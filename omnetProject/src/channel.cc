@@ -25,5 +25,4 @@ void Channel::initialize()
 void Channel::handleMessage(cMessage *msg)
 {
     // TODO - Generated method body
-    khbvsdf
 }
