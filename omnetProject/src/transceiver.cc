@@ -13,17 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn;
+#include "transceiver.h"
 
-//
-// TODO auto-generated module
-//
-simple PacketGen
+Define_Module(Transceiver);
+
+void Transceiver::initialize()
 {
-    parameters:
-        int messageSize;
-        int seqno;
-        
-    gates:
-        output out0;
+    // TODO - Generated method body
+}
+
+void Transceiver::handleMessage(cMessage *msg)
+{
+    // TODO - Generated method body
 }

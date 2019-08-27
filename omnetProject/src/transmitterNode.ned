@@ -17,4 +17,27 @@ package wsn;
 
 module Transmitter
 {
+    parameters:
+        int nodeId;
+        int nodeXPos;
+        int nodeYPos;
+        
+    gates:
+        input in0;
+        output out0;
+
+    submodules:
+        packGen: PacketGen;
+        MAC: MAC;
+        trans: Transceiver;
+        
+    connections:
+        packGen.out0 --> MAC.in0;
+        trans.out0 --> MAC.in1;
+        MAC.out0 --> trans.in0;
+        trans.out1 --> out0;
+        in0 --> trans.in1;
+        
+
+
 }

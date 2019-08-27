@@ -17,4 +17,25 @@ package wsn;
 
 module Reciever
 {
+    parameters:
+        int nodeId;
+        int nodeXPos;
+        int nodeYPos;
+        
+    gates:
+        input in0;
+        output out0;
+
+    submodules:
+        packSink: PacketSink;
+        MAC: MAC;
+        trans: Transceiver;
+        
+    connections:
+        packSink.in0 <-- MAC.out1;
+        trans.out0 --> MAC.in1;
+        MAC.out0 --> trans.in0;
+        trans.out1 --> out0;
+        in0 --> trans.in1;
+    
 }

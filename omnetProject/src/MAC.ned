@@ -20,4 +20,10 @@ package wsn;
 //
 simple MAC
 {
+    gates:
+        input in0;
+        input in1;
+        output out0;
+        output out1;
+         
 }

@@ -20,4 +20,7 @@ package wsn;
 //
 simple Channel
 {
+    gates:
+        input in[];
+        output out[];
 }

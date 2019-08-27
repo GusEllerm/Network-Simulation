@@ -20,4 +20,6 @@ package wsn;
 //
 simple PacketSink
 {
+    gates:
+        input in0;
 }

@@ -13,17 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn;
+#ifndef __WSN_TRANSCEIVER_H_
+#define __WSN_TRANSCEIVER_H_
 
-//
-// TODO auto-generated module
-//
-simple PacketGen
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+/**
+ * TODO - Generated class
+ */
+class Transceiver : public cSimpleModule
 {
-    parameters:
-        int messageSize;
-        int seqno;
-        
-    gates:
-        output out0;
-}
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+#endif

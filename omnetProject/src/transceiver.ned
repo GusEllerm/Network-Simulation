@@ -18,12 +18,20 @@ package wsn;
 //
 // TODO auto-generated module
 //
-simple PacketGen
+simple Transceiver
 {
     parameters:
-        int messageSize;
-        int seqno;
+        double txPowerDBm;
+        double bitRate;
+        double csThreshDBm;
+        double noisePowerDBm;
+        double turnaroundTime;
+        double csTime;
         
     gates:
+        input in0;
+        input in1;
+        output out1;
         output out0;
+
 }
