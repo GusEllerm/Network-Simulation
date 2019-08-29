@@ -11,24 +11,13 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
-
-package wsn;
-
 //
-// TODO auto-generated module
-//
-simple MAC
-{
-    parameters:
-        int bufferSize;
-        int maxBackoffs;
-        double backoffDistribution;
-        
-    gates:
-        input in0;
-        input in1;
-        output out0;
-        output out1;
-         
+
+packet appMessage {
+	
+	simtime_t timeStamp;
+	int senderId;
+	int seqno;
+	int msgSize;
+
 }

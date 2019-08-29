@@ -13,22 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn;
+//
+// TODO generated message class
+//
+packet TransConfirm {
+    
+    int status;
 
-//
-// TODO auto-generated module
-//
-simple MAC
-{
-    parameters:
-        int bufferSize;
-        int maxBackoffs;
-        double backoffDistribution;
-        
-    gates:
-        input in0;
-        input in1;
-        output out0;
-        output out1;
-         
 }

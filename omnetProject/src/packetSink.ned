@@ -20,6 +20,8 @@ package wsn;
 //
 simple PacketSink
 {
+    parameters:
+        string outFile;
     gates:
         input in0;
 }
