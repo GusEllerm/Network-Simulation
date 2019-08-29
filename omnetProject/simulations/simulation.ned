@@ -13,29 +13,41 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn;
+package wsn.simulations;
 
-module Reciever
+import wsn.Channel;
+import wsn.ReceiverNode;
+import wsn.TransmitterNode;
+
+
+network simulation
 {
     parameters:
-        int nodeId;
-        int nodeXPos;
-        int nodeYPos;
-        
-    gates:
-        input in0;
-        output out0;
-
-    submodules:
-        packSink: PacketSink;
-        MAC: MAC;
-        trans: Transceiver;
-        
-    connections:
-        packSink.in0 <-- MAC.out1;
-        trans.out0 --> MAC.in1;
-        MAC.out0 --> trans.in0;
-        trans.out1 --> out0;
-        in0 --> trans.in1;
+        int numTX = 5;
+        double radius = 10;
     
+    submodules:
+        TXNode[numTX] : TransmitterNode
+        {
+            nodeId = index;
+            nodeXPos = radius * cos((2 * 3.14159 * index) / numTX);
+            nodeYPos = radius * sin((2 * 3.14159 * index) / numTX);
+        };
+        
+        RXNode : ReceiverNode
+        {
+        	nodeId = -1;
+        	nodeXPos = 0;
+        	nodeYPos = 0;
+        };
+        
+        Chan : Channel {};
+        
+	connections allowunconnected:
+	    Chan.out++ --> RXNode.in0;
+	    
+	    for idx = 0 .. (numTX - 1)
+	    {
+	    	Chan.in++ <-- TXNode[idx].out0;
+	    }
 }

@@ -13,16 +13,29 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "channel.h"
+package wsn;
 
-Define_Module(Channel);
-
-void Channel::initialize()
+module ReceiverNode
 {
-    int numGates = gateCount();
-}
+    parameters:
+        int nodeId;
+        int nodeXPos;
+        int nodeYPos;
+        
+    gates:
+        input in0;
+        output out0;
 
-void Channel::handleMessage(cMessage *msg)
-{
-
+    submodules:
+        packSink: PacketSink;
+        MAC: MAC;
+        trans: Transceiver;
+        
+    connections allowunconnected:
+        packSink.in0 <-- MAC.out1;
+        trans.out0 --> MAC.in1;
+        MAC.out0 --> trans.in0;
+        trans.out1 --> out0;
+        in0 --> trans.in1;
+    
 }

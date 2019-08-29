@@ -26,37 +26,14 @@ LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
-PROJECTRELATIVE_PATH = src
+PROJECTRELATIVE_PATH = simulations
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = \
-    $O/channel.o \
-    $O/MAC.o \
-    $O/packetGen.o \
-    $O/packetSink.o \
-    $O/transceiver.o \
-    $O/appMessage_m.o \
-    $O/CSRequest_m.o \
-    $O/CSResponse_m.o \
-    $O/macMessage_m.o \
-    $O/signalStart_m.o \
-    $O/signalStop_m.o \
-    $O/transmissionConfirm_m.o \
-    $O/transmissionIndication_m.o \
-    $O/transmissionReq_m.o
+OBJS =
 
 # Message files
-MSGFILES = \
-    appMessage.msg \
-    CSRequest.msg \
-    CSResponse.msg \
-    macMessage.msg \
-    signalStart.msg \
-    signalStop.msg \
-    transmissionConfirm.msg \
-    transmissionIndication.msg \
-    transmissionReq.msg
+MSGFILES =
 
 # SM files
 SMFILES =

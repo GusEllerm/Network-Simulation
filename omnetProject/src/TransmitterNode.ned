@@ -15,7 +15,7 @@
 
 package wsn;
 
-module Transmitter
+module TransmitterNode
 {
     parameters:
         int nodeId;
@@ -31,7 +31,7 @@ module Transmitter
         MAC: MAC;
         trans: Transceiver;
         
-    connections:
+    connections allowunconnected:
         packGen.out0 --> MAC.in0;
         trans.out0 --> MAC.in1;
         MAC.out0 --> trans.in0;
