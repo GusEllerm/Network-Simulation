@@ -13,12 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn.simulations;
+package wsn;
 
 import wsn.Channel;
 import wsn.ReceiverNode;
 import wsn.TransmitterNode;
-
 
 network simulation
 {

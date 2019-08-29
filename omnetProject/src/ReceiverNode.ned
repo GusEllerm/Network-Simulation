@@ -19,8 +19,8 @@ module ReceiverNode
 {
     parameters:
         int nodeId;
-        int nodeXPos;
-        int nodeYPos;
+        double nodeXPos;
+        double nodeYPos;
         
     gates:
         input in0;
