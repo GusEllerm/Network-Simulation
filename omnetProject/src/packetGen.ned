@@ -22,7 +22,7 @@ simple PacketGen
 {
     parameters:
         int messageSize;
-        int seqno;
+        double iatDistribution;
         
     gates:
         output out0;

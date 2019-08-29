@@ -14,6 +14,7 @@
 // 
 
 #include "packetGen.h"
+#include "appMessage.h"
 
 Define_Module(PacketGen);
 
