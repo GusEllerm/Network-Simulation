@@ -22,8 +22,8 @@ import wsn.TransmitterNode;
 network simulation
 {
     parameters:
-        int numTX = 5;
-        double radius = 10;
+        int numTX;
+        double radius;
     
     submodules:
         TXNode[numTX] : TransmitterNode

@@ -14,16 +14,24 @@
 // 
 
 #include "packetGen.h"
-#include "appMessage.h"
+#include "appMessage_m.h"
 
 Define_Module(PacketGen);
 
 void PacketGen::initialize()
 {
-    // TODO - Generated method body
+    int seqno = 0;
+    int messageSize = par("messageSize");
+    int txId = getParentModule()->par("nodeId");
+    double iatDistribution = par("iatDistribution");
+
+    scheduleAt(simTime() + 0.1, new cMessage("xx")); //sends the initial message!
 }
 
 void PacketGen::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if (!strncmp(msg->getName(), "xx", 2))
+    {
+       printf("test");
+    }
 }
