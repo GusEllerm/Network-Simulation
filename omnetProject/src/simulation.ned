@@ -24,6 +24,8 @@ network simulation
     parameters:
         int numTX;
         double radius;
+        
+        @display("bgb=0,0");
     
     submodules:
         TXNode[numTX] : TransmitterNode
@@ -31,6 +33,8 @@ network simulation
             nodeId = index;
             nodeXPos = radius * cos((2 * 3.14159 * index) / numTX);
             nodeYPos = radius * sin((2 * 3.14159 * index) / numTX);
+            
+            @display("p=$nodeXPos,$nodeYPos");
         };
         
         RXNode : ReceiverNode
@@ -38,9 +42,14 @@ network simulation
         	nodeId = -1;
         	nodeXPos = 0;
         	nodeYPos = 0;
+        	
+        	@display("p=$nodeXPos,$nodeYPos");
         };
         
-        Chan : Channel {};
+        Chan : Channel 
+        {
+             @display("p=0,0");
+        };
         
 	connections allowunconnected:
 	    Chan.out++ --> RXNode.in0;

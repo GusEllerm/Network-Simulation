@@ -39,7 +39,7 @@ void PacketGen::handleMessage(cMessage *msg)
 appMessage* PacketGen::createMessage()
 {
     char name[80];
-    sprintf(name, "TX: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
 
     appMessage* message = new appMessage(name);
 
@@ -49,7 +49,6 @@ appMessage* PacketGen::createMessage()
     message->setMsgSize(messageSize);
 
     seqno++;
-
 
     return message;
 }
