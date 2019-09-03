@@ -24,36 +24,36 @@
  * //
  * // TODO generated message class
  * //
- * packet MacMessage
+ * packet macMessage
  * {
  * }
  * </pre>
  */
-class MacMessage : public ::omnetpp::cPacket
+class macMessage : public ::omnetpp::cPacket
 {
   protected:
 
   private:
-    void copy(const MacMessage& other);
+    void copy(const macMessage& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const MacMessage&);
+    bool operator==(const macMessage&);
 
   public:
-    MacMessage(const char *name=nullptr, short kind=0);
-    MacMessage(const MacMessage& other);
-    virtual ~MacMessage();
-    MacMessage& operator=(const MacMessage& other);
-    virtual MacMessage *dup() const override {return new MacMessage(*this);}
+    macMessage(const char *name=nullptr, short kind=0);
+    macMessage(const macMessage& other);
+    virtual ~macMessage();
+    macMessage& operator=(const macMessage& other);
+    virtual macMessage *dup() const override {return new macMessage(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const MacMessage& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, MacMessage& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const macMessage& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, macMessage& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __MACMESSAGE_M_H

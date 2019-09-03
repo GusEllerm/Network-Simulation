@@ -177,22 +177,22 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(MacMessage)
+Register_Class(macMessage)
 
-MacMessage::MacMessage(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+macMessage::macMessage(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
 }
 
-MacMessage::MacMessage(const MacMessage& other) : ::omnetpp::cPacket(other)
+macMessage::macMessage(const macMessage& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-MacMessage::~MacMessage()
+macMessage::~macMessage()
 {
 }
 
-MacMessage& MacMessage::operator=(const MacMessage& other)
+macMessage& macMessage::operator=(const macMessage& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -200,27 +200,27 @@ MacMessage& MacMessage::operator=(const MacMessage& other)
     return *this;
 }
 
-void MacMessage::copy(const MacMessage& other)
+void macMessage::copy(const macMessage& other)
 {
 }
 
-void MacMessage::parsimPack(omnetpp::cCommBuffer *b) const
+void macMessage::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
 }
 
-void MacMessage::parsimUnpack(omnetpp::cCommBuffer *b)
+void macMessage::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
 }
 
-class MacMessageDescriptor : public omnetpp::cClassDescriptor
+class macMessageDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    MacMessageDescriptor();
-    virtual ~MacMessageDescriptor();
+    macMessageDescriptor();
+    virtual ~macMessageDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -242,24 +242,24 @@ class MacMessageDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(MacMessageDescriptor)
+Register_ClassDescriptor(macMessageDescriptor)
 
-MacMessageDescriptor::MacMessageDescriptor() : omnetpp::cClassDescriptor("MacMessage", "omnetpp::cPacket")
+macMessageDescriptor::macMessageDescriptor() : omnetpp::cClassDescriptor("macMessage", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-MacMessageDescriptor::~MacMessageDescriptor()
+macMessageDescriptor::~macMessageDescriptor()
 {
     delete[] propertynames;
 }
 
-bool MacMessageDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool macMessageDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<MacMessage *>(obj)!=nullptr;
+    return dynamic_cast<macMessage *>(obj)!=nullptr;
 }
 
-const char **MacMessageDescriptor::getPropertyNames() const
+const char **macMessageDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -270,19 +270,19 @@ const char **MacMessageDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *MacMessageDescriptor::getProperty(const char *propertyname) const
+const char *macMessageDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int MacMessageDescriptor::getFieldCount() const
+int macMessageDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 0+basedesc->getFieldCount() : 0;
 }
 
-unsigned int MacMessageDescriptor::getFieldTypeFlags(int field) const
+unsigned int macMessageDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -293,7 +293,7 @@ unsigned int MacMessageDescriptor::getFieldTypeFlags(int field) const
     return 0;
 }
 
-const char *MacMessageDescriptor::getFieldName(int field) const
+const char *macMessageDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -304,13 +304,13 @@ const char *MacMessageDescriptor::getFieldName(int field) const
     return nullptr;
 }
 
-int MacMessageDescriptor::findField(const char *fieldName) const
+int macMessageDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *MacMessageDescriptor::getFieldTypeString(int field) const
+const char *macMessageDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -321,7 +321,7 @@ const char *MacMessageDescriptor::getFieldTypeString(int field) const
     return nullptr;
 }
 
-const char **MacMessageDescriptor::getFieldPropertyNames(int field) const
+const char **macMessageDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -334,7 +334,7 @@ const char **MacMessageDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *MacMessageDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *macMessageDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -347,7 +347,7 @@ const char *MacMessageDescriptor::getFieldProperty(int field, const char *proper
     }
 }
 
-int MacMessageDescriptor::getFieldArraySize(void *object, int field) const
+int macMessageDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -355,13 +355,13 @@ int MacMessageDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    MacMessage *pp = (MacMessage *)object; (void)pp;
+    macMessage *pp = (macMessage *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *MacMessageDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *macMessageDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -369,13 +369,13 @@ const char *MacMessageDescriptor::getFieldDynamicTypeString(void *object, int fi
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    MacMessage *pp = (MacMessage *)object; (void)pp;
+    macMessage *pp = (macMessage *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string MacMessageDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string macMessageDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -383,13 +383,13 @@ std::string MacMessageDescriptor::getFieldValueAsString(void *object, int field,
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    MacMessage *pp = (MacMessage *)object; (void)pp;
+    macMessage *pp = (macMessage *)object; (void)pp;
     switch (field) {
         default: return "";
     }
 }
 
-bool MacMessageDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool macMessageDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -397,13 +397,13 @@ bool MacMessageDescriptor::setFieldValueAsString(void *object, int field, int i,
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    MacMessage *pp = (MacMessage *)object; (void)pp;
+    macMessage *pp = (macMessage *)object; (void)pp;
     switch (field) {
         default: return false;
     }
 }
 
-const char *MacMessageDescriptor::getFieldStructName(int field) const
+const char *macMessageDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -414,7 +414,7 @@ const char *MacMessageDescriptor::getFieldStructName(int field) const
     return nullptr;
 }
 
-void *MacMessageDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *macMessageDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -422,7 +422,7 @@ void *MacMessageDescriptor::getFieldStructValuePointer(void *object, int field, 
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    MacMessage *pp = (MacMessage *)object; (void)pp;
+    macMessage *pp = (macMessage *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

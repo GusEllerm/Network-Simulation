@@ -14,15 +14,43 @@
 // 
 
 #include "MAC.h"
+#include "appMessage_m.h"
+#include "macMessage_m.h"
+#include <deque>
 
 Define_Module(MAC);
 
 void MAC::initialize()
 {
-    // TODO - Generated method body
+    bufferSize = par("bufferSize");
+    maxBackoffs = par("maxBackoffs");
+    backoffDistribution = par("backoffDistribution");
+
+    buffer.resize(bufferSize);
+    buffer.clear();
+
 }
 
 void MAC::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if (static_cast<appMessage *>(msg))
+    {
+        appMessage *appMsg = static_cast<appMessage *>(msg);
+
+        if (buffer.size() != bufferSize)
+        {
+            buffer.push_front(appMsg);;
+        } else {
+            EV << "drop @ mac";
+            delete appMsg;
+        }
+
+        appMessage *outMsg = buffer.back();
+        buffer.pop_back();
+        //buffer popping not tested.
+
+        macMessage *mmsg = new macMessage();
+        mmsg->encapsulate(outMsg);
+        send(mmsg, "out0");
+    }
 }

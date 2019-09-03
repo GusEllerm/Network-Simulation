@@ -14,6 +14,8 @@
 // 
 
 #include "transceiver.h"
+#include "appMessage_m.h"
+
 
 Define_Module(Transceiver);
 
@@ -24,5 +26,15 @@ void Transceiver::initialize()
 
 void Transceiver::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if (dynamic_cast<appMessage *>(msg))
+    {
+        appMessage* appmsg = static_cast<appMessage *>(msg);
+
+        EV << appmsg->getSenderId();
+
+
+
+        send(msg, "out1");
+    }
+
 }

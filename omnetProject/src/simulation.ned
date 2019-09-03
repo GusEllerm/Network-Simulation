@@ -48,14 +48,21 @@ network simulation
         
         Chan : Channel 
         {
-             @display("p=0,0");
+             @display("p=10,10");
         };
         
 	connections allowunconnected:
+	   	for idx = 0 .. (numTX - 1)
+	    {
+	    	Chan.out++ --> TXNode[idx].in0;
+	    }
+	    
 	    Chan.out++ --> RXNode.in0;
 	    
 	    for idx = 0 .. (numTX - 1)
 	    {
 	    	Chan.in++ <-- TXNode[idx].out0;
 	    }
+	    
+	    Chan.in++ <-- RXNode.out0;
 }

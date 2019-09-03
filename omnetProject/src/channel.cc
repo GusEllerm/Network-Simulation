@@ -14,6 +14,8 @@
 // 
 
 #include "channel.h"
+#include "appMessage_m.h"
+
 
 Define_Module(Channel);
 
@@ -24,5 +26,8 @@ void Channel::initialize()
 
 void Channel::handleMessage(cMessage *msg)
 {
-
+    if (static_cast<appMessage *>(msg))
+    {
+        send(msg, "out", 10);
+    }
 }

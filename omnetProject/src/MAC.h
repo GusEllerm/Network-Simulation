@@ -17,6 +17,9 @@
 #define __WSN_MAC_H_
 
 #include <omnetpp.h>
+#include "appMessage_m.h"
+#include "circBuff.h"
+#include <deque>
 
 using namespace omnetpp;
 
@@ -28,6 +31,13 @@ class MAC : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+    int bufferSize;
+    int maxBackoffs;
+    double backoffDistribution;
+
+    std::deque<appMessage *> buffer;
+
 };
 
 #endif
