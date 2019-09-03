@@ -18,20 +18,38 @@
 
 Define_Module(PacketGen);
 
+
 void PacketGen::initialize()
 {
-    int seqno = 0;
-    int messageSize = par("messageSize");
-    int txId = getParentModule()->par("nodeId");
-    double iatDistribution = par("iatDistribution");
+    seqno = 0;
+    txId = getParentModule()->par("nodeId");
+    messageSize = par("messageSize");
+    distro = par("iatDistribution");
 
-    scheduleAt(simTime() + 0.1, new cMessage("xx")); //sends the initial message!
+    scheduleAt(simTime(), new cMessage); //sends the initial message!
 }
 
 void PacketGen::handleMessage(cMessage *msg)
 {
-    if (!strncmp(msg->getName(), "xx", 2))
-    {
-       printf("test");
-    }
+    appMessage* message = createMessage();
+    send(message, "out0");
+    scheduleAt((distro + simTime()), msg);
+}
+
+appMessage* PacketGen::createMessage()
+{
+    char name[80];
+    sprintf(name, "TX: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+
+    appMessage* message = new appMessage(name);
+
+    message->setTimeStamp(simTime());
+    message->setSenderId(txId);
+    message->setSeqno(seqno);
+    message->setMsgSize(messageSize);
+
+    seqno++;
+
+
+    return message;
 }

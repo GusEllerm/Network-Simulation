@@ -17,6 +17,7 @@
 #define __WSN_PACKETGEN_H_
 
 #include <omnetpp.h>
+#include "appMessage_m.h"
 
 using namespace omnetpp;
 
@@ -28,6 +29,12 @@ class PacketGen : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    appMessage* createMessage();
+
+    double distro;
+    int messageSize;
+    int seqno;
+    int txId;
 };
 
 #endif
