@@ -33,7 +33,8 @@ void PacketGen::handleMessage(cMessage *msg)
 {
     appMessage* message = createMessage();
     send(message, "out0");
-    scheduleAt((distro + simTime()), msg);
+    scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
+
 }
 
 appMessage* PacketGen::createMessage()
