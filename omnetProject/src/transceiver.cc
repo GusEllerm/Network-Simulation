@@ -15,6 +15,8 @@
 
 #include "transceiver.h"
 #include "transmissionRequest_m.h"
+#include "transmissionConfirm_m.h"
+#include "macMessage_m.h"
 #include "signalStart_m.h"
 #include "signalStop_m.h"
 
@@ -23,7 +25,18 @@ Define_Module(Transceiver);
 
 void Transceiver::initialize()
 {
-    // TODO - Generated method body
+    txPowerDBm = par("txPowerDBm");
+    bitRate = par("bitRate");
+    csThreshDBm = par("csThreshDBm");
+    noisePowerDBm = par("noisePowerDBm");
+    turnaroundTime = par("turnaroundTime");
+    csTime = par("csTime");
+
+    transceiverState = 0; //RX
+
+    nodeId = getParentModule()->par("nodeId");
+    nodeXPos = getParentModule()->par("nodeXPos");
+    nodeYPos = getParentModule()->par("nodeYPos");
 }
 
 void Transceiver::handleMessage(cMessage *msg)
@@ -41,6 +54,16 @@ void Transceiver::handleMessage(cMessage *msg)
 
     if (dynamic_cast<transmissionRequest *>(msg))
     {
+        if (transceiverState) //transmitting
+        {
+            transmissionConfirm *confirmMsg = new transmissionConfirm;
+            confirmMsg->setStatus("statusBusy");
+            send(confirmMsg, "out1");
+
+            //transmissionRequest *requestMsg = static_cast<transmissionRequest *>(msg);
+            //macMessage *mmsg = static_cast<macMessage *>(requestMsg->decapsulate());
+            //delete requestMsg;
+        }
 
     }
 

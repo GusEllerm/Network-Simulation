@@ -16,6 +16,7 @@
 #include "MAC.h"
 #include "appMessage_m.h"
 #include "macMessage_m.h"
+#include "transmissionRequest_m.h"
 #include <deque>
 
 Define_Module(MAC);
@@ -28,7 +29,6 @@ void MAC::initialize()
 
     buffer.resize(bufferSize);
     buffer.clear();
-
 }
 
 void MAC::handleMessage(cMessage *msg)
@@ -39,7 +39,7 @@ void MAC::handleMessage(cMessage *msg)
 
         if (buffer.size() != bufferSize)
         {
-            buffer.push_front(appMsg);;
+            buffer.push_front(appMsg);
         } else {
             EV << "drop @ mac";
             delete appMsg;
@@ -51,7 +51,11 @@ void MAC::handleMessage(cMessage *msg)
 
         macMessage *mmsg = new macMessage();
         mmsg->encapsulate(outMsg);
-        send(mmsg, "out0");
+
+        transmissionRequest *requestMsg = new transmissionRequest;
+        requestMsg->encapsulate(mmsg);
+
+        send(requestMsg, "out0");
 
         //TODO encapsulate mmsg in a transmission request packet
     }

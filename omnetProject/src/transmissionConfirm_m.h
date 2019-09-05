@@ -24,41 +24,41 @@
  * //
  * // TODO generated message class
  * //
- * packet TransConfirm
+ * packet transmissionConfirm
  * {
- *     int status;
+ *     string status;
  * 
  * }
  * </pre>
  */
-class TransConfirm : public ::omnetpp::cPacket
+class transmissionConfirm : public ::omnetpp::cPacket
 {
   protected:
-    int status;
+    ::omnetpp::opp_string status;
 
   private:
-    void copy(const TransConfirm& other);
+    void copy(const transmissionConfirm& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const TransConfirm&);
+    bool operator==(const transmissionConfirm&);
 
   public:
-    TransConfirm(const char *name=nullptr, short kind=0);
-    TransConfirm(const TransConfirm& other);
-    virtual ~TransConfirm();
-    TransConfirm& operator=(const TransConfirm& other);
-    virtual TransConfirm *dup() const override {return new TransConfirm(*this);}
+    transmissionConfirm(const char *name=nullptr, short kind=0);
+    transmissionConfirm(const transmissionConfirm& other);
+    virtual ~transmissionConfirm();
+    transmissionConfirm& operator=(const transmissionConfirm& other);
+    virtual transmissionConfirm *dup() const override {return new transmissionConfirm(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
-    virtual int getStatus() const;
-    virtual void setStatus(int status);
+    virtual const char * getStatus() const;
+    virtual void setStatus(const char * status);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const TransConfirm& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TransConfirm& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const transmissionConfirm& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, transmissionConfirm& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __TRANSMISSIONCONFIRM_M_H

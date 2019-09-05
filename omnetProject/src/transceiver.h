@@ -30,6 +30,17 @@ class Transceiver : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
 
     int transceiverState;
+
+    int nodeId;
+    double nodeXPos;
+    double nodeYPos;
+
+    double txPowerDBm;
+    double bitRate;
+    double csThreshDBm;
+    double noisePowerDBm;
+    double turnaroundTime;
+    double csTime;
 };
 
 #endif

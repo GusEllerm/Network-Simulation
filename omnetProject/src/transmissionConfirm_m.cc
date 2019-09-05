@@ -177,23 +177,22 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(TransConfirm)
+Register_Class(transmissionConfirm)
 
-TransConfirm::TransConfirm(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+transmissionConfirm::transmissionConfirm(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
-    this->status = 0;
 }
 
-TransConfirm::TransConfirm(const TransConfirm& other) : ::omnetpp::cPacket(other)
+transmissionConfirm::transmissionConfirm(const transmissionConfirm& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-TransConfirm::~TransConfirm()
+transmissionConfirm::~transmissionConfirm()
 {
 }
 
-TransConfirm& TransConfirm::operator=(const TransConfirm& other)
+transmissionConfirm& transmissionConfirm::operator=(const transmissionConfirm& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -201,40 +200,40 @@ TransConfirm& TransConfirm::operator=(const TransConfirm& other)
     return *this;
 }
 
-void TransConfirm::copy(const TransConfirm& other)
+void transmissionConfirm::copy(const transmissionConfirm& other)
 {
     this->status = other.status;
 }
 
-void TransConfirm::parsimPack(omnetpp::cCommBuffer *b) const
+void transmissionConfirm::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->status);
 }
 
-void TransConfirm::parsimUnpack(omnetpp::cCommBuffer *b)
+void transmissionConfirm::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->status);
 }
 
-int TransConfirm::getStatus() const
+const char * transmissionConfirm::getStatus() const
 {
-    return this->status;
+    return this->status.c_str();
 }
 
-void TransConfirm::setStatus(int status)
+void transmissionConfirm::setStatus(const char * status)
 {
     this->status = status;
 }
 
-class TransConfirmDescriptor : public omnetpp::cClassDescriptor
+class transmissionConfirmDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    TransConfirmDescriptor();
-    virtual ~TransConfirmDescriptor();
+    transmissionConfirmDescriptor();
+    virtual ~transmissionConfirmDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -256,24 +255,24 @@ class TransConfirmDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(TransConfirmDescriptor)
+Register_ClassDescriptor(transmissionConfirmDescriptor)
 
-TransConfirmDescriptor::TransConfirmDescriptor() : omnetpp::cClassDescriptor("TransConfirm", "omnetpp::cPacket")
+transmissionConfirmDescriptor::transmissionConfirmDescriptor() : omnetpp::cClassDescriptor("transmissionConfirm", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-TransConfirmDescriptor::~TransConfirmDescriptor()
+transmissionConfirmDescriptor::~transmissionConfirmDescriptor()
 {
     delete[] propertynames;
 }
 
-bool TransConfirmDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool transmissionConfirmDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<TransConfirm *>(obj)!=nullptr;
+    return dynamic_cast<transmissionConfirm *>(obj)!=nullptr;
 }
 
-const char **TransConfirmDescriptor::getPropertyNames() const
+const char **transmissionConfirmDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -284,19 +283,19 @@ const char **TransConfirmDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *TransConfirmDescriptor::getProperty(const char *propertyname) const
+const char *transmissionConfirmDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int TransConfirmDescriptor::getFieldCount() const
+int transmissionConfirmDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
-unsigned int TransConfirmDescriptor::getFieldTypeFlags(int field) const
+unsigned int transmissionConfirmDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -310,7 +309,7 @@ unsigned int TransConfirmDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
-const char *TransConfirmDescriptor::getFieldName(int field) const
+const char *transmissionConfirmDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -324,7 +323,7 @@ const char *TransConfirmDescriptor::getFieldName(int field) const
     return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
-int TransConfirmDescriptor::findField(const char *fieldName) const
+int transmissionConfirmDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -332,7 +331,7 @@ int TransConfirmDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *TransConfirmDescriptor::getFieldTypeString(int field) const
+const char *transmissionConfirmDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -341,12 +340,12 @@ const char *TransConfirmDescriptor::getFieldTypeString(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
-        "int",
+        "string",
     };
     return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **TransConfirmDescriptor::getFieldPropertyNames(int field) const
+const char **transmissionConfirmDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -359,7 +358,7 @@ const char **TransConfirmDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *TransConfirmDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *transmissionConfirmDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -372,7 +371,7 @@ const char *TransConfirmDescriptor::getFieldProperty(int field, const char *prop
     }
 }
 
-int TransConfirmDescriptor::getFieldArraySize(void *object, int field) const
+int transmissionConfirmDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -380,13 +379,13 @@ int TransConfirmDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    TransConfirm *pp = (TransConfirm *)object; (void)pp;
+    transmissionConfirm *pp = (transmissionConfirm *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *TransConfirmDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *transmissionConfirmDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -394,13 +393,13 @@ const char *TransConfirmDescriptor::getFieldDynamicTypeString(void *object, int 
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransConfirm *pp = (TransConfirm *)object; (void)pp;
+    transmissionConfirm *pp = (transmissionConfirm *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string TransConfirmDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string transmissionConfirmDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -408,14 +407,14 @@ std::string TransConfirmDescriptor::getFieldValueAsString(void *object, int fiel
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransConfirm *pp = (TransConfirm *)object; (void)pp;
+    transmissionConfirm *pp = (transmissionConfirm *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getStatus());
+        case 0: return oppstring2string(pp->getStatus());
         default: return "";
     }
 }
 
-bool TransConfirmDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool transmissionConfirmDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -423,14 +422,14 @@ bool TransConfirmDescriptor::setFieldValueAsString(void *object, int field, int 
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    TransConfirm *pp = (TransConfirm *)object; (void)pp;
+    transmissionConfirm *pp = (transmissionConfirm *)object; (void)pp;
     switch (field) {
-        case 0: pp->setStatus(string2long(value)); return true;
+        case 0: pp->setStatus((value)); return true;
         default: return false;
     }
 }
 
-const char *TransConfirmDescriptor::getFieldStructName(int field) const
+const char *transmissionConfirmDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -443,7 +442,7 @@ const char *TransConfirmDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *TransConfirmDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *transmissionConfirmDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -451,7 +450,7 @@ void *TransConfirmDescriptor::getFieldStructValuePointer(void *object, int field
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    TransConfirm *pp = (TransConfirm *)object; (void)pp;
+    transmissionConfirm *pp = (transmissionConfirm *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

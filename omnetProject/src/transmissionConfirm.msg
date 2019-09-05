@@ -16,8 +16,8 @@
 //
 // TODO generated message class
 //
-packet TransConfirm {
+packet transmissionConfirm {
     
-    int status;
+    string status;
 
 }
