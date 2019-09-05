@@ -23,7 +23,7 @@ Define_Module(Channel);
 
 void Channel::initialize()
 {
-    numGates = gateCount();
+    numGates = gateCount() / 2;
 }
 
 void Channel::handleMessage(cMessage *msg)
