@@ -17,7 +17,7 @@
 #include "appMessage_m.h"
 #include "macMessage_m.h"
 #include "transmissionRequest_m.h"
-#include <deque>
+#include <list>
 
 Define_Module(MAC);
 
@@ -27,7 +27,6 @@ void MAC::initialize()
     maxBackoffs = par("maxBackoffs");
     backoffDistribution = par("backoffDistribution");
 
-    buffer.resize(bufferSize);
     buffer.clear();
 }
 

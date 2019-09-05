@@ -177,22 +177,22 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(TransmissionIndication)
+Register_Class(transmissionIndication)
 
-TransmissionIndication::TransmissionIndication(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+transmissionIndication::transmissionIndication(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
 }
 
-TransmissionIndication::TransmissionIndication(const TransmissionIndication& other) : ::omnetpp::cPacket(other)
+transmissionIndication::transmissionIndication(const transmissionIndication& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-TransmissionIndication::~TransmissionIndication()
+transmissionIndication::~transmissionIndication()
 {
 }
 
-TransmissionIndication& TransmissionIndication::operator=(const TransmissionIndication& other)
+transmissionIndication& transmissionIndication::operator=(const transmissionIndication& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -200,27 +200,27 @@ TransmissionIndication& TransmissionIndication::operator=(const TransmissionIndi
     return *this;
 }
 
-void TransmissionIndication::copy(const TransmissionIndication& other)
+void transmissionIndication::copy(const transmissionIndication& other)
 {
 }
 
-void TransmissionIndication::parsimPack(omnetpp::cCommBuffer *b) const
+void transmissionIndication::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
 }
 
-void TransmissionIndication::parsimUnpack(omnetpp::cCommBuffer *b)
+void transmissionIndication::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
 }
 
-class TransmissionIndicationDescriptor : public omnetpp::cClassDescriptor
+class transmissionIndicationDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    TransmissionIndicationDescriptor();
-    virtual ~TransmissionIndicationDescriptor();
+    transmissionIndicationDescriptor();
+    virtual ~transmissionIndicationDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -242,24 +242,24 @@ class TransmissionIndicationDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(TransmissionIndicationDescriptor)
+Register_ClassDescriptor(transmissionIndicationDescriptor)
 
-TransmissionIndicationDescriptor::TransmissionIndicationDescriptor() : omnetpp::cClassDescriptor("TransmissionIndication", "omnetpp::cPacket")
+transmissionIndicationDescriptor::transmissionIndicationDescriptor() : omnetpp::cClassDescriptor("transmissionIndication", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-TransmissionIndicationDescriptor::~TransmissionIndicationDescriptor()
+transmissionIndicationDescriptor::~transmissionIndicationDescriptor()
 {
     delete[] propertynames;
 }
 
-bool TransmissionIndicationDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool transmissionIndicationDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<TransmissionIndication *>(obj)!=nullptr;
+    return dynamic_cast<transmissionIndication *>(obj)!=nullptr;
 }
 
-const char **TransmissionIndicationDescriptor::getPropertyNames() const
+const char **transmissionIndicationDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -270,19 +270,19 @@ const char **TransmissionIndicationDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *TransmissionIndicationDescriptor::getProperty(const char *propertyname) const
+const char *transmissionIndicationDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int TransmissionIndicationDescriptor::getFieldCount() const
+int transmissionIndicationDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 0+basedesc->getFieldCount() : 0;
 }
 
-unsigned int TransmissionIndicationDescriptor::getFieldTypeFlags(int field) const
+unsigned int transmissionIndicationDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -293,7 +293,7 @@ unsigned int TransmissionIndicationDescriptor::getFieldTypeFlags(int field) cons
     return 0;
 }
 
-const char *TransmissionIndicationDescriptor::getFieldName(int field) const
+const char *transmissionIndicationDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -304,13 +304,13 @@ const char *TransmissionIndicationDescriptor::getFieldName(int field) const
     return nullptr;
 }
 
-int TransmissionIndicationDescriptor::findField(const char *fieldName) const
+int transmissionIndicationDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *TransmissionIndicationDescriptor::getFieldTypeString(int field) const
+const char *transmissionIndicationDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -321,7 +321,7 @@ const char *TransmissionIndicationDescriptor::getFieldTypeString(int field) cons
     return nullptr;
 }
 
-const char **TransmissionIndicationDescriptor::getFieldPropertyNames(int field) const
+const char **transmissionIndicationDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -334,7 +334,7 @@ const char **TransmissionIndicationDescriptor::getFieldPropertyNames(int field) 
     }
 }
 
-const char *TransmissionIndicationDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *transmissionIndicationDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -347,7 +347,7 @@ const char *TransmissionIndicationDescriptor::getFieldProperty(int field, const 
     }
 }
 
-int TransmissionIndicationDescriptor::getFieldArraySize(void *object, int field) const
+int transmissionIndicationDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -355,13 +355,13 @@ int TransmissionIndicationDescriptor::getFieldArraySize(void *object, int field)
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    TransmissionIndication *pp = (TransmissionIndication *)object; (void)pp;
+    transmissionIndication *pp = (transmissionIndication *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *TransmissionIndicationDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *transmissionIndicationDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -369,13 +369,13 @@ const char *TransmissionIndicationDescriptor::getFieldDynamicTypeString(void *ob
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransmissionIndication *pp = (TransmissionIndication *)object; (void)pp;
+    transmissionIndication *pp = (transmissionIndication *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string TransmissionIndicationDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string transmissionIndicationDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -383,13 +383,13 @@ std::string TransmissionIndicationDescriptor::getFieldValueAsString(void *object
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransmissionIndication *pp = (TransmissionIndication *)object; (void)pp;
+    transmissionIndication *pp = (transmissionIndication *)object; (void)pp;
     switch (field) {
         default: return "";
     }
 }
 
-bool TransmissionIndicationDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool transmissionIndicationDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -397,13 +397,13 @@ bool TransmissionIndicationDescriptor::setFieldValueAsString(void *object, int f
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    TransmissionIndication *pp = (TransmissionIndication *)object; (void)pp;
+    transmissionIndication *pp = (transmissionIndication *)object; (void)pp;
     switch (field) {
         default: return false;
     }
 }
 
-const char *TransmissionIndicationDescriptor::getFieldStructName(int field) const
+const char *transmissionIndicationDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -414,7 +414,7 @@ const char *TransmissionIndicationDescriptor::getFieldStructName(int field) cons
     return nullptr;
 }
 
-void *TransmissionIndicationDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *transmissionIndicationDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -422,7 +422,7 @@ void *TransmissionIndicationDescriptor::getFieldStructValuePointer(void *object,
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    TransmissionIndication *pp = (TransmissionIndication *)object; (void)pp;
+    transmissionIndication *pp = (transmissionIndication *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

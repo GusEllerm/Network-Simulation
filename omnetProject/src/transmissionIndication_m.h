@@ -24,36 +24,36 @@
  * //
  * // TODO generated message class
  * //
- * packet TransmissionIndication
+ * packet transmissionIndication
  * {
  * }
  * </pre>
  */
-class TransmissionIndication : public ::omnetpp::cPacket
+class transmissionIndication : public ::omnetpp::cPacket
 {
   protected:
 
   private:
-    void copy(const TransmissionIndication& other);
+    void copy(const transmissionIndication& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const TransmissionIndication&);
+    bool operator==(const transmissionIndication&);
 
   public:
-    TransmissionIndication(const char *name=nullptr, short kind=0);
-    TransmissionIndication(const TransmissionIndication& other);
-    virtual ~TransmissionIndication();
-    TransmissionIndication& operator=(const TransmissionIndication& other);
-    virtual TransmissionIndication *dup() const override {return new TransmissionIndication(*this);}
+    transmissionIndication(const char *name=nullptr, short kind=0);
+    transmissionIndication(const transmissionIndication& other);
+    virtual ~transmissionIndication();
+    transmissionIndication& operator=(const transmissionIndication& other);
+    virtual transmissionIndication *dup() const override {return new transmissionIndication(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const TransmissionIndication& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TransmissionIndication& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const transmissionIndication& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, transmissionIndication& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __TRANSMISSIONINDICATION_M_H

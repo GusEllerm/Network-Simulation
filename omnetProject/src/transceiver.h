@@ -17,6 +17,8 @@
 #define __WSN_TRANSCEIVER_H_
 
 #include <omnetpp.h>
+#include "signalStart_m.h"
+#include <list>
 
 using namespace omnetpp;
 
@@ -28,6 +30,17 @@ class Transceiver : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+    const double ref = 1.0;
+    double lossRatio;
+    double lossRatioDB;
+    double receivedPowerDBm;
+    double bitRateDB;
+    double snrDB;
+    double snr;
+    double ber;
+    double per;
+    double u;
 
     int transceiverState;
 
@@ -41,6 +54,8 @@ class Transceiver : public cSimpleModule
     double noisePowerDBm;
     double turnaroundTime;
     double csTime;
+
+    std::list<signalStart *> currentTransmissions;
 };
 
 #endif
