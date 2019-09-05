@@ -14,7 +14,9 @@
 // 
 
 #include "transceiver.h"
-#include "appMessage_m.h"
+#include "transmissionRequest_m.h"
+#include "signalStart_m.h"
+#include "signalStop_m.h"
 
 
 Define_Module(Transceiver);
@@ -26,14 +28,20 @@ void Transceiver::initialize()
 
 void Transceiver::handleMessage(cMessage *msg)
 {
-    if (dynamic_cast<appMessage *>(msg))
+    if (dynamic_cast<signalStart *>(msg))
     {
-        appMessage* appmsg = static_cast<appMessage *>(msg);
+
+    }
+
+    else if (dynamic_cast<signalStop *>(msg))
+    {
+
+    }
 
 
+    if (dynamic_cast<transmissionRequest *>(msg))
+    {
 
-
-        send(msg, "out1");
     }
 
 }

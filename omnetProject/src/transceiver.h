@@ -28,6 +28,8 @@ class Transceiver : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+    int transceiverState;
 };
 
 #endif

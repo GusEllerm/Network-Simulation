@@ -45,7 +45,7 @@ OBJS = \
     $O/signalStop_m.o \
     $O/transmissionConfirm_m.o \
     $O/transmissionIndication_m.o \
-    $O/transmissionReq_m.o
+    $O/transmissionRequest_m.o
 
 # Message files
 MSGFILES = \
@@ -57,7 +57,7 @@ MSGFILES = \
     signalStop.msg \
     transmissionConfirm.msg \
     transmissionIndication.msg \
-    transmissionReq.msg
+    transmissionRequest.msg
 
 # SM files
 SMFILES =

@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.5 from transmissionReq.msg.
+// Generated file, do not edit! Created by nedtool 5.5 from transmissionRequest.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "transmissionReq_m.h"
+#include "transmissionRequest_m.h"
 
 namespace omnetpp {
 
@@ -177,22 +177,22 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(TransReq)
+Register_Class(transmissionRequest)
 
-TransReq::TransReq(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+transmissionRequest::transmissionRequest(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
 }
 
-TransReq::TransReq(const TransReq& other) : ::omnetpp::cPacket(other)
+transmissionRequest::transmissionRequest(const transmissionRequest& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-TransReq::~TransReq()
+transmissionRequest::~transmissionRequest()
 {
 }
 
-TransReq& TransReq::operator=(const TransReq& other)
+transmissionRequest& transmissionRequest::operator=(const transmissionRequest& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -200,27 +200,27 @@ TransReq& TransReq::operator=(const TransReq& other)
     return *this;
 }
 
-void TransReq::copy(const TransReq& other)
+void transmissionRequest::copy(const transmissionRequest& other)
 {
 }
 
-void TransReq::parsimPack(omnetpp::cCommBuffer *b) const
+void transmissionRequest::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
 }
 
-void TransReq::parsimUnpack(omnetpp::cCommBuffer *b)
+void transmissionRequest::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
 }
 
-class TransReqDescriptor : public omnetpp::cClassDescriptor
+class transmissionRequestDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    TransReqDescriptor();
-    virtual ~TransReqDescriptor();
+    transmissionRequestDescriptor();
+    virtual ~transmissionRequestDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -242,24 +242,24 @@ class TransReqDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(TransReqDescriptor)
+Register_ClassDescriptor(transmissionRequestDescriptor)
 
-TransReqDescriptor::TransReqDescriptor() : omnetpp::cClassDescriptor("TransReq", "omnetpp::cPacket")
+transmissionRequestDescriptor::transmissionRequestDescriptor() : omnetpp::cClassDescriptor("transmissionRequest", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-TransReqDescriptor::~TransReqDescriptor()
+transmissionRequestDescriptor::~transmissionRequestDescriptor()
 {
     delete[] propertynames;
 }
 
-bool TransReqDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool transmissionRequestDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<TransReq *>(obj)!=nullptr;
+    return dynamic_cast<transmissionRequest *>(obj)!=nullptr;
 }
 
-const char **TransReqDescriptor::getPropertyNames() const
+const char **transmissionRequestDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -270,19 +270,19 @@ const char **TransReqDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *TransReqDescriptor::getProperty(const char *propertyname) const
+const char *transmissionRequestDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int TransReqDescriptor::getFieldCount() const
+int transmissionRequestDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 0+basedesc->getFieldCount() : 0;
 }
 
-unsigned int TransReqDescriptor::getFieldTypeFlags(int field) const
+unsigned int transmissionRequestDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -293,7 +293,7 @@ unsigned int TransReqDescriptor::getFieldTypeFlags(int field) const
     return 0;
 }
 
-const char *TransReqDescriptor::getFieldName(int field) const
+const char *transmissionRequestDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -304,13 +304,13 @@ const char *TransReqDescriptor::getFieldName(int field) const
     return nullptr;
 }
 
-int TransReqDescriptor::findField(const char *fieldName) const
+int transmissionRequestDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *TransReqDescriptor::getFieldTypeString(int field) const
+const char *transmissionRequestDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -321,7 +321,7 @@ const char *TransReqDescriptor::getFieldTypeString(int field) const
     return nullptr;
 }
 
-const char **TransReqDescriptor::getFieldPropertyNames(int field) const
+const char **transmissionRequestDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -334,7 +334,7 @@ const char **TransReqDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *TransReqDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *transmissionRequestDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -347,7 +347,7 @@ const char *TransReqDescriptor::getFieldProperty(int field, const char *property
     }
 }
 
-int TransReqDescriptor::getFieldArraySize(void *object, int field) const
+int transmissionRequestDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -355,13 +355,13 @@ int TransReqDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    TransReq *pp = (TransReq *)object; (void)pp;
+    transmissionRequest *pp = (transmissionRequest *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *TransReqDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *transmissionRequestDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -369,13 +369,13 @@ const char *TransReqDescriptor::getFieldDynamicTypeString(void *object, int fiel
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransReq *pp = (TransReq *)object; (void)pp;
+    transmissionRequest *pp = (transmissionRequest *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string TransReqDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string transmissionRequestDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -383,13 +383,13 @@ std::string TransReqDescriptor::getFieldValueAsString(void *object, int field, i
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    TransReq *pp = (TransReq *)object; (void)pp;
+    transmissionRequest *pp = (transmissionRequest *)object; (void)pp;
     switch (field) {
         default: return "";
     }
 }
 
-bool TransReqDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool transmissionRequestDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -397,13 +397,13 @@ bool TransReqDescriptor::setFieldValueAsString(void *object, int field, int i, c
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    TransReq *pp = (TransReq *)object; (void)pp;
+    transmissionRequest *pp = (transmissionRequest *)object; (void)pp;
     switch (field) {
         default: return false;
     }
 }
 
-const char *TransReqDescriptor::getFieldStructName(int field) const
+const char *transmissionRequestDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -414,7 +414,7 @@ const char *TransReqDescriptor::getFieldStructName(int field) const
     return nullptr;
 }
 
-void *TransReqDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *transmissionRequestDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -422,7 +422,7 @@ void *TransReqDescriptor::getFieldStructValuePointer(void *object, int field, in
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    TransReq *pp = (TransReq *)object; (void)pp;
+    transmissionRequest *pp = (transmissionRequest *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
