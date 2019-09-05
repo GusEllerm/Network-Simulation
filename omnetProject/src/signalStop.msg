@@ -16,7 +16,7 @@
 //
 // TODO generated message class
 //
-packet SignalStop {
+packet signalStop {
     
 	int id;
 	

@@ -33,7 +33,7 @@ void MAC::initialize()
 
 void MAC::handleMessage(cMessage *msg)
 {
-    if (static_cast<appMessage *>(msg))
+    if (dynamic_cast<appMessage *>(msg))
     {
         appMessage *appMsg = static_cast<appMessage *>(msg);
 
@@ -45,12 +45,14 @@ void MAC::handleMessage(cMessage *msg)
             delete appMsg;
         }
 
-        appMessage *outMsg = buffer.back();
+        appMessage *outMsg = new appMessage(*buffer.back());
         buffer.pop_back();
         //buffer popping not tested.
 
         macMessage *mmsg = new macMessage();
         mmsg->encapsulate(outMsg);
         send(mmsg, "out0");
+
+        //TODO encapsulate mmsg in a transmission request packet
     }
 }

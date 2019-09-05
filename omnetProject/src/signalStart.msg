@@ -16,7 +16,7 @@
 //
 // TODO generated message class
 //
-packet SignalStart {
+packet signalStart {
 
 	double transmitPowerDBm;
 	double posX;

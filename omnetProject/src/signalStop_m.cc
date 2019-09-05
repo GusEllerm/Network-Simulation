@@ -177,23 +177,23 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(SignalStop)
+Register_Class(signalStop)
 
-SignalStop::SignalStop(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+signalStop::signalStop(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->id = 0;
 }
 
-SignalStop::SignalStop(const SignalStop& other) : ::omnetpp::cPacket(other)
+signalStop::signalStop(const signalStop& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-SignalStop::~SignalStop()
+signalStop::~signalStop()
 {
 }
 
-SignalStop& SignalStop::operator=(const SignalStop& other)
+signalStop& signalStop::operator=(const signalStop& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -201,40 +201,40 @@ SignalStop& SignalStop::operator=(const SignalStop& other)
     return *this;
 }
 
-void SignalStop::copy(const SignalStop& other)
+void signalStop::copy(const signalStop& other)
 {
     this->id = other.id;
 }
 
-void SignalStop::parsimPack(omnetpp::cCommBuffer *b) const
+void signalStop::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->id);
 }
 
-void SignalStop::parsimUnpack(omnetpp::cCommBuffer *b)
+void signalStop::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->id);
 }
 
-int SignalStop::getId() const
+int signalStop::getId() const
 {
     return this->id;
 }
 
-void SignalStop::setId(int id)
+void signalStop::setId(int id)
 {
     this->id = id;
 }
 
-class SignalStopDescriptor : public omnetpp::cClassDescriptor
+class signalStopDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    SignalStopDescriptor();
-    virtual ~SignalStopDescriptor();
+    signalStopDescriptor();
+    virtual ~signalStopDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -256,24 +256,24 @@ class SignalStopDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(SignalStopDescriptor)
+Register_ClassDescriptor(signalStopDescriptor)
 
-SignalStopDescriptor::SignalStopDescriptor() : omnetpp::cClassDescriptor("SignalStop", "omnetpp::cPacket")
+signalStopDescriptor::signalStopDescriptor() : omnetpp::cClassDescriptor("signalStop", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-SignalStopDescriptor::~SignalStopDescriptor()
+signalStopDescriptor::~signalStopDescriptor()
 {
     delete[] propertynames;
 }
 
-bool SignalStopDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool signalStopDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<SignalStop *>(obj)!=nullptr;
+    return dynamic_cast<signalStop *>(obj)!=nullptr;
 }
 
-const char **SignalStopDescriptor::getPropertyNames() const
+const char **signalStopDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -284,19 +284,19 @@ const char **SignalStopDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *SignalStopDescriptor::getProperty(const char *propertyname) const
+const char *signalStopDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int SignalStopDescriptor::getFieldCount() const
+int signalStopDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
-unsigned int SignalStopDescriptor::getFieldTypeFlags(int field) const
+unsigned int signalStopDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -310,7 +310,7 @@ unsigned int SignalStopDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
-const char *SignalStopDescriptor::getFieldName(int field) const
+const char *signalStopDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -324,7 +324,7 @@ const char *SignalStopDescriptor::getFieldName(int field) const
     return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
-int SignalStopDescriptor::findField(const char *fieldName) const
+int signalStopDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -332,7 +332,7 @@ int SignalStopDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *SignalStopDescriptor::getFieldTypeString(int field) const
+const char *signalStopDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -346,7 +346,7 @@ const char *SignalStopDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **SignalStopDescriptor::getFieldPropertyNames(int field) const
+const char **signalStopDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -359,7 +359,7 @@ const char **SignalStopDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *SignalStopDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *signalStopDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -372,7 +372,7 @@ const char *SignalStopDescriptor::getFieldProperty(int field, const char *proper
     }
 }
 
-int SignalStopDescriptor::getFieldArraySize(void *object, int field) const
+int signalStopDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -380,13 +380,13 @@ int SignalStopDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    SignalStop *pp = (SignalStop *)object; (void)pp;
+    signalStop *pp = (signalStop *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *SignalStopDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *signalStopDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -394,13 +394,13 @@ const char *SignalStopDescriptor::getFieldDynamicTypeString(void *object, int fi
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    SignalStop *pp = (SignalStop *)object; (void)pp;
+    signalStop *pp = (signalStop *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string SignalStopDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string signalStopDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -408,14 +408,14 @@ std::string SignalStopDescriptor::getFieldValueAsString(void *object, int field,
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    SignalStop *pp = (SignalStop *)object; (void)pp;
+    signalStop *pp = (signalStop *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getId());
         default: return "";
     }
 }
 
-bool SignalStopDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool signalStopDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -423,14 +423,14 @@ bool SignalStopDescriptor::setFieldValueAsString(void *object, int field, int i,
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    SignalStop *pp = (SignalStop *)object; (void)pp;
+    signalStop *pp = (signalStop *)object; (void)pp;
     switch (field) {
         case 0: pp->setId(string2long(value)); return true;
         default: return false;
     }
 }
 
-const char *SignalStopDescriptor::getFieldStructName(int field) const
+const char *signalStopDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -443,7 +443,7 @@ const char *SignalStopDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *SignalStopDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *signalStopDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -451,7 +451,7 @@ void *SignalStopDescriptor::getFieldStructValuePointer(void *object, int field, 
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    SignalStop *pp = (SignalStop *)object; (void)pp;
+    signalStop *pp = (signalStop *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

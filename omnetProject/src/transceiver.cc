@@ -30,7 +30,6 @@ void Transceiver::handleMessage(cMessage *msg)
     {
         appMessage* appmsg = static_cast<appMessage *>(msg);
 
-        EV << appmsg->getSenderId();
 
 
 

@@ -24,7 +24,7 @@
  * //
  * // TODO generated message class
  * //
- * packet SignalStart
+ * packet signalStart
  * {
  *     double transmitPowerDBm;
  *     double posX;
@@ -36,7 +36,7 @@
  * }
  * </pre>
  */
-class SignalStart : public ::omnetpp::cPacket
+class signalStart : public ::omnetpp::cPacket
 {
   protected:
     double transmitPowerDBm;
@@ -46,18 +46,18 @@ class SignalStart : public ::omnetpp::cPacket
     bool collidedFlag;
 
   private:
-    void copy(const SignalStart& other);
+    void copy(const signalStart& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const SignalStart&);
+    bool operator==(const signalStart&);
 
   public:
-    SignalStart(const char *name=nullptr, short kind=0);
-    SignalStart(const SignalStart& other);
-    virtual ~SignalStart();
-    SignalStart& operator=(const SignalStart& other);
-    virtual SignalStart *dup() const override {return new SignalStart(*this);}
+    signalStart(const char *name=nullptr, short kind=0);
+    signalStart(const signalStart& other);
+    virtual ~signalStart();
+    signalStart& operator=(const signalStart& other);
+    virtual signalStart *dup() const override {return new signalStart(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
@@ -74,8 +74,8 @@ class SignalStart : public ::omnetpp::cPacket
     virtual void setCollidedFlag(bool collidedFlag);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const SignalStart& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, SignalStart& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const signalStart& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, signalStart& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __SIGNALSTART_M_H

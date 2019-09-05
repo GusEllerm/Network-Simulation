@@ -24,31 +24,31 @@
  * //
  * // TODO generated message class
  * //
- * packet SignalStop
+ * packet signalStop
  * {
  *     int id;
  * 
  * }
  * </pre>
  */
-class SignalStop : public ::omnetpp::cPacket
+class signalStop : public ::omnetpp::cPacket
 {
   protected:
     int id;
 
   private:
-    void copy(const SignalStop& other);
+    void copy(const signalStop& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const SignalStop&);
+    bool operator==(const signalStop&);
 
   public:
-    SignalStop(const char *name=nullptr, short kind=0);
-    SignalStop(const SignalStop& other);
-    virtual ~SignalStop();
-    SignalStop& operator=(const SignalStop& other);
-    virtual SignalStop *dup() const override {return new SignalStop(*this);}
+    signalStop(const char *name=nullptr, short kind=0);
+    signalStop(const signalStop& other);
+    virtual ~signalStop();
+    signalStop& operator=(const signalStop& other);
+    virtual signalStop *dup() const override {return new signalStop(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
@@ -57,8 +57,8 @@ class SignalStop : public ::omnetpp::cPacket
     virtual void setId(int id);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const SignalStop& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, SignalStop& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const signalStop& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, signalStop& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __SIGNALSTOP_M_H

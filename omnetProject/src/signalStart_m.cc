@@ -177,9 +177,9 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(SignalStart)
+Register_Class(signalStart)
 
-SignalStart::SignalStart(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+signalStart::signalStart(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->transmitPowerDBm = 0;
     this->posX = 0;
@@ -188,16 +188,16 @@ SignalStart::SignalStart(const char *name, short kind) : ::omnetpp::cPacket(name
     this->collidedFlag = false;
 }
 
-SignalStart::SignalStart(const SignalStart& other) : ::omnetpp::cPacket(other)
+signalStart::signalStart(const signalStart& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-SignalStart::~SignalStart()
+signalStart::~signalStart()
 {
 }
 
-SignalStart& SignalStart::operator=(const SignalStart& other)
+signalStart& signalStart::operator=(const signalStart& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -205,7 +205,7 @@ SignalStart& SignalStart::operator=(const SignalStart& other)
     return *this;
 }
 
-void SignalStart::copy(const SignalStart& other)
+void signalStart::copy(const signalStart& other)
 {
     this->transmitPowerDBm = other.transmitPowerDBm;
     this->posX = other.posX;
@@ -214,7 +214,7 @@ void SignalStart::copy(const SignalStart& other)
     this->collidedFlag = other.collidedFlag;
 }
 
-void SignalStart::parsimPack(omnetpp::cCommBuffer *b) const
+void signalStart::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->transmitPowerDBm);
@@ -224,7 +224,7 @@ void SignalStart::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->collidedFlag);
 }
 
-void SignalStart::parsimUnpack(omnetpp::cCommBuffer *b)
+void signalStart::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->transmitPowerDBm);
@@ -234,63 +234,63 @@ void SignalStart::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->collidedFlag);
 }
 
-double SignalStart::getTransmitPowerDBm() const
+double signalStart::getTransmitPowerDBm() const
 {
     return this->transmitPowerDBm;
 }
 
-void SignalStart::setTransmitPowerDBm(double transmitPowerDBm)
+void signalStart::setTransmitPowerDBm(double transmitPowerDBm)
 {
     this->transmitPowerDBm = transmitPowerDBm;
 }
 
-double SignalStart::getPosX() const
+double signalStart::getPosX() const
 {
     return this->posX;
 }
 
-void SignalStart::setPosX(double posX)
+void signalStart::setPosX(double posX)
 {
     this->posX = posX;
 }
 
-double SignalStart::getPosY() const
+double signalStart::getPosY() const
 {
     return this->posY;
 }
 
-void SignalStart::setPosY(double posY)
+void signalStart::setPosY(double posY)
 {
     this->posY = posY;
 }
 
-int SignalStart::getId() const
+int signalStart::getId() const
 {
     return this->id;
 }
 
-void SignalStart::setId(int id)
+void signalStart::setId(int id)
 {
     this->id = id;
 }
 
-bool SignalStart::getCollidedFlag() const
+bool signalStart::getCollidedFlag() const
 {
     return this->collidedFlag;
 }
 
-void SignalStart::setCollidedFlag(bool collidedFlag)
+void signalStart::setCollidedFlag(bool collidedFlag)
 {
     this->collidedFlag = collidedFlag;
 }
 
-class SignalStartDescriptor : public omnetpp::cClassDescriptor
+class signalStartDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    SignalStartDescriptor();
-    virtual ~SignalStartDescriptor();
+    signalStartDescriptor();
+    virtual ~signalStartDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -312,24 +312,24 @@ class SignalStartDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(SignalStartDescriptor)
+Register_ClassDescriptor(signalStartDescriptor)
 
-SignalStartDescriptor::SignalStartDescriptor() : omnetpp::cClassDescriptor("SignalStart", "omnetpp::cPacket")
+signalStartDescriptor::signalStartDescriptor() : omnetpp::cClassDescriptor("signalStart", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-SignalStartDescriptor::~SignalStartDescriptor()
+signalStartDescriptor::~signalStartDescriptor()
 {
     delete[] propertynames;
 }
 
-bool SignalStartDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool signalStartDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<SignalStart *>(obj)!=nullptr;
+    return dynamic_cast<signalStart *>(obj)!=nullptr;
 }
 
-const char **SignalStartDescriptor::getPropertyNames() const
+const char **signalStartDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -340,19 +340,19 @@ const char **SignalStartDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *SignalStartDescriptor::getProperty(const char *propertyname) const
+const char *signalStartDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int SignalStartDescriptor::getFieldCount() const
+int signalStartDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 5+basedesc->getFieldCount() : 5;
 }
 
-unsigned int SignalStartDescriptor::getFieldTypeFlags(int field) const
+unsigned int signalStartDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -370,7 +370,7 @@ unsigned int SignalStartDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
-const char *SignalStartDescriptor::getFieldName(int field) const
+const char *signalStartDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -388,7 +388,7 @@ const char *SignalStartDescriptor::getFieldName(int field) const
     return (field>=0 && field<5) ? fieldNames[field] : nullptr;
 }
 
-int SignalStartDescriptor::findField(const char *fieldName) const
+int signalStartDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -400,7 +400,7 @@ int SignalStartDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *SignalStartDescriptor::getFieldTypeString(int field) const
+const char *signalStartDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -418,7 +418,7 @@ const char *SignalStartDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<5) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **SignalStartDescriptor::getFieldPropertyNames(int field) const
+const char **signalStartDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -431,7 +431,7 @@ const char **SignalStartDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *SignalStartDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *signalStartDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -444,7 +444,7 @@ const char *SignalStartDescriptor::getFieldProperty(int field, const char *prope
     }
 }
 
-int SignalStartDescriptor::getFieldArraySize(void *object, int field) const
+int signalStartDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -452,13 +452,13 @@ int SignalStartDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    SignalStart *pp = (SignalStart *)object; (void)pp;
+    signalStart *pp = (signalStart *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *SignalStartDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *signalStartDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -466,13 +466,13 @@ const char *SignalStartDescriptor::getFieldDynamicTypeString(void *object, int f
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    SignalStart *pp = (SignalStart *)object; (void)pp;
+    signalStart *pp = (signalStart *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string SignalStartDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string signalStartDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -480,7 +480,7 @@ std::string SignalStartDescriptor::getFieldValueAsString(void *object, int field
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    SignalStart *pp = (SignalStart *)object; (void)pp;
+    signalStart *pp = (signalStart *)object; (void)pp;
     switch (field) {
         case 0: return double2string(pp->getTransmitPowerDBm());
         case 1: return double2string(pp->getPosX());
@@ -491,7 +491,7 @@ std::string SignalStartDescriptor::getFieldValueAsString(void *object, int field
     }
 }
 
-bool SignalStartDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool signalStartDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -499,7 +499,7 @@ bool SignalStartDescriptor::setFieldValueAsString(void *object, int field, int i
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    SignalStart *pp = (SignalStart *)object; (void)pp;
+    signalStart *pp = (signalStart *)object; (void)pp;
     switch (field) {
         case 0: pp->setTransmitPowerDBm(string2double(value)); return true;
         case 1: pp->setPosX(string2double(value)); return true;
@@ -510,7 +510,7 @@ bool SignalStartDescriptor::setFieldValueAsString(void *object, int field, int i
     }
 }
 
-const char *SignalStartDescriptor::getFieldStructName(int field) const
+const char *signalStartDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -523,7 +523,7 @@ const char *SignalStartDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *SignalStartDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *signalStartDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -531,7 +531,7 @@ void *SignalStartDescriptor::getFieldStructValuePointer(void *object, int field,
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    SignalStart *pp = (SignalStart *)object; (void)pp;
+    signalStart *pp = (signalStart *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

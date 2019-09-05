@@ -15,19 +15,47 @@
 
 #include "channel.h"
 #include "appMessage_m.h"
+#include "signalStart_m.h"
+#include "signalStop_m.h"
 
 
 Define_Module(Channel);
 
 void Channel::initialize()
 {
-    int numGates = gateCount();
+    numGates = gateCount();
 }
 
 void Channel::handleMessage(cMessage *msg)
 {
-    if (static_cast<appMessage *>(msg))
+    if (dynamic_cast<signalStart *>(msg))
     {
-        send(msg, "out", 10);
+        signalStart *startMsg = static_cast<signalStart *>(msg);
+
+        for (int idx = 0; idx < numGates; idx++)
+        {
+            signalStart *sendMsg = new signalStart(*startMsg); //deep copy
+            send(sendMsg, "out", idx);
+        }
+
+        delete msg;
+    }
+
+    else if (dynamic_cast<signalStop *>(msg))
+    {
+        signalStop *stopMsg = static_cast<signalStop *>(msg);
+
+        for (int idx = 0; idx < numGates; idx++)
+        {
+            signalStop *sendMsg = new signalStop(*stopMsg); //deep copy
+            send(sendMsg, "out", idx);
+        }
+
+        delete msg;
+    }
+
+    else {
+        EV << "something strange got to channel";
+        delete msg;
     }
 }
