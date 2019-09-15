@@ -17,6 +17,7 @@
 #include "appMessage_m.h"
 #include "macMessage_m.h"
 #include "transmissionRequest_m.h"
+#include "CSRequest_m.h"
 #include <list>
 
 Define_Module(MAC);
@@ -53,6 +54,9 @@ void MAC::handleMessage(cMessage *msg)
 
         transmissionRequest *requestMsg = new transmissionRequest;
         requestMsg->encapsulate(mmsg);
+
+//        CSRequest *csmsg = new CSRequest();
+
 
         send(requestMsg, "out0");
 

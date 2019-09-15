@@ -35,6 +35,7 @@ network simulation
             nodeYPos = radius * sin((2 * 3.14159 * index) / numTX);
             
             @display("p=$nodeXPos,$nodeYPos");
+            @display("r=90");
         };
         
         RXNode : ReceiverNode
@@ -44,6 +45,7 @@ network simulation
         	nodeYPos = 0;
         	
         	@display("p=$nodeXPos,$nodeYPos");
+        	@display("r=90");
         };
         
         Chan : Channel 

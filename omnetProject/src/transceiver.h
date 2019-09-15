@@ -15,6 +15,7 @@
 
 #ifndef __WSN_TRANSCEIVER_H_
 #define __WSN_TRANSCEIVER_H_
+#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "signalStart_m.h"
@@ -42,7 +43,18 @@ class Transceiver : public cSimpleModule
     double per;
     double u;
 
+    // State control
     int transceiverState;
+    cFSM transmitFSM;
+    enum {
+        INIT = 0,
+        RECEIVE = FSM_Steady(1),
+        TURNAROUNDLOCK = FSM_Steady(2),
+        TRANSMIT = FSM_Transient(1),
+        CSLOCK = FSM_Steady(3),
+        CSTRANSMIT = FSM_Transient(2),
+        TRANSMITFINAL = FSM_Steady(4)
+    };
 
     int nodeId;
     double nodeXPos;

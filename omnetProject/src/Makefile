@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for omnetProject
+# OMNeT++/OMNEST Makefile for WSN
 #
 # This file was generated with the command:
-#  opp_makemake -f
+#  opp_makemake -f --deep
 #
 
 # Name of target to be created (-o option)
-TARGET = omnetProject$(D)$(EXE_SUFFIX)
+TARGET = WSN$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -41,6 +41,7 @@ OBJS = \
     $O/CSRequest_m.o \
     $O/CSResponse_m.o \
     $O/macMessage_m.o \
+    $O/selfMessage_m.o \
     $O/signalStart_m.o \
     $O/signalStop_m.o \
     $O/transmissionConfirm_m.o \
@@ -53,6 +54,7 @@ MSGFILES = \
     CSRequest.msg \
     CSResponse.msg \
     macMessage.msg \
+    selfMessage.msg \
     signalStart.msg \
     signalStop.msg \
     transmissionConfirm.msg \

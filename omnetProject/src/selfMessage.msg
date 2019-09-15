@@ -13,32 +13,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package wsn;
-
-module TransmitterNode
-{
-    parameters:
-        int nodeId;
-        double nodeXPos;
-        double nodeYPos;
-        
-    gates:
-        input in0;
-        output out0;
-
-    submodules:
-        packGen: PacketGen;
-        MAC: MAC;
-        trans: Transceiver;
-        
-        
-    connections allowunconnected:
-        packGen.out0 --> MAC.in0;
-        trans.out0 --> MAC.in1;
-        MAC.out0 --> trans.in0;
-        trans.out1 --> out0;
-        in0 --> trans.in1;
-        
-
-
+//
+// TODO generated message class
+//
+packet SelfMessage {
+    string description;
 }
