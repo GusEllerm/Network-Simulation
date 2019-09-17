@@ -36,6 +36,19 @@ class MAC : public cSimpleModule
     int maxBackoffs;
     double backoffDistribution;
 
+    // State control
+    int MAC_State;
+    cFSM MAC_FSM;
+    enum {
+        INIT = 0,
+        RUNNING = FSM_Steady(1),
+        TRANSMITCS = FSM_Transient(1),
+        TRANSMITLOCK = FSM_Steady(2),
+        TRANSMITMSG = FSM_Transient(2),
+        TRANSMITFAIL = FSM_Transient(3)
+    };
+
+    int backoffCounter;
     std::list<appMessage *> buffer;
 
 };

@@ -52,6 +52,9 @@ void Transceiver::initialize()
 }
 
 void Transceiver::handleMessage(cMessage *msg)
+
+//TODO - How do we handle receiving a message and passing it to the MAC layer?
+
 {
     FSM_Switch(transmitFSM)
     {
@@ -161,10 +164,8 @@ void Transceiver::handleMessage(cMessage *msg)
 
             //TODO - need to calculate the noise of the network and send response.
 
-
             FSM_Goto(transmitFSM, RECEIVE);
             break;
-
     }
 
 

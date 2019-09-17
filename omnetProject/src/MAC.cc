@@ -28,11 +28,55 @@ void MAC::initialize()
     maxBackoffs = par("maxBackoffs");
     backoffDistribution = par("backoffDistribution");
 
+    MAC_State = 0;
+
     buffer.clear();
 }
 
 void MAC::handleMessage(cMessage *msg)
 {
+
+// TODO - need the full transceiver behavior to be working before implementation
+    /*
+    FSM_Switch(MAC_FSM){
+        case FSM_Exit(INIT):
+            backoffCounter = 0;
+            FSM_Goto(MAC_FSM, RUNNING);
+            break;
+
+        case FSM_Enter(RUNNING):
+            break;
+        case FSM_Exit(RUNNING):
+
+            if (dynamic_cast<appMessage *>(msg)) {
+                FSM_Goto(MAC_FSM, TRANSMITCS);
+            }
+
+            break;
+
+        case FSM_Exit(TRANSMITCS):
+            // TODO - send CS message to transceiver
+            FSM_Goto(MAC_FSM, TRANSMITLOCK);
+            break;
+
+        case FSM_Enter(TRANSMITLOCK):
+            // TODO
+            break;
+        case FSM_Exit(TRANSMITLOCK):
+            // TODO
+            break;
+
+        case FSM_Exit(TRANSMITMSG):
+            // TODO
+            break;
+
+        case FSM_Exit(TRANSMITFAIL):
+            // TODO
+            break;
+    }
+     */
+
+
     if (dynamic_cast<appMessage *>(msg))
     {
         appMessage *appMsg = static_cast<appMessage *>(msg);
