@@ -204,97 +204,97 @@ void Transceiver::handleMessage(cMessage *msg)
 
 // Havent got this intergrated yet
 
-//    if (dynamic_cast<signalStop *>(msg))
-//    {
-//        signalStop *stopMsg = static_cast<signalStop *>(msg);
-//        signalStart *startMsg;
-//
-//        // Check for corresponding start message
-//        bool found = false;
-//        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-//        {
-//            if (stopMsg->getId() == (*it)->getId())
-//            {
-//                startMsg = *it;
-//                it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
-//                found = true;
-//            }
-//        }
-//        if (!found)
-//        {
-//            EV << "Aborting in transceiver";
-//            exit(EXIT_FAILURE);
-//        }
-//
-//
-//        delete stopMsg;
-//
-//        if (startMsg->getCollidedFlag())
-//        {
-//            //TODO how do we drop a collided message?
-//        }
-//        else
-//        {
-//
-//            macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
-//
-//            double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
-//            double msgXPos = startMsg->getPosX();
-//            double msgYPos = startMsg->getPosY();
-//
-//            double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
-//            double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
-//
-//            double dist = sqrt(xDist + yDist);
-//
-//            if (dist < ref)
-//            {
-//                lossRatio = 1.0;
-//            }
-//            else
-//            {
-//                lossRatio = pow(dist, 4);
-//            }
-//
-//            lossRatioDB = 10 * log10(lossRatio);
-//            receivedPowerDBm = txPowerDBm - lossRatioDB;
-//            bitRateDB = 10 * log10(bitRate);
-//            snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
-//            snr = pow(10, snrDB/10);
-//            ber = erfc(sqrt(2 * snr));
-//
-//            EV << " ";
-//            EV << snrDB;
-//            EV << " ";
-//            EV << snr;
-//            EV << " ";
-//            EV << ber;
-//            EV << " ";
-//
-//            int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
-//            packetLength = packetLength * 8;
-//
-//            per = 1 - pow((1 - ber), packetLength);
-//
-//            EV << per;
-//
-//            u = uniform(0, 1);
-//
-//            if (u < per)
-//            {
-//                delete mmsg;
-//            }
-//            else
-//            {
-//                transmissionIndication *indicationMsg = new transmissionIndication();
-//                indicationMsg->encapsulate(mmsg);
-//                send(indicationMsg, "out0");
-//            }
-//        }
-//
-//       delete startMsg;
-//       return;
-//    }
+    if (dynamic_cast<signalStop *>(msg))
+    {
+        signalStop *stopMsg = static_cast<signalStop *>(msg);
+        signalStart *startMsg;
+
+        // Check for corresponding start message
+        bool found = false;
+        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+        {
+            if (stopMsg->getId() == (*it)->getId())
+            {
+                startMsg = *it;
+                it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
+                found = true;
+            }
+        }
+        if (!found)
+        {
+            EV << "Aborting in transceiver";
+            exit(EXIT_FAILURE);
+        }
+
+
+        delete stopMsg;
+
+        if (startMsg->getCollidedFlag())
+        {
+            //TODO how do we drop a collided message?
+        }
+        else
+        {
+
+            macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
+
+            double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
+            double msgXPos = startMsg->getPosX();
+            double msgYPos = startMsg->getPosY();
+
+            double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+            double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+
+            double dist = sqrt(xDist + yDist);
+
+            if (dist < ref)
+            {
+                lossRatio = 1.0;
+            }
+            else
+            {
+                lossRatio = pow(dist, 4);
+            }
+
+            lossRatioDB = 10 * log10(lossRatio);
+            receivedPowerDBm = txPowerDBm - lossRatioDB;
+            bitRateDB = 10 * log10(bitRate);
+            snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
+            snr = pow(10, snrDB/10);
+            ber = erfc(sqrt(2 * snr));
+
+            EV << " ";
+            EV << snrDB;
+            EV << " ";
+            EV << snr;
+            EV << " ";
+            EV << ber;
+            EV << " ";
+
+            int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
+            packetLength = packetLength * 8;
+
+            per = 1 - pow((1 - ber), packetLength);
+
+            EV << per;
+
+            u = uniform(0, 1);
+
+            if (u < per)
+            {
+                delete mmsg;
+            }
+            else
+            {
+                transmissionIndication *indicationMsg = new transmissionIndication();
+                indicationMsg->encapsulate(mmsg);
+                send(indicationMsg, "out0");
+            }
+        }
+
+       delete startMsg;
+       return;
+    }
 
 
 
