@@ -48,7 +48,6 @@ void Transceiver::initialize()
     nodeXPos = getParentModule()->par("nodeXPos");
     nodeYPos = getParentModule()->par("nodeYPos");
 
-
 }
 
 void Transceiver::handleMessage(cMessage *msg)
@@ -70,7 +69,6 @@ void Transceiver::handleMessage(cMessage *msg)
             }
         }
 
-        //TODO - Ive just removed this as the mac module just sends transmit requests constantly so it crashes haha
         // Check if a node has more than one on going transmission, if so - end the program
         for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
         {
