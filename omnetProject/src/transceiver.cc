@@ -53,9 +53,133 @@ void Transceiver::initialize()
 
 void Transceiver::handleMessage(cMessage *msg)
 
-//TODO - How do we handle receiving a message and passing it to the MAC layer?
-
 {
+    // The receive path (receive path gets run always therefore is not included in the state machine)
+
+    if (dynamic_cast<signalStart *>(msg))
+    {
+        signalStart *startMsg = static_cast<signalStart *>(msg);
+
+        // Collision check
+        if (!currentTransmissions.empty())
+        {
+            startMsg->setCollidedFlag(true);
+            for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+            {
+                (*it)->setCollidedFlag(true);
+            }
+        }
+
+        //TODO - Ive just removed this as the mac module just sends transmit requests constantly so it crashes haha
+        // Check if a node has more than one on going transmission, if so - end the program
+        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+        {
+            if (startMsg->getId() == (*it)->getId())
+            {
+                EV << "Aborting in transceiver -- node has more than one connection";
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        currentTransmissions.push_front(new signalStart(*startMsg)); //deep copy
+
+        delete msg;
+        return;
+    }
+
+    if (dynamic_cast<signalStop *>(msg))
+      {
+          signalStop *stopMsg = static_cast<signalStop *>(msg);
+          signalStart *startMsg;
+
+          // Check for corresponding start message
+          bool found = false;
+          for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+          {
+              if (stopMsg->getId() == (*it)->getId())
+              {
+                  startMsg = *it;
+                  it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
+                  found = true;
+              }
+          }
+          if (!found)
+          {
+              EV << "Aborting in transceiver";
+              exit(EXIT_FAILURE);
+          }
+
+
+          delete stopMsg;
+
+          if (startMsg->getCollidedFlag())
+          {
+              //TODO how do we drop a collided message?
+          }
+          else
+          {
+
+              macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
+
+              double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
+              double msgXPos = startMsg->getPosX();
+              double msgYPos = startMsg->getPosY();
+
+              double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+              double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+
+              double dist = sqrt(xDist + yDist);
+
+              if (dist < ref)
+              {
+                  lossRatio = 1.0;
+              }
+              else
+              {
+                  lossRatio = pow(dist, 4);
+              }
+
+              lossRatioDB = 10 * log10(lossRatio);
+              receivedPowerDBm = txPowerDBm - lossRatioDB;
+              bitRateDB = 10 * log10(bitRate);
+              snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
+              snr = pow(10, snrDB/10);
+              ber = erfc(sqrt(2 * snr));
+
+              EV << " ";
+              EV << snrDB;
+              EV << " ";
+              EV << snr;
+              EV << " ";
+              EV << ber;
+              EV << " ";
+
+              int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
+              packetLength = packetLength * 8;
+
+              per = 1 - pow((1 - ber), packetLength);
+
+              EV << per;
+
+              u = uniform(0, 1);
+
+              if (u < per)
+              {
+                  delete mmsg;
+              }
+              else
+              {
+                  transmissionIndication *indicationMsg = new transmissionIndication();
+                  indicationMsg->encapsulate(mmsg);
+                  send(indicationMsg, "out0");
+              }
+          }
+
+         delete startMsg;
+         return;
+      }
+
+
     FSM_Switch(transmitFSM)
     {
         case FSM_Exit(INIT):
@@ -87,7 +211,7 @@ void Transceiver::handleMessage(cMessage *msg)
             }
 
             // CS request from MAC
-            if (dynamic_cast<CSRequest *>(msg)) {
+            else if (dynamic_cast<CSRequest *>(msg)) {
                 //TODO calculate the current signal power
                 EV << "CS Request received\n";
 
@@ -103,15 +227,15 @@ void Transceiver::handleMessage(cMessage *msg)
             break;
         case FSM_Exit(TURNAROUNDLOCK):
             if (dynamic_cast<SelfMessage *>(msg)) FSM_Goto(transmitFSM, TRANSMIT); // message has waited for the turnaround time, start transmit
-            if (dynamic_cast<transmissionConfirm *>(msg)) FSM_Goto(transmitFSM, RECEIVE); // ''
+            else if (dynamic_cast<transmissionConfirm *>(msg)) FSM_Goto(transmitFSM, RECEIVE); // ''
             break;
 
         case FSM_Exit(TRANSMIT):
             if (dynamic_cast<SelfMessage *>(msg)){
-
                 SelfMessage *smsg = static_cast<SelfMessage *>(msg);
-                transmissionRequest *tmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
-                macMessage *mmsg = static_cast<macMessage *>(tmsg->decapsulate());
+                transmissionRequest *tcmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
+                macMessage *mmsg = static_cast<macMessage *>(tcmsg->decapsulate());
+
                 signalStart *startMsg = new signalStart();
 
                 int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
@@ -122,16 +246,22 @@ void Transceiver::handleMessage(cMessage *msg)
                 startMsg->setPosY(nodeYPos);
                 startMsg->setTransmitPowerDBm(txPowerDBm);
                 startMsg->setCollidedFlag(false);
+
                 startMsg->encapsulate(mmsg);
 
+                send(startMsg, "out1"); //to channel
+
                 delete msg;
-                scheduleAt(simTime() + (packetLength / bitRate), startMsg);
+
+                SelfMessage *selfPacket = new SelfMessage();
+                selfPacket->setDescription("End Transmission");
+                scheduleAt(simTime() + (packetLength / bitRate), selfPacket);
                 FSM_Goto(transmitFSM, TRANSMITFINAL);
             }
 
 
             // TransmissionRequest while dealing with a previous TransmissionRequest
-            if (dynamic_cast<transmissionRequest *>(msg)) {
+            else if (dynamic_cast<transmissionRequest *>(msg)) {
                 transmissionConfirm *tcmsg = new transmissionConfirm();
                 tcmsg->setStatus("statusBusy");
                 send(tcmsg, "out1");
@@ -142,14 +272,18 @@ void Transceiver::handleMessage(cMessage *msg)
             break;
 
         case FSM_Exit(TRANSMITFINAL):
-            if (dynamic_cast<signalStart *>(msg)) {
-                send(msg, "out1"); // Send startSignal to channel
-                //delete msg;
+            if (dynamic_cast<SelfMessage *>(msg)) {
+                delete msg;
 
-                // Gen trans confirm message and send it to receiver
-                transmissionConfirm *tmsg = new transmissionConfirm();
-                tmsg->setStatus("statusOK");
-                scheduleAt(simTime() + turnaroundTime, tmsg);
+                signalStop *stopMsg = new signalStop();
+                int id = getParentModule()->par("nodeId");
+                stopMsg->setId(id);
+                send(stopMsg, "out1"); //to channel
+
+                transmissionConfirm *tcmsg = new transmissionConfirm();
+                tcmsg->setStatus("statusOK");
+                scheduleAt(simTime() + turnaroundTime, tcmsg);
+
                 FSM_Goto(transmitFSM, TURNAROUNDLOCK);
             }
 
@@ -167,219 +301,4 @@ void Transceiver::handleMessage(cMessage *msg)
             FSM_Goto(transmitFSM, RECEIVE);
             break;
     }
-
-
-    // The receive path (receive path gets run always therefore is not included in the state machine)
-
-    if (dynamic_cast<signalStart *>(msg))
-    {
-        signalStart *startMsg = static_cast<signalStart *>(msg);
-
-        // Collision check
-        if (!currentTransmissions.empty())
-        {
-            startMsg->setCollidedFlag(true);
-            for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-            {
-                (*it)->setCollidedFlag(true);
-            }
-        }
-
-        //TODO - Ive just removed this as the mac module just sends transmit requests constantly so it crashes haha
-        // Check if a node has more than one on going transmission, if so - end the program
-//        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-//        {
-//            if (startMsg->getId() == (*it)->getId())
-//            {
-//                EV << "Aborting in transceiver -- node has more than one connection";
-//                exit(EXIT_FAILURE);
-//            }
-//        }
-
-        currentTransmissions.push_front(new signalStart(*startMsg)); //deep copy
-
-        //delete msg;
-        return;
-    }
-
-// Havent got this intergrated yet
-
-//    if (dynamic_cast<signalStop *>(msg))
-//    {
-//        signalStop *stopMsg = static_cast<signalStop *>(msg);
-//        signalStart *startMsg;
-//
-//        // Check for corresponding start message
-//        bool found = false;
-//        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-//        {
-//            if (stopMsg->getId() == (*it)->getId())
-//            {
-//                startMsg = *it;
-//                it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
-//                found = true;
-//            }
-//        }
-//        if (!found)
-//        {
-//            EV << "Aborting in transceiver";
-//            exit(EXIT_FAILURE);
-//        }
-//
-//
-//        delete stopMsg;
-//
-//        if (startMsg->getCollidedFlag())
-//        {
-//            //TODO how do we drop a collided message?
-//        }
-//        else
-//        {
-//
-//            macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
-//
-//            double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
-//            double msgXPos = startMsg->getPosX();
-//            double msgYPos = startMsg->getPosY();
-//
-//            double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
-//            double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
-//
-//            double dist = sqrt(xDist + yDist);
-//
-//            if (dist < ref)
-//            {
-//                lossRatio = 1.0;
-//            }
-//            else
-//            {
-//                lossRatio = pow(dist, 4);
-//            }
-//
-//            lossRatioDB = 10 * log10(lossRatio);
-//            receivedPowerDBm = txPowerDBm - lossRatioDB;
-//            bitRateDB = 10 * log10(bitRate);
-//            snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
-//            snr = pow(10, snrDB/10);
-//            ber = erfc(sqrt(2 * snr));
-//
-//            EV << " ";
-//            EV << snrDB;
-//            EV << " ";
-//            EV << snr;
-//            EV << " ";
-//            EV << ber;
-//            EV << " ";
-//
-//            int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
-//            packetLength = packetLength * 8;
-//
-//            per = 1 - pow((1 - ber), packetLength);
-//
-//            EV << per;
-//
-//            u = uniform(0, 1);
-//
-//            if (u < per)
-//            {
-//                delete mmsg;
-//            }
-//            else
-//            {
-//                transmissionIndication *indicationMsg = new transmissionIndication();
-//                indicationMsg->encapsulate(mmsg);
-//                send(indicationMsg, "out0");
-//            }
-//        }
-//
-//       delete startMsg;
-//       return;
-//    }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-//    // TRANMITTING
-//    if (dynamic_cast<transmissionRequest *>(msg))
-//    {
-//        if (transceiverState) //transmitting
-//        {
-//            delete msg;
-//            transmissionConfirm *confirmMsg = new transmissionConfirm;
-//            confirmMsg->setStatus("statusBusy");
-//            send(confirmMsg, "out0"); //to MAC
-//        }
-//
-//        if (!transceiverState)
-//        {
-//            transmissionRequest *requestMsg = static_cast<transmissionRequest *>(msg);
-//            macMessage *mmsg = static_cast<macMessage *>(requestMsg->decapsulate());
-//
-//            delete requestMsg;
-//
-//            transceiverState = 1;
-//
-//            scheduleAt(simTime() + turnaroundTime, mmsg);
-//        }
-//    }
-//
-//    else if (dynamic_cast<macMessage *>(msg))
-//    {
-//        if (transceiverState)
-//        {
-//            macMessage *mmsg = static_cast<macMessage *>(msg);
-//            signalStart *startMsg = new signalStart();
-//
-//            int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
-//            packetLength = packetLength * 8; //convert to bits
-//
-//            startMsg->setId(nodeId);
-//            startMsg->setPosX(nodeXPos);
-//            startMsg->setPosY(nodeYPos);
-//            startMsg->setTransmitPowerDBm(txPowerDBm);
-//            startMsg->setCollidedFlag(false);
-//
-//            startMsg->encapsulate(mmsg);
-//
-//            send(startMsg, "out1"); //to channel
-//
-//            scheduleAt(simTime() + packetLength / bitRate, new cMessage("test"));
-//        }
-//    }
-//
-//    else if (!strcmp(msg->getName(), "test"))
-//    {
-//        delete msg;
-//
-//        signalStop *stopMsg = new signalStop();
-//        int id = getParentModule()->par("nodeId");
-//        stopMsg->setId(id);
-//        send(stopMsg, "out1"); //to channel
-//        scheduleAt(simTime() + turnaroundTime, new cMessage("test2"));
-//    }
-//
-//    else if (!strcmp(msg->getName(), "test2"))
-//    {
-//        delete msg;
-//        transceiverState = 0;
-//        transmissionConfirm *confirmMessage = new transmissionConfirm();
-//        confirmMessage->setStatus("statusOK");
-//        send(confirmMessage, "out0"); //to MAC
-//
-//    }
-//
-//    else
-//    {
-//        EV << "something a bit odd in trans";
-//        delete msg;
-//    }
 }
