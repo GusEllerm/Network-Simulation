@@ -23,6 +23,7 @@
 #include "signalStop_m.h"
 #include "selfMessage_m.h"
 #include "CSRequest_m.h"
+#include "CSResponse_m.h"
 #include <list>
 #include <stdlib.h>
 #include <ctgmath>
@@ -51,10 +52,58 @@ void Transceiver::initialize()
 }
 
 void Transceiver::handleMessage(cMessage *msg)
-
 {
-    // The receive path (receive path gets run always therefore is not included in the state machine)
+    //we need to handle this differently depending if transceiver is in RX or TX state. I just have it up here to test it.
+    if (dynamic_cast<CSRequest *>(msg))
+    {
+        double totalPower = 0;
+        double totalPowerDBm = 0;
 
+        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+        {
+            double msgtransmitPowerDBm = (*it)->getTransmitPowerDBm();
+            double msgXPos = (*it)->getPosX();
+            double msgYPos = (*it)->getPosY();
+
+            double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+            double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+
+            double dist = sqrt(xDist + yDist);
+
+            if (dist <= ref)
+            {
+                lossRatio = ref;
+            }
+            else
+            {
+                lossRatio = pow(dist, pathLossExponent);
+            }
+
+            lossRatioDB = 10 * log10(lossRatio);
+            receivedPowerDBm = txPowerDBm - lossRatioDB;
+            double receivedPower = pow(10, receivedPowerDBm / 10);
+            totalPower += receivedPower;
+        }
+
+        totalPowerDBm = 10 * log10(totalPower);
+
+        CSResponse *csResponse = new CSResponse();
+
+        if (totalPowerDBm > csThreshDBm)
+        {
+            csResponse->setBusyChannel(true);
+        } else
+        {
+            csResponse->setBusyChannel(false);
+        }
+
+        sendDelayed(csResponse, csTime, "out1");
+
+        return;
+
+    }
+
+    // The receive path (receive path gets run always therefore is not included in the state machine)
     if (dynamic_cast<signalStart *>(msg))
     {
         signalStart *startMsg = static_cast<signalStart *>(msg);
@@ -128,13 +177,13 @@ void Transceiver::handleMessage(cMessage *msg)
 
               double dist = sqrt(xDist + yDist);
 
-              if (dist < ref)
+              if (dist <= ref)
               {
-                  lossRatio = 1.0;
+                  lossRatio = ref;
               }
               else
               {
-                  lossRatio = pow(dist, 4);
+                  lossRatio = pow(dist, pathLossExponent);
               }
 
               lossRatioDB = 10 * log10(lossRatio);
@@ -144,20 +193,10 @@ void Transceiver::handleMessage(cMessage *msg)
               snr = pow(10, snrDB/10);
               ber = erfc(sqrt(2 * snr));
 
-              EV << " ";
-              EV << snrDB;
-              EV << " ";
-              EV << snr;
-              EV << " ";
-              EV << ber;
-              EV << " ";
-
               int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
               packetLength = packetLength * 8;
 
-              per = 1 - pow((1 - ber), packetLength);
-
-              EV << per;
+              per = 1 - (pow((1 - ber), packetLength));
 
               u = uniform(0, 1);
 
@@ -172,6 +211,23 @@ void Transceiver::handleMessage(cMessage *msg)
                   send(indicationMsg, "out0");
               }
           }
+
+
+         EV << "Path Loss (delta): ";
+         EV << lossRatioDB;
+         EV << "||";
+         EV << "Received Power DBm (R): ";
+         EV << receivedPowerDBm;
+         EV << "||";
+         EV << "SNR DB (E): ";
+         EV << snrDB;
+         EV << "||";
+         EV << "Bit Error Rate (p): ";
+         EV << ber;
+         EV << "||";
+         EV << "Packet Error Rate: ";
+         EV << per;
+         EV << "||";
 
          delete startMsg;
          return;

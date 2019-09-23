@@ -33,6 +33,7 @@ class Transceiver : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
 
     const double ref = 1.0;
+    const double pathLossExponent = 4.0;
     double lossRatio;
     double lossRatioDB;
     double receivedPowerDBm;
