@@ -19,7 +19,6 @@
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
-#include "circBuff.h"
 #include <list>
 
 using namespace omnetpp;

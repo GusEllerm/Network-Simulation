@@ -19,5 +19,4 @@
 packet transmissionConfirm {
     
     string status;
-
 }

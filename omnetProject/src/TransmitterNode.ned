@@ -33,6 +33,7 @@ module TransmitterNode
         
         
     connections allowunconnected:
+        packGen.in1 <-- MAC.out1;
         packGen.out0 --> MAC.in0;
         trans.out0 --> MAC.in1;
         MAC.out0 --> trans.in0;

@@ -26,4 +26,5 @@ simple PacketGen
         
     gates:
         output out0;
+        input in1;
 }

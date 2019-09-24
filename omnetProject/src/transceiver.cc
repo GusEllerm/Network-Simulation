@@ -73,13 +73,12 @@ void Transceiver::handleMessage(cMessage *msg)
         {
             if (startMsg->getId() == (*it)->getId())
             {
-                EV << "Aborting in transceiver -- node has more than one connection";
+                EV << "Aborting in transceiver -- node has more than one active transmission";
                 exit(EXIT_FAILURE);
             }
         }
 
         currentTransmissions.push_front(new signalStart(*startMsg)); //deep copy
-
         delete msg;
         return;
     }
@@ -100,12 +99,11 @@ void Transceiver::handleMessage(cMessage *msg)
                   found = true;
               }
           }
-          if (!found)
+          if (!found) //we got a stop signal for a tranmission that never existed!
           {
               EV << "Aborting in transceiver";
               exit(EXIT_FAILURE);
           }
-
 
           delete stopMsg;
 
@@ -215,7 +213,6 @@ void Transceiver::handleMessage(cMessage *msg)
 
             // CS request from MAC
             else if (dynamic_cast<CSRequest *>(msg)) {
-                //TODO calculate the current signal power
                 EV << "CS Request received\n";
 
                 double totalPower = 0;
