@@ -15,6 +15,7 @@
 
 #ifndef __WSN_MAC_H_
 #define __WSN_MAC_H_
+#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
@@ -35,21 +36,22 @@ class MAC : public cSimpleModule
     int bufferSize;
     int maxBackoffs;
     double backoffDistribution;
+    bool firstPass = true;
 
     // State control
     int MAC_State;
     cFSM MAC_FSM;
     enum {
         INIT = 0,
-        RUNNING = FSM_Steady(1),
         TRANSMITCS = FSM_Transient(1),
-        TRANSMITLOCK = FSM_Steady(2),
+        TRANSMITLOCK = FSM_Steady(1),
         TRANSMITMSG = FSM_Transient(2),
         TRANSMITFAIL = FSM_Transient(3)
     };
 
     int backoffCounter;
     std::list<appMessage *> buffer;
+    appMessage *curMessage;
 
 };
 
