@@ -134,7 +134,7 @@ void MAC::handleMessage(cMessage *msg)
 
         case FSM_Exit(TRANSMITMSG):
             EV << "TRANSMIT MESSAGE \n";
-            FSM_Goto(MAC_FSM, TRANSMITLOCK); // this is just here to stop the compiler complaning about unfinished code
+            FSM_Goto(MAC_FSM, TRANSMITCS); // this is just here to stop the compiler complaning about unfinished code
             // TODO
             break;
 
