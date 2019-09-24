@@ -18,4 +18,5 @@
 //
 packet SelfMessage {
     string description;
+    double totalPower;
 }

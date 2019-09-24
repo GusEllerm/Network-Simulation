@@ -181,6 +181,7 @@ Register_Class(SelfMessage)
 
 SelfMessage::SelfMessage(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
+    this->totalPower = 0;
 }
 
 SelfMessage::SelfMessage(const SelfMessage& other) : ::omnetpp::cPacket(other)
@@ -203,18 +204,21 @@ SelfMessage& SelfMessage::operator=(const SelfMessage& other)
 void SelfMessage::copy(const SelfMessage& other)
 {
     this->description = other.description;
+    this->totalPower = other.totalPower;
 }
 
 void SelfMessage::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->description);
+    doParsimPacking(b,this->totalPower);
 }
 
 void SelfMessage::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->description);
+    doParsimUnpacking(b,this->totalPower);
 }
 
 const char * SelfMessage::getDescription() const
@@ -225,6 +229,16 @@ const char * SelfMessage::getDescription() const
 void SelfMessage::setDescription(const char * description)
 {
     this->description = description;
+}
+
+double SelfMessage::getTotalPower() const
+{
+    return this->totalPower;
+}
+
+void SelfMessage::setTotalPower(double totalPower)
+{
+    this->totalPower = totalPower;
 }
 
 class SelfMessageDescriptor : public omnetpp::cClassDescriptor
@@ -292,7 +306,7 @@ const char *SelfMessageDescriptor::getProperty(const char *propertyname) const
 int SelfMessageDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int SelfMessageDescriptor::getFieldTypeFlags(int field) const
@@ -305,8 +319,9 @@ unsigned int SelfMessageDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *SelfMessageDescriptor::getFieldName(int field) const
@@ -319,8 +334,9 @@ const char *SelfMessageDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "description",
+        "totalPower",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int SelfMessageDescriptor::findField(const char *fieldName) const
@@ -328,6 +344,7 @@ int SelfMessageDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='d' && strcmp(fieldName, "description")==0) return base+0;
+    if (fieldName[0]=='t' && strcmp(fieldName, "totalPower")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -341,8 +358,9 @@ const char *SelfMessageDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "string",
+        "double",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **SelfMessageDescriptor::getFieldPropertyNames(int field) const
@@ -410,6 +428,7 @@ std::string SelfMessageDescriptor::getFieldValueAsString(void *object, int field
     SelfMessage *pp = (SelfMessage *)object; (void)pp;
     switch (field) {
         case 0: return oppstring2string(pp->getDescription());
+        case 1: return double2string(pp->getTotalPower());
         default: return "";
     }
 }
@@ -425,6 +444,7 @@ bool SelfMessageDescriptor::setFieldValueAsString(void *object, int field, int i
     SelfMessage *pp = (SelfMessage *)object; (void)pp;
     switch (field) {
         case 0: pp->setDescription((value)); return true;
+        case 1: pp->setTotalPower(string2double(value)); return true;
         default: return false;
     }
 }

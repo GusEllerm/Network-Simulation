@@ -53,56 +53,6 @@ void Transceiver::initialize()
 
 void Transceiver::handleMessage(cMessage *msg)
 {
-    //we need to handle this differently depending if transceiver is in RX or TX state. I just have it up here to test it.
-    if (dynamic_cast<CSRequest *>(msg))
-    {
-        double totalPower = 0;
-        double totalPowerDBm = 0;
-
-        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-        {
-            double msgtransmitPowerDBm = (*it)->getTransmitPowerDBm();
-            double msgXPos = (*it)->getPosX();
-            double msgYPos = (*it)->getPosY();
-
-            double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
-            double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
-
-            double dist = sqrt(xDist + yDist);
-
-            if (dist <= ref)
-            {
-                lossRatio = ref;
-            }
-            else
-            {
-                lossRatio = pow(dist, pathLossExponent);
-            }
-
-            lossRatioDB = 10 * log10(lossRatio);
-            receivedPowerDBm = txPowerDBm - lossRatioDB;
-            double receivedPower = pow(10, receivedPowerDBm / 10);
-            totalPower += receivedPower;
-        }
-
-        totalPowerDBm = 10 * log10(totalPower);
-
-        CSResponse *csResponse = new CSResponse();
-
-        if (totalPowerDBm > csThreshDBm)
-        {
-            csResponse->setBusyChannel(true);
-        } else
-        {
-            csResponse->setBusyChannel(false);
-        }
-
-        sendDelayed(csResponse, csTime, "out1");
-
-        return;
-
-    }
-
     // The receive path (receive path gets run always therefore is not included in the state machine)
     if (dynamic_cast<signalStart *>(msg))
     {
@@ -165,7 +115,6 @@ void Transceiver::handleMessage(cMessage *msg)
           }
           else
           {
-
               macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
 
               double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
@@ -269,8 +218,39 @@ void Transceiver::handleMessage(cMessage *msg)
                 //TODO calculate the current signal power
                 EV << "CS Request received\n";
 
-                // Create self message to enable the csTime timer
+                double totalPower = 0;
+                double totalPowerDBm = 0;
+
+                 for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+                 {
+                     double msgtransmitPowerDBm = (*it)->getTransmitPowerDBm();
+                     double msgXPos = (*it)->getPosX();
+                     double msgYPos = (*it)->getPosY();
+
+                     double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+                     double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+
+                     double dist = sqrt(xDist + yDist);
+
+                     if (dist <= ref)
+                     {
+                         lossRatio = ref;
+                     }
+                     else
+                     {
+                         lossRatio = pow(dist, pathLossExponent);
+                     }
+
+                     lossRatioDB = 10 * log10(lossRatio);
+                     receivedPowerDBm = txPowerDBm - lossRatioDB;
+                     double receivedPower = pow(10, receivedPowerDBm / 10);
+                     totalPower += receivedPower;
+                 }
+
+                 totalPowerDBm = 10 * log10(totalPower);
+
                 SelfMessage *smsg = new SelfMessage();
+                smsg->setTotalPower(totalPowerDBm);
                 scheduleAt(simTime() + csTime, smsg);
                 FSM_Goto(transmitFSM, CSLOCK);
             }
@@ -315,12 +295,18 @@ void Transceiver::handleMessage(cMessage *msg)
 
 
             // TransmissionRequest while dealing with a previous TransmissionRequest
-            else if (dynamic_cast<transmissionRequest *>(msg)) {
+            else if (dynamic_cast<transmissionRequest *>(msg))
+            {
                 transmissionConfirm *tcmsg = new transmissionConfirm();
                 tcmsg->setStatus("statusBusy");
                 send(tcmsg, "out1");
-                // Send statusBusy back to the mac
-                delete tcmsg;
+            }
+
+            else if (dynamic_cast<CSRequest *>(msg))
+            {
+                CSResponse *csResponse = new CSResponse();
+                csResponse->setBusyChannel(true);
+                send(csResponse, "out0");
             }
 
             break;
@@ -350,7 +336,20 @@ void Transceiver::handleMessage(cMessage *msg)
         case FSM_Exit(CSTRANSMIT):
             EV << "SENDING CS RESPONSE\n";
 
-            //TODO - need to calculate the noise of the network and send response.
+            SelfMessage *selfMessage = static_cast<SelfMessage *>(msg);
+            CSResponse *csResponse = new CSResponse();
+
+            double totalPowerDBm = selfMessage->getTotalPower();
+
+            if (totalPowerDBm > csThreshDBm)
+            {
+                csResponse->setBusyChannel(true);
+            } else
+            {
+                csResponse->setBusyChannel(false);
+            }
+
+            send(csResponse, "out0");
 
             FSM_Goto(transmitFSM, RECEIVE);
             break;

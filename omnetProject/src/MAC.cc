@@ -91,7 +91,6 @@ void MAC::handleMessage(cMessage *msg)
 
         appMessage *outMsg = new appMessage(*buffer.back());
         buffer.pop_back();
-        //buffer popping not tested.
 
         macMessage *mmsg = new macMessage();
         mmsg->encapsulate(outMsg);
@@ -99,11 +98,12 @@ void MAC::handleMessage(cMessage *msg)
         transmissionRequest *requestMsg = new transmissionRequest;
         requestMsg->encapsulate(mmsg);
 
-//        CSRequest *csmsg = new CSRequest();
+//      CSRequest *csmsg = new CSRequest();
 
 
         send(requestMsg, "out0");
 
         //TODO encapsulate mmsg in a transmission request packet
     }
+
 }

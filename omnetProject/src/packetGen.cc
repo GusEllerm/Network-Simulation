@@ -15,6 +15,7 @@
 
 #include "packetGen.h"
 #include "appMessage_m.h"
+#include "CSRequest_m.h"
 
 Define_Module(PacketGen);
 
@@ -31,7 +32,7 @@ void PacketGen::initialize()
 
 void PacketGen::handleMessage(cMessage *msg)
 {
-    appMessage* message = createMessage();
+    appMessage *message = createMessage();
     send(message, "out0");
     scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
 }

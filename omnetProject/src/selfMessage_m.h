@@ -27,6 +27,7 @@
  * packet SelfMessage
  * {
  *     string description;
+ *     double totalPower;
  * }
  * </pre>
  */
@@ -34,6 +35,7 @@ class SelfMessage : public ::omnetpp::cPacket
 {
   protected:
     ::omnetpp::opp_string description;
+    double totalPower;
 
   private:
     void copy(const SelfMessage& other);
@@ -54,6 +56,8 @@ class SelfMessage : public ::omnetpp::cPacket
     // field getter/setter methods
     virtual const char * getDescription() const;
     virtual void setDescription(const char * description);
+    virtual double getTotalPower() const;
+    virtual void setTotalPower(double totalPower);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const SelfMessage& obj) {obj.parsimPack(b);}
