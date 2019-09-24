@@ -17,6 +17,7 @@
 #define __WSN_PACKETSINK_H_
 
 #include <omnetpp.h>
+#include <fstream>
 
 using namespace omnetpp;
 
@@ -28,6 +29,10 @@ class PacketSink : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+    std::string outFileName;
+    int bufferSize;
+    std::ofstream outFile;
 };
 
 #endif
