@@ -23,9 +23,15 @@ Define_Module(PacketSink);
 
 void PacketSink::initialize()
 {
+    time_t t = time(0);
+    struct tm *now = localtime(& t);
+
+    char date[80];
+    strftime(date,80,"%Y-%m-%d-%H:%M:%S",now);
+
     outFileName = par("outFile").str();
     bufferSize = 4096;
-    outFile.open(outFileName);
+    outFile.open("./logs/" + outFileName + date);
     outFile << "Time_RX,Time_TX,ID,Seqno,Size" << std::endl;
 }
 
