@@ -73,19 +73,6 @@ void MAC::handleMessage(cMessage *msg)
             firstPass = false;
         }
 
-
-
-        //appMessage *outMsg = new appMessage(*buffer.back());
-        //buffer.pop_back();
-
-        //macMessage *mmsg = new macMessage();
-        //mmsg->encapsulate(outMsg);
-
-        //transmissionRequest *requestMsg = new transmissionRequest;
-        //requestMsg->encapsulate(mmsg);
-
-        //send(requestMsg, "out0");
-
     }
 
     // RX path
@@ -114,13 +101,6 @@ void MAC::handleMessage(cMessage *msg)
                 EV << "\n";
                 curMessage = new appMessage(*buffer.back());
                 // Start the process to send curMessage
-                EV << "\n";
-                EV << "\n";
-                EV << "\n";
-                EV << curMessage;
-                EV << "\n";
-                EV << "\n";
-                EV << "\n";
                 FSM_Goto(MAC_FSM, TRANSMITCS);
             }
             break;
