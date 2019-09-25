@@ -14,15 +14,33 @@
 // 
 
 #include "packetSink.h"
+#include "appMessage_m.h"
+#include "circBuff.h"
+#include <iostream>
+#include <fstream>
 
 Define_Module(PacketSink);
 
 void PacketSink::initialize()
 {
-    // TODO - Generated method body
+    time_t t = time(0);
+    struct tm *now = localtime(& t);
+
+    char date[80];
+    strftime(date,80,"%Y-%m-%d-%H:%M:%S",now);
+
+    outFileName = par("outFile").str();
+    bufferSize = 4096;
+    outFile.open("./logs/" + outFileName + date);
+    outFile << "Time_RX,Time_TX,ID,Seqno,Size" << std::endl;
 }
 
 void PacketSink::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if (dynamic_cast<appMessage *>(msg))
+    {
+        appMessage *appMsg = static_cast<appMessage *>(msg);
+        outFile << simTime().dbl() << "," << appMsg->getTimeStamp() << "," << appMsg->getSenderId() << "," << appMsg->getSeqno() << "," << appMsg->getMsgSize() << std::endl;
+        delete msg;
+    }
 }

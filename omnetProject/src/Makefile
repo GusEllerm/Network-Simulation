@@ -36,6 +36,7 @@ OBJS = \
     $O/MAC.o \
     $O/packetGen.o \
     $O/packetSink.o \
+    $O/stuff.o \
     $O/transceiver.o \
     $O/appMessage_m.o \
     $O/CSRequest_m.o \

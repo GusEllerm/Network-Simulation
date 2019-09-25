@@ -19,7 +19,6 @@
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
-#include "circBuff.h"
 #include <list>
 
 using namespace omnetpp;
@@ -36,7 +35,7 @@ class MAC : public cSimpleModule
     int bufferSize;
     int maxBackoffs;
     double backoffDistribution;
-    bool firstPass = true;
+    bool firstPass = false;
 
     // State control
     int MAC_State;

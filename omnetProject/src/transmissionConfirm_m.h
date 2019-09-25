@@ -27,7 +27,6 @@
  * packet transmissionConfirm
  * {
  *     string status;
- * 
  * }
  * </pre>
  */

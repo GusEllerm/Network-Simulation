@@ -17,8 +17,11 @@
 #include "appMessage_m.h"
 #include "macMessage_m.h"
 #include "transmissionRequest_m.h"
+#include "transmissionIndication_m.h"
+#include "transmissionConfirm_m.h"
 #include "CSRequest_m.h"
 #include "CSResponse_m.h"
+#include "selfMessage_m.h"
 #include <list>
 
 #include <stdlib.h>
@@ -33,6 +36,7 @@ void MAC::initialize()
     maxBackoffs = par("maxBackoffs");
     backoffDistribution = par("backoffDistribution");
 
+    firstPass = true;
     MAC_State = 0;
 
     buffer.clear();
@@ -50,43 +54,73 @@ void MAC::handleMessage(cMessage *msg)
         {
             buffer.push_front(appMsg);
         } else {
-            EV << "drop @ mac";
-            delete appMsg;
+
+            EV << "Buffer overflow.. packet dropped ";
+            EV << buffer.size();
+            EV << "/";
+            EV << bufferSize;
+            EV << "\n";
+
+            // TODO - This delete causes a seg fault
+            //delete appMsg;
+        }
+
+        // This is here to sync with the init cycle of the transceiver
+        if (firstPass) {
+            buffer.pop_back();
+            transmissionRequest *initPacket = new transmissionRequest;
+            send(initPacket, "out0");
+            firstPass = false;
         }
 
 
-//        appMessage *outMsg = new appMessage(*buffer.back());
-//        //buffer.pop_back();
-//
-//        macMessage *mmsg = new macMessage();
-//        mmsg->encapsulate(outMsg);
-//
-//        transmissionRequest *requestMsg = new transmissionRequest;
-//        requestMsg->encapsulate(mmsg);
-//
-//        send(requestMsg, "out0");
+
+        //appMessage *outMsg = new appMessage(*buffer.back());
+        //buffer.pop_back();
+
+        //macMessage *mmsg = new macMessage();
+        //mmsg->encapsulate(outMsg);
+
+        //transmissionRequest *requestMsg = new transmissionRequest;
+        //requestMsg->encapsulate(mmsg);
+
+        //send(requestMsg, "out0");
 
     }
 
+    // RX path
+    else if (dynamic_cast<transmissionIndication *>(msg))
+    {
+        transmissionIndication *tiMsg = static_cast<transmissionIndication *>(msg);
+        macMessage *mMsg = static_cast<macMessage *>(tiMsg->decapsulate());
+        appMessage *appMsg = static_cast<appMessage *>(mMsg->decapsulate());
+        send(appMsg, "out1");
+    }
 
-    // State machine requires something else to place an appmessage into the buffer
-    // It will wait till something is in the buffer before commencing
+
+    // TX path
+    // consumes items from the buffer
     FSM_Switch(MAC_FSM){
         case FSM_Exit(INIT):
             backoffCounter = 0;
 
-            // This is here to sync with the init cycle of the transceiver
-            if (firstPass) {
-                transmissionRequest *initPacket = new transmissionRequest;
-                send(initPacket, "out0");
-                firstPass = false;
-            }
-
             // if there is something to read from the buffer start the state machine to transmit
-            else if (buffer.size() > 0) {
-                EV << "Somthing in the buffer to send \n";
+            if (buffer.size() > 0) {
+                EV << "Transmit Attempt.. ";
+                EV << "Buffer size.. ";
+                EV << buffer.size();
+                EV << "/";
+                EV << bufferSize;
+                EV << "\n";
                 curMessage = new appMessage(*buffer.back());
                 // Start the process to send curMessage
+                EV << "\n";
+                EV << "\n";
+                EV << "\n";
+                EV << curMessage;
+                EV << "\n";
+                EV << "\n";
+                EV << "\n";
                 FSM_Goto(MAC_FSM, TRANSMITCS);
             }
             break;
@@ -102,41 +136,77 @@ void MAC::handleMessage(cMessage *msg)
         }
 
         case FSM_Enter(TRANSMITLOCK):
-            // TODO
             break;
         case FSM_Exit(TRANSMITLOCK):
-            // will recieve a CSResponse packet
+            // will receive a CSResponse packet
             // busyChannel will be either true or false
             if (dynamic_cast<CSResponse *>(msg)) {
-                EV << "GOT CS RESPONSE IN MAC";
                 CSResponse *csmsg = static_cast<CSResponse *>(msg);
+                EV << "GOT CS RESPONSE IN MAC \n";
+                EV << "Channel status..  busy: ";
+                EV << csmsg->getBusyChannel();
+                EV << "\n";
                 if (csmsg->getBusyChannel()) {
-                    // Channel is busy
-                    EV << "Channel is busy \n";
-                    EV << csmsg->getBusyChannel();
-                    EV << "\n";
 
-                    if (backoffCounter <= maxBackoffs) {
+                    if (backoffCounter < maxBackoffs) {
                         backoffCounter += 1;
-                        FSM_Goto(MAC_FSM, TRANSMITCS);
+
+                        EV << "Channel busy.. backoffCounter: ";
+                        EV << backoffCounter;
+                        EV << "/";
+                        EV << maxBackoffs;
+                        EV << "\n";
+
+                        SelfMessage *smsg = new SelfMessage();
+                        smsg->setDescription("Wait for backoffDistribution");
+
+                        scheduleAt(simTime() + backoffDistribution, smsg);
+                        FSM_Goto(MAC_FSM, TRANSMITLOCK);
+
                     } else {
                         // packet is dropped
                         buffer.pop_back();
+                        curMessage = NULL;
+                        EV << "Packet has reached max backoffs - dropping packet & restarting \n";
                         FSM_Goto(MAC_FSM, INIT);
                     }
                 } else {
                     // Channel is clear
-                    EV << "Channel is clear \n";
                     FSM_Goto(MAC_FSM, TRANSMITMSG);
                 }
+            }
+
+            else if (dynamic_cast<transmissionConfirm *>(msg)) {
+                buffer.pop_back();
+                curMessage = NULL;
+                EV << "Transmission Successful.. Buffer Size: ";
+                EV << buffer.size();
+                EV << "\n";
+                FSM_Goto(MAC_FSM, INIT);
+            }
+
+            else if (dynamic_cast<SelfMessage *>(msg)) {
+                FSM_Goto(MAC_FSM, TRANSMITCS);
             }
             break;
 
         case FSM_Exit(TRANSMITMSG):
+        {
             EV << "TRANSMIT MESSAGE \n";
-            FSM_Goto(MAC_FSM, TRANSMITCS); // this is just here to stop the compiler complaning about unfinished code
-            // TODO
+
+            appMessage *appMsg = new appMessage(*curMessage);
+            macMessage *mmsg = new macMessage();
+            transmissionRequest *requestMsg = new transmissionRequest;
+
+            mmsg->encapsulate(appMsg);
+            requestMsg->encapsulate(mmsg);
+
+            send(requestMsg, "out0");
+
+            FSM_Goto(MAC_FSM, TRANSMITLOCK);
+
             break;
+        }
 
         case FSM_Exit(TRANSMITFAIL):
             // TODO
