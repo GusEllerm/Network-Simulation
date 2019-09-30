@@ -192,6 +192,8 @@ void Transceiver::handleMessage(cMessage *msg)
                 if (dynamic_cast<transmissionConfirm *>(msg)) {
                     EV << "Status ok sent to MAC\n";
                     send(msg, "out0"); // Sends the transmission confirm to the MAC layer
+                } else if (dynamic_cast<SelfMessage *>(msg)) {
+                    delete msg;
                 }
             break;
 
@@ -213,6 +215,8 @@ void Transceiver::handleMessage(cMessage *msg)
 
             // CS request from MAC
             else if (dynamic_cast<CSRequest *>(msg)) {
+
+                delete msg;
                 EV << "CS Request received\n";
 
                 double totalPower = 0;
@@ -282,7 +286,9 @@ void Transceiver::handleMessage(cMessage *msg)
 
                 send(startMsg, "out1"); //to channel
 
-                delete msg;
+
+                delete smsg;
+                delete tcmsg;
 
                 SelfMessage *selfPacket = new SelfMessage();
                 selfPacket->setDescription("End Transmission");
@@ -333,10 +339,10 @@ void Transceiver::handleMessage(cMessage *msg)
         case FSM_Exit(CSTRANSMIT):
             EV << "SENDING CS RESPONSE\n";
 
-            SelfMessage *selfMessage = static_cast<SelfMessage *>(msg);
+            SelfMessage *smsg = static_cast<SelfMessage *>(msg);
             CSResponse *csResponse = new CSResponse();
 
-            double totalPowerDBm = selfMessage->getTotalPower();
+            double totalPowerDBm = smsg->getTotalPower();
 
             if (totalPowerDBm > csThreshDBm)
             {
@@ -347,6 +353,8 @@ void Transceiver::handleMessage(cMessage *msg)
             }
 
             send(csResponse, "out0");
+
+
 
             FSM_Goto(transmitFSM, RECEIVE);
             break;

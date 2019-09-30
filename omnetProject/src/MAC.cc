@@ -43,14 +43,13 @@ void MAC::initialize()
 
 void MAC::handleMessage(cMessage *msg)
 {
-
     // buffer control (adding & dropping packets to the buffer)
     if (dynamic_cast<appMessage *>(msg))
     {
-        appMessage *appMsg = static_cast<appMessage *>(msg);
 
         if (buffer.size() < bufferSize)
         {
+            appMessage *appMsg = static_cast<appMessage *>(msg);
             buffer.push_front(appMsg);
         } else {
 
@@ -59,9 +58,6 @@ void MAC::handleMessage(cMessage *msg)
             EV << "/";
             EV << bufferSize;
             EV << "\n";
-
-            // TODO - This delete causes a seg fault
-            //delete appMsg;
         }
 
         // This is here to sync with the init cycle of the transceiver
@@ -73,16 +69,6 @@ void MAC::handleMessage(cMessage *msg)
         }
 
     }
-
-    // RX path
-    else if (dynamic_cast<transmissionIndication *>(msg))
-    {
-        transmissionIndication *tiMsg = static_cast<transmissionIndication *>(msg);
-        macMessage *mMsg = static_cast<macMessage *>(tiMsg->decapsulate());
-        appMessage *appMsg = static_cast<appMessage *>(mMsg->decapsulate());
-        send(appMsg, "out1");
-    }
-
 
     // TX path
     // consumes items from the buffer
@@ -145,7 +131,7 @@ void MAC::handleMessage(cMessage *msg)
                     } else {
                         // packet is dropped
                         buffer.pop_back();
-                        curMessage = NULL;
+                        delete curMessage;
                         EV << "Packet has reached max backoffs - dropping packet & restarting \n";
                         FSM_Goto(MAC_FSM, INIT);
                     }
@@ -157,7 +143,7 @@ void MAC::handleMessage(cMessage *msg)
 
             else if (dynamic_cast<transmissionConfirm *>(msg)) {
                 buffer.pop_back();
-                curMessage = NULL;
+                delete curMessage;
                 EV << "Transmission Successful.. Buffer Size: ";
                 EV << buffer.size();
                 EV << "\n";
@@ -186,10 +172,18 @@ void MAC::handleMessage(cMessage *msg)
 
             break;
         }
+    }
 
-        case FSM_Exit(TRANSMITFAIL):
-            // TODO
-            break;
+    // RX path
+    if (dynamic_cast<transmissionIndication *>(msg))
+    {
+        transmissionIndication *tiMsg = static_cast<transmissionIndication *>(msg);
+        macMessage *mMsg = static_cast<macMessage *>(tiMsg->decapsulate());
+        appMessage *appMsg = static_cast<appMessage *>(mMsg->decapsulate());
+
+        send(appMsg, "out1");
+        delete tiMsg;
+        delete mMsg;
     }
 
 }
