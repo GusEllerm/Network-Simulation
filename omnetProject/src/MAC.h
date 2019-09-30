@@ -44,8 +44,7 @@ class MAC : public cSimpleModule
         INIT = 0,
         TRANSMITCS = FSM_Transient(1),
         TRANSMITLOCK = FSM_Steady(1),
-        TRANSMITMSG = FSM_Transient(2),
-        TRANSMITFAIL = FSM_Transient(3)
+        TRANSMITMSG = FSM_Transient(2)
     };
 
     int backoffCounter;
