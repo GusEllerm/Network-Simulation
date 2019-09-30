@@ -28,7 +28,7 @@ void PacketSink::initialize()
     struct tm *now = localtime(& t);
 
     char date[80];
-    strftime(date,80,"%Y-%m-%d-%H:%M:%S",now);
+    strftime(date,80," %Y-%m-%d %H-%M-%S",now);
 
     outFileName = par("outFile").str();
     outFileName = outFileName.substr(1, outFileName.size()-2);
