@@ -18,6 +18,7 @@
 #include "circBuff.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 Define_Module(PacketSink);
 
@@ -30,6 +31,7 @@ void PacketSink::initialize()
     strftime(date,80,"%Y-%m-%d-%H:%M:%S",now);
 
     outFileName = par("outFile").str();
+    outFileName = outFileName.substr(1, outFileName.size()-2);
     bufferSize = 4096;
     outFile.open("./logs/" + outFileName + date);
     outFile << "Time_RX,Time_TX,ID,Seqno,Size" << std::endl;

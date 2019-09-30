@@ -23,7 +23,6 @@
 #include "CSResponse_m.h"
 #include "selfMessage_m.h"
 #include <list>
-
 #include <stdlib.h>
 #include <string.h>
 
