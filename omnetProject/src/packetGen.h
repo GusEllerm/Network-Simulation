@@ -26,15 +26,23 @@ using namespace omnetpp;
  */
 class PacketGen : public cSimpleModule
 {
+public:
+    ~PacketGen();
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
     appMessage* createMessage();
 
     double distro;
     int messageSize;
     int seqno;
     int txId;
+
+    appMessage *message = nullptr;
+    appMessage *outMessage = nullptr;
+    appMessage *appMsg = nullptr;
 };
 
 #endif

@@ -19,6 +19,13 @@
 
 Define_Module(PacketGen);
 
+PacketGen::~PacketGen()
+{
+    if (message != nullptr)
+    {
+        delete message;
+    }
+}
 
 void PacketGen::initialize()
 {
@@ -38,7 +45,23 @@ void PacketGen::handleMessage(cMessage *msg)
     }
     else
     {
-        appMessage *message = createMessage();
+        if (message != nullptr)
+        {
+            delete message;
+        }
+
+        char name[80];
+        sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+
+        message = new appMessage(name);
+
+        message->setTimeStamp(simTime());
+        message->setSenderId(txId);
+        message->setSeqno(seqno);
+        message->setMsgSize(messageSize);
+
+        seqno++;
+
         send(message, "out0");
         scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
     }
@@ -46,17 +69,21 @@ void PacketGen::handleMessage(cMessage *msg)
 
 appMessage* PacketGen::createMessage()
 {
-    char name[80];
-    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
-
-    appMessage* message = new appMessage(name);
-
-    message->setTimeStamp(simTime());
-    message->setSenderId(txId);
-    message->setSeqno(seqno);
-    message->setMsgSize(messageSize);
-
-    seqno++;
-
-    return message;
+//    char name[80];
+//    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+//
+//    message = new appMessage(name);
+//
+//    message->setTimeStamp(simTime());
+//    message->setSenderId(txId);
+//    message->setSeqno(seqno);
+//    message->setMsgSize(messageSize);
+//
+//    seqno++;
+//
+//    return message;
 }
+
+void PacketGen::finish()
+{
+    }

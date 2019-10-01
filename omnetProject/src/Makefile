@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for WSN
+# OMNeT++/OMNEST Makefile for omnetProject
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep
+#  opp_makemake -f
 #
 
 # Name of target to be created (-o option)
-TARGET = WSN$(D)$(EXE_SUFFIX)
+TARGET = omnetProject$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -36,7 +36,6 @@ OBJS = \
     $O/MAC.o \
     $O/packetGen.o \
     $O/packetSink.o \
-    $O/stuff.o \
     $O/transceiver.o \
     $O/appMessage_m.o \
     $O/CSRequest_m.o \

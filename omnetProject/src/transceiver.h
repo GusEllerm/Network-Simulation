@@ -19,6 +19,7 @@
 
 #include <omnetpp.h>
 #include "signalStart_m.h"
+#include "CSRequest_m.h"
 #include <list>
 
 using namespace omnetpp;
@@ -69,6 +70,8 @@ class Transceiver : public cSimpleModule
     double csTime;
 
     std::list<signalStart *> currentTransmissions;
+
+    CSRequest *csr = NULL;
 };
 
 #endif

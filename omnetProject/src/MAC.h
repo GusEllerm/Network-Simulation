@@ -19,6 +19,13 @@
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
+#include "macMessage_m.h"
+#include "transmissionIndication_m.h"
+#include "transmissionRequest_m.h"
+#include "transmissionConfirm_m.h"
+#include "CSRequest_m.h"
+#include "selfMessage_m.h"
+#include "CSResponse_m.h"
 #include <list>
 
 using namespace omnetpp;
@@ -28,17 +35,21 @@ using namespace omnetpp;
  */
 class MAC : public cSimpleModule
 {
+  public:
+    ~MAC();
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 
+    int MAC_State;
+    int backoffCounter;
     int bufferSize;
     int maxBackoffs;
     double backoffDistribution;
     bool firstPass = false;
 
     // State control
-    int MAC_State;
+
     cFSM MAC_FSM;
     enum {
         INIT = 0,
@@ -47,10 +58,19 @@ class MAC : public cSimpleModule
         TRANSMITMSG = FSM_Transient(2)
     };
 
-    int backoffCounter;
     std::list<appMessage *> buffer;
-    appMessage *curMessage;
 
+    appMessage *curMessage = NULL;
+    appMessage *appMsg = NULL;
+    appMessage *appMsgEncap;
+    macMessage *mmsg;
+    transmissionIndication *tiMsg = NULL;
+    transmissionRequest *initPacket = NULL;
+    transmissionRequest *requestMsg = NULL;
+    CSRequest *csrmsg = NULL;
+    CSResponse *csMsg = NULL;
+    transmissionConfirm *confirm = NULL;
+    SelfMessage *smsg;
 };
 
 #endif

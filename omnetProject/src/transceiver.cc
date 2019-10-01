@@ -215,10 +215,10 @@ void Transceiver::handleMessage(cMessage *msg)
 
             // CS request from MAC
             else if (dynamic_cast<CSRequest *>(msg)) {
+                csr = static_cast<CSRequest *>(msg);
+                delete csr;
 
-                delete msg;
                 EV << "CS Request received\n";
-
                 double totalPower = 0;
                 double totalPowerDBm = 0;
 
@@ -248,28 +248,37 @@ void Transceiver::handleMessage(cMessage *msg)
                      totalPower += receivedPower;
                  }
 
-                 totalPowerDBm = 10 * log10(totalPower);
+                totalPowerDBm = 10 * log10(totalPower);
 
                 SelfMessage *smsg = new SelfMessage();
                 smsg->setTotalPower(totalPowerDBm);
                 scheduleAt(simTime() + csTime, smsg);
+
                 FSM_Goto(transmitFSM, CSLOCK);
             }
 
-            break;
+            //break;
 
         case FSM_Enter(TURNAROUNDLOCK):
             break;
         case FSM_Exit(TURNAROUNDLOCK):
-            if (dynamic_cast<SelfMessage *>(msg)) FSM_Goto(transmitFSM, TRANSMIT); // message has waited for the turnaround time, start transmit
-            else if (dynamic_cast<transmissionConfirm *>(msg)) FSM_Goto(transmitFSM, RECEIVE); // ''
-            break;
+            if (dynamic_cast<SelfMessage *>(msg))
+            {
+                FSM_Goto(transmitFSM, TRANSMIT); // message has waited for the turnaround time, start transmit
+            } else if (dynamic_cast<transmissionConfirm *>(msg))
+            {
+                FSM_Goto(transmitFSM, RECEIVE);
+            }
+            //break;
 
         case FSM_Exit(TRANSMIT):
             if (dynamic_cast<SelfMessage *>(msg)){
                 SelfMessage *smsg = static_cast<SelfMessage *>(msg);
                 transmissionRequest *tcmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
                 macMessage *mmsg = static_cast<macMessage *>(tcmsg->decapsulate());
+
+                delete smsg;
+                delete tcmsg;
 
                 signalStart *startMsg = new signalStart();
 
@@ -286,10 +295,6 @@ void Transceiver::handleMessage(cMessage *msg)
 
                 send(startMsg, "out1"); //to channel
 
-
-                delete smsg;
-                delete tcmsg;
-
                 SelfMessage *selfPacket = new SelfMessage();
                 selfPacket->setDescription("End Transmission");
                 scheduleAt(simTime() + (packetLength / bitRate), selfPacket);
@@ -303,6 +308,7 @@ void Transceiver::handleMessage(cMessage *msg)
                 transmissionConfirm *tcmsg = new transmissionConfirm();
                 tcmsg->setStatus("statusBusy");
                 send(tcmsg, "out1");
+                delete msg;
             }
 
             else if (dynamic_cast<CSRequest *>(msg))
@@ -310,18 +316,19 @@ void Transceiver::handleMessage(cMessage *msg)
                 CSResponse *csResponse = new CSResponse();
                 csResponse->setBusyChannel(true);
                 send(csResponse, "out0");
+                delete msg;
             }
 
             break;
 
         case FSM_Exit(TRANSMITFINAL):
             if (dynamic_cast<SelfMessage *>(msg)) {
-                delete msg;
 
                 signalStop *stopMsg = new signalStop();
                 int id = getParentModule()->par("nodeId");
                 stopMsg->setId(id);
                 send(stopMsg, "out1"); //to channel
+                delete msg;
 
                 transmissionConfirm *tcmsg = new transmissionConfirm();
                 tcmsg->setStatus("statusOK");
@@ -334,7 +341,7 @@ void Transceiver::handleMessage(cMessage *msg)
             break;
         case FSM_Exit(CSLOCK):
             if (msg->isSelfMessage()) FSM_Goto(transmitFSM, CSTRANSMIT);
-            break;
+            //break;
 
         case FSM_Exit(CSTRANSMIT):
             EV << "SENDING CS RESPONSE\n";
@@ -353,10 +360,7 @@ void Transceiver::handleMessage(cMessage *msg)
             }
 
             send(csResponse, "out0");
-
-
-
             FSM_Goto(transmitFSM, RECEIVE);
-            break;
+            //break;
     }
 }
