@@ -29,10 +29,12 @@ class PacketSink : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
 
     std::string outFileName;
-    int bufferSize;
     std::ofstream outFile;
+    int bufferSize;
+    int rxCount;
 };
 
 #endif

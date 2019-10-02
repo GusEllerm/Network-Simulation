@@ -1,2 +1,2 @@
 # COSC418
-test
+./omnetProject -f omnetpp.ini -u Cmdenv

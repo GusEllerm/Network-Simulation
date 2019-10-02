@@ -30,6 +30,7 @@ void PacketSink::initialize()
     char date[80];
     strftime(date,80," %Y-%m-%d %H-%M-%S",now);
 
+    rxCount = 0;
     outFileName = par("outFile").str();
     outFileName = outFileName.substr(1, outFileName.size()-2);
     bufferSize = 4096;
@@ -42,7 +43,13 @@ void PacketSink::handleMessage(cMessage *msg)
     if (dynamic_cast<appMessage *>(msg))
     {
         appMessage *appMsg = static_cast<appMessage *>(msg);
-        outFile << simTime().dbl() << "," << appMsg->getTimeStamp() << "," << appMsg->getSenderId() << "," << appMsg->getSeqno() << "," << appMsg->getMsgSize() << std::endl;
+        rxCount++;
+        //outFile << simTime().dbl() << "," << appMsg->getTimeStamp() << "," << appMsg->getSenderId() << "," << appMsg->getSeqno() << "," << appMsg->getMsgSize() << std::endl;
         delete msg;
     }
+}
+
+void PacketSink::finish()
+{
+    outFile << rxCount << std::endl;
 }

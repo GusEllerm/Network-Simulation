@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
+#include <fstream>
 
 using namespace omnetpp;
 
@@ -39,10 +40,13 @@ public:
     int messageSize;
     int seqno;
     int txId;
+    int txCount;
 
     appMessage *message = nullptr;
     appMessage *outMessage = nullptr;
     appMessage *appMsg = nullptr;
+
+    std::ofstream outFileGenerator;
 };
 
 #endif

@@ -29,6 +29,16 @@ PacketGen::~PacketGen()
 
 void PacketGen::initialize()
 {
+    time_t t = time(0);
+    struct tm *now = localtime(& t);
+
+    char date[80];
+    strftime(date,80," %Y-%m-%d %H-%M-%S",now);
+
+    outFileGenerator.open("./logs/generator");
+    outFileGenerator << "TX_Count" << std::endl;
+
+    txCount = 0;
     seqno = 0;
     txId = getParentModule()->par("nodeId");
     messageSize = par("messageSize");
@@ -63,6 +73,7 @@ void PacketGen::handleMessage(cMessage *msg)
         seqno++;
 
         send(message, "out0");
+        txCount++;
         scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
     }
 }
@@ -86,4 +97,5 @@ appMessage* PacketGen::createMessage()
 
 void PacketGen::finish()
 {
-    }
+    outFileGenerator << txCount << std::endl;
+}
