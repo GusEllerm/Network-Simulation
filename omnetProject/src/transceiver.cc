@@ -134,7 +134,7 @@ void Transceiver::handleMessage(cMessage *msg)
               }
 
               lossRatioDB = 10 * log10(lossRatio);
-              receivedPowerDBm = txPowerDBm - lossRatioDB;
+              receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
               bitRateDB = 10 * log10(bitRate);
               snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
               snr = pow(10, snrDB/10);
@@ -243,7 +243,7 @@ void Transceiver::handleMessage(cMessage *msg)
                      }
 
                      lossRatioDB = 10 * log10(lossRatio);
-                     receivedPowerDBm = txPowerDBm - lossRatioDB;
+                     receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
                      double receivedPower = pow(10, receivedPowerDBm / 10);
                      totalPower += receivedPower;
                  }
