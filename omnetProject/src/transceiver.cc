@@ -257,7 +257,7 @@ void Transceiver::handleMessage(cMessage *msg)
                 FSM_Goto(transmitFSM, CSLOCK);
             }
 
-            //break;
+            break;
 
         case FSM_Enter(TURNAROUNDLOCK):
             break;
@@ -269,7 +269,7 @@ void Transceiver::handleMessage(cMessage *msg)
             {
                 FSM_Goto(transmitFSM, RECEIVE);
             }
-            //break;
+            break;
 
         case FSM_Exit(TRANSMIT):
             if (dynamic_cast<SelfMessage *>(msg)){
@@ -341,7 +341,7 @@ void Transceiver::handleMessage(cMessage *msg)
             break;
         case FSM_Exit(CSLOCK):
             if (msg->isSelfMessage()) FSM_Goto(transmitFSM, CSTRANSMIT);
-            //break;
+            break;
 
         case FSM_Exit(CSTRANSMIT):
             EV << "SENDING CS RESPONSE\n";
@@ -361,6 +361,6 @@ void Transceiver::handleMessage(cMessage *msg)
 
             send(csResponse, "out0");
             FSM_Goto(transmitFSM, RECEIVE);
-            //break;
+            break;
     }
 }

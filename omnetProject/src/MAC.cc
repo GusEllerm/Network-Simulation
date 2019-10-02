@@ -94,6 +94,12 @@ void MAC::handleMessage(cMessage *msg)
     // consumes items from the buffer
     FSM_Switch(MAC_FSM){
         case FSM_Exit(INIT):
+
+            if (csMsg != NULL)
+            {
+                delete csMsg;
+            }
+
             if (confirm != NULL)
             {
                 delete confirm;
@@ -162,9 +168,6 @@ void MAC::handleMessage(cMessage *msg)
                     // Channel is clear
                     FSM_Goto(MAC_FSM, TRANSMITMSG);
                 }
-
-            delete csMsg;
-
             }
 
             else if (dynamic_cast<transmissionConfirm *>(msg)) {
