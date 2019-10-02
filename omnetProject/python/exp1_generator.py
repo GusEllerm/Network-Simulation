@@ -13,7 +13,7 @@ for i in range(1, 41):
                          'simulation.radius': i,
                          'simulation.TXNode[*].packGen.messageSize': '64',
                          'simulation.TXNode[*].packGen.iatDistribution': '0.01',
-                         'simulation.RXNode.packSink.outFile': '"logFile"',
+                         'simulation.RXNode.packSink.outFile': '"exp1_radius_' + str(i) + 'm"',
                          'simulation.TXNode[*].trans.txPowerDBm': '0',
                          'simulation.TXNode[*].trans.bitRate': '250000',
                          'simulation.TXNode[*].trans.csThreshDBm': '-50',
