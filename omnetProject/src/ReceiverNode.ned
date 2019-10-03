@@ -21,7 +21,7 @@ module ReceiverNode
         int nodeId;
         double nodeXPos;
         double nodeYPos;
-        
+
     gates:
         input in0;
         output out0;
@@ -30,12 +30,11 @@ module ReceiverNode
         packSink: PacketSink;
         MAC: MAC;
         trans: Transceiver;
-        
     connections allowunconnected:
         packSink.in0 <-- MAC.out1;
         trans.out0 --> MAC.in1;
         MAC.out0 --> trans.in0;
         trans.out1 --> out0;
         in0 --> trans.in1;
-    
+
 }

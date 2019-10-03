@@ -30,7 +30,7 @@
 #include <math.h>
 #include <string.h>
 
-
+namespace wsn {
 Define_Module(Transceiver);
 #define FSM_DEBUG
 
@@ -363,4 +363,5 @@ void Transceiver::handleMessage(cMessage *msg)
             FSM_Goto(transmitFSM, RECEIVE);
             break;
     }
+}
 }

@@ -8,12 +8,14 @@ for i in range(1, 21):
         config['General'] = {'network': 'simulation',
                              'cpu-time-limit': '60s',
                              'debug-on-errors': 'true',
-                             'sim-tim-limit': '1000s',
+                             'sim-time-limit': '1000s',
+                             'seed-set': '${repetition}',
+                             'repeat': '10',
                              'simulation.numTX': i,
                              'simulation.radius': '20',
                              'simulation.TXNode[*].packGen.messageSize': '64',
                              'simulation.TXNode[*].packGen.iatDistribution': 'exponential(0.02)',
-                             'simulation.RXNode.packSink.outFile': '"exp2_numTX_' + str(i) + '"',
+                             'simulation.RXNode.packSink.outFile': '"./exp2/exp2_numTX_' + str(i) + '"',
                              'simulation.TXNode[*].trans.txPowerDBm': '0',
                              'simulation.TXNode[*].trans.bitRate': '250000',
                              'simulation.TXNode[*].trans.csThreshDBm': '-50',
@@ -33,5 +35,5 @@ for i in range(1, 21):
                              'simulation.RXNode.MAC.bufferSize': '5',
                              'simulation.RXNode.MAC.maxBackoffs': '5'}
 
-        with open('./experiment2/exp2_numTX_' + str(i) + '.ini', 'w') as configfile:
+        with open('../simulations/exp2_numTX_' + str(i) + '.ini', 'w') as configfile:
             config.write(configfile)

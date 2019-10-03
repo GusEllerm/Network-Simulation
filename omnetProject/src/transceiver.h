@@ -24,6 +24,8 @@
 
 using namespace omnetpp;
 
+namespace wsn {
+
 /**
  * TODO - Generated class
  */
@@ -73,5 +75,5 @@ class Transceiver : public cSimpleModule
 
     CSRequest *csr = NULL;
 };
-
+}
 #endif

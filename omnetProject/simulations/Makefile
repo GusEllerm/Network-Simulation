@@ -26,14 +26,40 @@ LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
-PROJECTRELATIVE_PATH = simulations
+PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS =
+OBJS = \
+    $O/../src/circBuff.o \
+    $O/../src/MAC.o \
+    $O/../src/packetGen.o \
+    $O/../src/packetSink.o \
+    $O/../src/SimpleChannel.o \
+    $O/../src/transceiver.o \
+    $O/../src/appMessage_m.o \
+    $O/../src/CSRequest_m.o \
+    $O/../src/CSResponse_m.o \
+    $O/../src/macMessage_m.o \
+    $O/../src/selfMessage_m.o \
+    $O/../src/signalStart_m.o \
+    $O/../src/signalStop_m.o \
+    $O/../src/transmissionConfirm_m.o \
+    $O/../src/transmissionIndication_m.o \
+    $O/../src/transmissionRequest_m.o
 
 # Message files
-MSGFILES =
+MSGFILES = \
+    appMessage.msg \
+    CSRequest.msg \
+    CSResponse.msg \
+    macMessage.msg \
+    selfMessage.msg \
+    signalStart.msg \
+    signalStop.msg \
+    transmissionConfirm.msg \
+    transmissionIndication.msg \
+    transmissionRequest.msg
 
 # SM files
 SMFILES =

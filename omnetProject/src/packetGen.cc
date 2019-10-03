@@ -17,6 +17,7 @@
 #include "appMessage_m.h"
 #include "CSRequest_m.h"
 
+namespace wsn {
 Define_Module(PacketGen);
 
 PacketGen::~PacketGen()
@@ -35,7 +36,7 @@ void PacketGen::initialize()
     char date[80];
     strftime(date,80," %Y-%m-%d %H-%M-%S",now);
 
-    outFileGenerator.open("./logs/generator");
+    outFileGenerator.open("../logs/generator");
     outFileGenerator << "TX_Count" << std::endl;
 
     txCount = 0;
@@ -78,24 +79,25 @@ void PacketGen::handleMessage(cMessage *msg)
     }
 }
 
-appMessage* PacketGen::createMessage()
-{
-//    char name[80];
-//    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
-//
-//    message = new appMessage(name);
-//
-//    message->setTimeStamp(simTime());
-//    message->setSenderId(txId);
-//    message->setSeqno(seqno);
-//    message->setMsgSize(messageSize);
-//
-//    seqno++;
-//
-//    return message;
-}
+//appMessage* PacketGen::createMessage()
+//{
+////    char name[80];
+////    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+////
+////    message = new appMessage(name);
+////
+////    message->setTimeStamp(simTime());
+////    message->setSenderId(txId);
+////    message->setSeqno(seqno);
+////    message->setMsgSize(messageSize);
+////
+////    seqno++;
+////
+////    return message;
+//}
 
 void PacketGen::finish()
 {
     outFileGenerator << txCount << std::endl;
+}
 }

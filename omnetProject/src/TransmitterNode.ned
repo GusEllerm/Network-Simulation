@@ -21,7 +21,7 @@ module TransmitterNode
         int nodeId;
         double nodeXPos;
         double nodeYPos;
-        
+
     gates:
         input in0;
         output out0;
@@ -30,8 +30,6 @@ module TransmitterNode
         packGen: PacketGen;
         MAC: MAC;
         trans: Transceiver;
-        
-        
     connections allowunconnected:
         packGen.in1 <-- MAC.out1;
         packGen.out0 --> MAC.in0;
@@ -39,7 +37,7 @@ module TransmitterNode
         MAC.out0 --> trans.in0;
         trans.out1 --> out0;
         in0 --> trans.in1;
-        
+
 
 
 }

@@ -30,6 +30,8 @@
 
 using namespace omnetpp;
 
+namespace wsn{
+
 /**
  * TODO - Generated class
  */
@@ -72,5 +74,6 @@ class MAC : public cSimpleModule
     transmissionConfirm *confirm = NULL;
     SelfMessage *smsg;
 };
+}
 
 #endif

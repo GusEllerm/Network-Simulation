@@ -20,6 +20,8 @@
 #include <fstream>
 #include <string>
 
+namespace wsn {
+
 Define_Module(PacketSink);
 
 void PacketSink::initialize()
@@ -32,10 +34,15 @@ void PacketSink::initialize()
 
     rxCount = 0;
     outFileName = par("outFile").str();
-    outFileName = outFileName.substr(1, outFileName.size()-2);
+    outFileName = outFileName.substr(1, outFileName.size()-3);
     bufferSize = 4096;
-    outFile.open("./logs/" + outFileName + date);
-    outFile << "Time_RX,Time_TX,ID,Seqno,Size" << std::endl;
+    outFile.open("../logs/" + outFileName, std::ios_base::app);
+
+    outFile.seekp(0, std::ios_base::end);
+    if (outFile.tellp() == 0) {
+        //outFile << "Time_RX,Time_TX,ID,Seqno,Size" << std::endl;
+        outFile << "Packets_RX" << std::endl;
+    }
 }
 
 void PacketSink::handleMessage(cMessage *msg)
@@ -52,4 +59,5 @@ void PacketSink::handleMessage(cMessage *msg)
 void PacketSink::finish()
 {
     outFile << rxCount << std::endl;
+}
 }

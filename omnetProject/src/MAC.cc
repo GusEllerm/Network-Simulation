@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+namespace wsn {
 Define_Module(MAC);
 #define FSM_DEBUG
 
@@ -215,4 +216,5 @@ void MAC::handleMessage(cMessage *msg)
         delete macMsg;
         delete tiMsg;
     }
+}
 }

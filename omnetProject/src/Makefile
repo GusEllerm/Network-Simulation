@@ -31,11 +31,11 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
 OBJS = \
-    $O/channel.o \
     $O/circBuff.o \
     $O/MAC.o \
     $O/packetGen.o \
     $O/packetSink.o \
+    $O/SimpleChannel.o \
     $O/transceiver.o \
     $O/appMessage_m.o \
     $O/CSRequest_m.o \

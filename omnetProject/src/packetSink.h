@@ -21,6 +21,8 @@
 
 using namespace omnetpp;
 
+namespace wsn {
+
 /**
  * TODO - Generated class
  */
@@ -36,5 +38,6 @@ class PacketSink : public cSimpleModule
     int bufferSize;
     int rxCount;
 };
+}
 
 #endif

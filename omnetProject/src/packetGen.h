@@ -22,6 +22,8 @@
 
 using namespace omnetpp;
 
+namespace wsn {
+
 /**
  * TODO - Generated class
  */
@@ -34,7 +36,7 @@ public:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
     virtual void finish();
-    appMessage* createMessage();
+    //appMessage* createMessage();
 
     double distro;
     int messageSize;
@@ -48,5 +50,6 @@ public:
 
     std::ofstream outFileGenerator;
 };
+}
 
 #endif
