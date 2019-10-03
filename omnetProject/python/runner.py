@@ -7,8 +7,6 @@ configs = []
 for i in range(1, 41):
     configs.append("./omnetProject -n .:../src -f exp1_radius_" + str(i) + "m.ini -u Cmdenv")
 
-print(configs)
-
 subprocess.call(["python3", "clean_up.py"])
 os.chdir("../simulations")
 
