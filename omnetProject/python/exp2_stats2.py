@@ -16,6 +16,9 @@ for q in range (1,21):
     total_mac_loss = []
     sent_on_chan = []
     lost_on_chan = []
+    channel_loss = []
+    mac_loss = []
+    lost_on_mac = []
 
     if (q % 2 == 0):
 
@@ -58,6 +61,22 @@ for q in range (1,21):
             sent = packets_sent[i] - total_mac_loss[i]
             sent_on_chan.append(sent)
 
+
         for i in range(0, repeats):
             lost = sent_on_chan[i] - packets_received[i]
             lost_on_chan.append(lost)
+
+            loss = (lost_on_chan[i] / packets_sent[i] * 100)
+            channel_loss.append(loss)
+
+            lost_mac = total_mac_loss[i] - packets_received[i]
+            lost_on_mac.append(lost_mac)
+
+            loss_mac = (lost_on_mac[i] / packets_sent[i] * 100)
+            mac_loss.append(loss_mac)
+
+
+        print(np.mean(loss_rates) + np.mean(channel_loss))
+        print(np.mean(loss_rates) + np.mean(mac_loss))
+
+        print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))
