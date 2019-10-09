@@ -27,6 +27,7 @@
 #include "selfMessage_m.h"
 #include "CSResponse_m.h"
 #include <list>
+#include <fstream>
 
 using namespace omnetpp;
 
@@ -42,14 +43,21 @@ class MAC : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
 
     int MAC_State;
     int backoffCounter;
     uint bufferSize;
     int maxBackoffs;
-    double backoffDistribution;
+    volatile double backoffDistribution;
     bool firstPass = false;
     bool test = false;
+    int timedOut;
+    int bufferDropped;
+    int txId;
+
+    std::string outFileName;
+    std::ofstream outFile;
 
     // State control
 
@@ -73,7 +81,7 @@ class MAC : public cSimpleModule
     CSRequest *csrmsg = nullptr;
     CSResponse *csMsg = nullptr;
     transmissionConfirm *confirm = nullptr;
-    SelfMessage *smsg;
+    SelfMessage *smsg = nullptr;
 };
 }
 

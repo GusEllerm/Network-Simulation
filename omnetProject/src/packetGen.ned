@@ -23,6 +23,7 @@ simple PacketGen
     parameters:
         int messageSize;
         double iatDistribution;
+        string outFile;
         
     gates:
         output out0;

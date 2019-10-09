@@ -55,19 +55,31 @@ MAC::~MAC()
     while (!buffer.empty())
     {
         appMessage *appMsgDelete = buffer.back();
+        delete appMsgDelete;
         buffer.pop_back();
-        //delete appMsgDelete;
     }
 }
 
 void MAC::initialize()
 {
+    txId = getParentModule()->par("nodeId");
     bufferSize = par("bufferSize");
     maxBackoffs = par("maxBackoffs");
     backoffDistribution = par("backoffDistribution");
 
+    outFileName = par("outFile").str();
+    outFileName = outFileName.substr(1, outFileName.size() - 2);
+    outFile.open("../logs/" + outFileName, std::ios_base::app);
+
+    outFile.seekp(0, std::ios_base::end);
+    if (outFile.tellp() == 0) {
+        outFile << "Node_ID,Overflowed,Timed_Out" << std::endl;
+    }
+
     firstPass = true;
     MAC_State = 0;
+    timedOut = 0;
+    bufferDropped = 0;
 
     buffer.clear();
 }
@@ -84,17 +96,19 @@ void MAC::handleMessage(cMessage *msg)
 
             buffer.push_front(new appMessage(*appMsg));
         }
-//        else {
-//            EV << "Buffer overflow.. packet dropped ";
-//            EV << buffer.size();
-//            EV << "/";
-//            EV << bufferSize;
-//            EV << "\n";
-//            return;
-//        }
+        else {
+            bufferDropped++;
+            EV << "Buffer overflow.. packet dropped ";
+            EV << buffer.size();
+            EV << "/";
+            EV << bufferSize;
+            EV << "\n";
+            return;
+        }
 
         // This is here to sync with the init cycle of the transceiver
-        if (firstPass) {
+        if (firstPass)
+        {
             appMessage *test = buffer.back();
             delete test;
             buffer.pop_back();
@@ -104,16 +118,23 @@ void MAC::handleMessage(cMessage *msg)
         }
     }
 
+    if (csMsg != nullptr)
+    {
+        delete csMsg;
+        csMsg = nullptr;
+    }
+
+//    if (smsg != nullptr)
+//    {
+//        cancelAndDelete(smsg);
+//        smsg = nullptr;
+//    }
+
     // TX path
     // consumes items from the buffer
     FSM_Switch(MAC_FSM){
         case FSM_Exit(INIT):
-
-            if (csMsg != nullptr)
-            {
-                delete csMsg;
-                csMsg = nullptr;
-            }
+            //delete csMsg;
 
             if (confirm != nullptr)
             {
@@ -175,6 +196,8 @@ void MAC::handleMessage(cMessage *msg)
                         FSM_Goto(MAC_FSM, TRANSMITLOCK);
 
                     } else {
+                        delete smsg;
+                        timedOut++;
                         // packet is dropped
                         appMessage *test = buffer.back();
                         delete test;
@@ -189,8 +212,8 @@ void MAC::handleMessage(cMessage *msg)
                     // Channel is clear
                     FSM_Goto(MAC_FSM, TRANSMITMSG);
                 }
-                //delete csMsg;
-                //csMsg = nullptr;
+
+                cancelAndDelete(smsg);
             }
 
             else if (dynamic_cast<transmissionConfirm *>(msg)) {
@@ -242,5 +265,9 @@ void MAC::handleMessage(cMessage *msg)
         delete macMsg;
         delete tiMsg;
     }
+}
+void MAC::finish()
+{
+    outFile << txId << "," << bufferDropped << "," << timedOut << std::endl;
 }
 }

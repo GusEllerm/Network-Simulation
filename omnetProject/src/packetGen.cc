@@ -30,25 +30,21 @@ namespace wsn {
 
     void PacketGen::initialize()
     {
-        time_t t = time(0);
-        struct tm *now = localtime(& t);
+        outFileName = par("outFile").str();
+        txId = getParentModule()->par("nodeId");
+        messageSize = par("messageSize");
+        distro = par("iatDistribution");
 
-        char date[80];
-        strftime(date,80," %Y-%m-%d %H-%M-%S",now);
+        outFileName = outFileName.substr(1, outFileName.size() - 2);
+        outFile.open("../logs/" + outFileName, std::ios_base::app);
 
-        outFileGenerator.open("../logs/generator", std::ios_base::app);
-
-
-        outFileGenerator.seekp(0, std::ios_base::end);
-        if (outFileGenerator.tellp() == 0) {
-            outFileGenerator << "Node_ID,TX_Count,X,Y" << std::endl;
+        outFile.seekp(0, std::ios_base::end);
+        if (outFile.tellp() == 0) {
+            outFile << "Node_ID,TX_Count,X,Y" << std::endl;
         }
 
         txCount = 0;
         seqno = 0;
-        txId = getParentModule()->par("nodeId");
-        messageSize = par("messageSize");
-        distro = par("iatDistribution");
 
         scheduleAt(simTime(), new cMessage); //sends the initial message!
     }
@@ -85,27 +81,10 @@ namespace wsn {
         }
     }
 
-    //appMessage* PacketGen::createMessage()
-    //{
-    ////    char name[80];
-    ////    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
-    ////
-    ////    message = new appMessage(name);
-    ////
-    ////    message->setTimeStamp(simTime());
-    ////    message->setSenderId(txId);
-    ////    message->setSeqno(seqno);
-    ////    message->setMsgSize(messageSize);
-    ////
-    ////    seqno++;
-    ////
-    ////    return message;
-    //}
-
     void PacketGen::finish()
     {
         double xPos = getParentModule()->par("nodeXPos");
         double yPos = getParentModule()->par("nodeYPos");
-        outFileGenerator << txId << "," << txCount << "," << xPos << "," << yPos << std::endl;
+        outFile << txId << "," << txCount << "," << xPos << "," << yPos << std::endl;
     }
 }

@@ -38,6 +38,8 @@ Transceiver::~Transceiver()
 {
     while (!currentTransmissions.empty())
     {
+        signalStart *deleteMsg = currentTransmissions.back();
+        delete deleteMsg;
         currentTransmissions.pop_back();
     }
 }

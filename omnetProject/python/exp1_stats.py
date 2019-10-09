@@ -6,10 +6,11 @@ packets_received = []
 loss_rate = []
 receive_rate = []
 
-packets_transmitted = np.loadtxt("../logs/generator", skiprows=1) - 2
+packets_transmitted = np.loadtxt("../logs/exp1/generator_exp1", skiprows=1, delimiter=',', usecols=1)
+packets_transmitted = np.mean(packets_transmitted) - 2
 
 for i in range(1,41):
-    data = np.loadtxt("../logs/exp1/exp1_radius_" + str(i), skiprows=1)
+    data = np.loadtxt("../logs/exp1/exp1_radius_" + str(i) + "m", skiprows=1, delimiter=',', usecols=0)
     mean = np.mean(data)
     packets_received.append(mean)
     loss_rate.append(1 - (mean/packets_transmitted))

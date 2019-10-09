@@ -24,6 +24,7 @@ simple MAC
         int bufferSize;
         int maxBackoffs;
         double backoffDistribution;
+        string outFile;
         
     gates:
         input in0;

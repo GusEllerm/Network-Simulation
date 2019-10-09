@@ -49,6 +49,9 @@ public:
     appMessage *appMsg = nullptr;
 
     std::ofstream outFileGenerator;
+
+    std::string outFileName;
+    std::ofstream outFile;
 };
 }
 
