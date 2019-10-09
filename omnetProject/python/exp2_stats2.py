@@ -1,13 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+test = []
+test2 = []
+test3 = []
+numTXX = []
+drop_rates = []
+
+for i in range(1, 21):
+    if (i % 2 == 0):
+        numTXX.append(i)
 
 for q in range (1,21):
     i = 0
     j = 0
     total_mac_loss = 0
     repeats = 10
-    numTX = range(1, 21)
     packets_received = []
     packets_sent = []
     buffer_overflows = []
@@ -16,9 +24,10 @@ for q in range (1,21):
     total_mac_loss = []
     sent_on_chan = []
     lost_on_chan = []
+    lost_on_mac = []
     channel_loss = []
     mac_loss = []
-    lost_on_mac = []
+
 
     if (q % 2 == 0):
 
@@ -75,8 +84,39 @@ for q in range (1,21):
             loss_mac = (lost_on_mac[i] / packets_sent[i] * 100)
             mac_loss.append(loss_mac)
 
+        drop_rates.append((100 - (np.mean(loss_rates))) / 100)
 
-        print(np.mean(loss_rates) + np.mean(channel_loss))
-        print(np.mean(loss_rates) + np.mean(mac_loss))
+        test.append((np.mean(loss_rates) + np.mean(channel_loss)))
+        test2.append((np.mean(loss_rates) + np.mean(mac_loss)))
 
-        print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))
+
+
+
+
+# plt.figure()
+# plt.plot(numTXX, test)
+# plt.hold(True)
+# plt.plot(numTXX, test2)
+# plt.title('Channel Packet Receive Rate Simulation')
+# plt.xlabel('Number of Transmitters')
+# plt.ylabel('Loss Rate')
+# plt.legend(['Channel Loss', 'Mac Loss'])
+# plt.grid(True)
+# plt.xlim(2, 20)
+
+plt.figure()
+plt.plot(numTXX, drop_rates)
+
+plt.title('Total Loss Rate')
+plt.xlabel('Number of Transmitters')
+plt.ylabel('Loss Rate')
+plt.grid(True)
+plt.xlim(2, 20)
+plt.ylim(0, 1)
+plt.show()
+
+
+
+            #test2.append((np.mean(loss_rates) + np.mean(mac_loss)))
+
+        #print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))
