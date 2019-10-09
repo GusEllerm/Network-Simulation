@@ -124,12 +124,6 @@ void MAC::handleMessage(cMessage *msg)
         csMsg = nullptr;
     }
 
-//    if (smsg != nullptr)
-//    {
-//        cancelAndDelete(smsg);
-//        smsg = nullptr;
-//    }
-
     // TX path
     // consumes items from the buffer
     FSM_Switch(MAC_FSM){
