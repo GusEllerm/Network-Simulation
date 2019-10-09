@@ -1,11 +1,13 @@
-../out/gcc-release/src/packetSink.o: packetSink.cc packetSink.h \
+../out/gcc-debug/src/SimpleChannel.o: SimpleChannel.cc SimpleChannel.h \
  /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h \
- appMessage_m.h circBuff.h
+ appMessage_m.h signalStart_m.h signalStop_m.h
 
-packetSink.h:
+SimpleChannel.h:
 
 /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h:
 
 appMessage_m.h:
 
-circBuff.h:
+signalStart_m.h:
+
+signalStop_m.h:

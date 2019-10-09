@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 #include "MAC.h"
 #include "appMessage_m.h"
@@ -28,7 +28,7 @@
 
 namespace wsn {
 Define_Module(MAC);
-//#define FSM_DEBUG
+#define FSM_DEBUG
 
 MAC::~MAC()
 {
@@ -56,7 +56,6 @@ MAC::~MAC()
     {
         appMessage *appMsgDelete = buffer.back();
         buffer.pop_back();
-        //delete appMsgDelete;
     }
 }
 
@@ -81,22 +80,17 @@ void MAC::handleMessage(cMessage *msg)
 
         if (buffer.size() < bufferSize)
         {
-
-            buffer.push_front(new appMessage(*appMsg));
+            buffer.push_front(appMsg);
+        } else {
+            EV << "Buffer overflow.. packet dropped ";
+            EV << buffer.size();
+            EV << "/";
+            EV << bufferSize;
+            EV << "\n";
         }
-//        else {
-//            EV << "Buffer overflow.. packet dropped ";
-//            EV << buffer.size();
-//            EV << "/";
-//            EV << bufferSize;
-//            EV << "\n";
-//            return;
-//        }
 
         // This is here to sync with the init cycle of the transceiver
         if (firstPass) {
-            appMessage *test = buffer.back();
-            delete test;
             buffer.pop_back();
             initPacket = new transmissionRequest;
             send(initPacket, "out0");
@@ -109,11 +103,10 @@ void MAC::handleMessage(cMessage *msg)
     FSM_Switch(MAC_FSM){
         case FSM_Exit(INIT):
 
-            if (csMsg != nullptr)
-            {
-                delete csMsg;
-                csMsg = nullptr;
-            }
+//            if (csMsg != nullptr)
+//            {
+//                delete csMsg;
+//            }
 
             if (confirm != nullptr)
             {
@@ -176,10 +169,7 @@ void MAC::handleMessage(cMessage *msg)
 
                     } else {
                         // packet is dropped
-                        appMessage *test = buffer.back();
-                        delete test;
                         buffer.pop_back();
-
                         delete curMessage;
                         curMessage = nullptr;
                         EV << "Packet has reached max backoffs - dropping packet & restarting \n";
@@ -189,17 +179,13 @@ void MAC::handleMessage(cMessage *msg)
                     // Channel is clear
                     FSM_Goto(MAC_FSM, TRANSMITMSG);
                 }
-                //delete csMsg;
-                //csMsg = nullptr;
+                delete csMsg;
+                csMsg = nullptr;
             }
 
             else if (dynamic_cast<transmissionConfirm *>(msg)) {
                 confirm = static_cast<transmissionConfirm *>(msg);
-
-                appMessage *test = buffer.back();
-                delete test;
                 buffer.pop_back();
-
                 delete curMessage;
                 curMessage = nullptr;
                 EV << "Transmission Successful.. Buffer Size: ";
@@ -216,9 +202,10 @@ void MAC::handleMessage(cMessage *msg)
         case FSM_Exit(TRANSMITMSG):
         {
             EV << "TRANSMIT MESSAGE \n";
+
             appMsgEncap = new appMessage(*curMessage);
             mmsg = new macMessage();
-            requestMsg = new transmissionRequest();
+            requestMsg = new transmissionRequest;
 
             mmsg->encapsulate(appMsgEncap);
             requestMsg->encapsulate(mmsg);

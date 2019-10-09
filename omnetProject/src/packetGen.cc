@@ -18,86 +18,94 @@
 #include "CSRequest_m.h"
 
 namespace wsn {
-Define_Module(PacketGen);
+    Define_Module(PacketGen);
 
-PacketGen::~PacketGen()
-{
-    if (message != nullptr)
-    {
-        delete message;
-    }
-}
-
-void PacketGen::initialize()
-{
-    time_t t = time(0);
-    struct tm *now = localtime(& t);
-
-    char date[80];
-    strftime(date,80," %Y-%m-%d %H-%M-%S",now);
-
-    outFileGenerator.open("../logs/generator");
-    outFileGenerator << "TX_Count" << std::endl;
-
-    txCount = 0;
-    seqno = 0;
-    txId = getParentModule()->par("nodeId");
-    messageSize = par("messageSize");
-    distro = par("iatDistribution");
-
-    scheduleAt(simTime(), new cMessage); //sends the initial message!
-}
-
-void PacketGen::handleMessage(cMessage *msg)
-{
-    if (dynamic_cast<appMessage *>(msg))
-    {
-        delete msg;
-    }
-    else
+    PacketGen::~PacketGen()
     {
         if (message != nullptr)
         {
             delete message;
         }
-
-        char name[80];
-        sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
-
-        message = new appMessage(name);
-
-        message->setTimeStamp(simTime());
-        message->setSenderId(txId);
-        message->setSeqno(seqno);
-        message->setMsgSize(messageSize);
-
-        seqno++;
-
-        send(message, "out0");
-        txCount++;
-        scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
     }
-}
 
-//appMessage* PacketGen::createMessage()
-//{
-////    char name[80];
-////    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
-////
-////    message = new appMessage(name);
-////
-////    message->setTimeStamp(simTime());
-////    message->setSenderId(txId);
-////    message->setSeqno(seqno);
-////    message->setMsgSize(messageSize);
-////
-////    seqno++;
-////
-////    return message;
-//}
+    void PacketGen::initialize()
+    {
+        time_t t = time(0);
+        struct tm *now = localtime(& t);
 
-void PacketGen::finish()
-{
-    outFileGenerator << txCount << std::endl;
-}
+        char date[80];
+        strftime(date,80," %Y-%m-%d %H-%M-%S",now);
+
+        outFileGenerator.open("../logs/generator", std::ios_base::app);
+
+
+        outFileGenerator.seekp(0, std::ios_base::end);
+        if (outFileGenerator.tellp() == 0) {
+            outFileGenerator << "Node_ID,TX_Count,X,Y" << std::endl;
+        }
+
+        txCount = 0;
+        seqno = 0;
+        txId = getParentModule()->par("nodeId");
+        messageSize = par("messageSize");
+        distro = par("iatDistribution");
+
+        scheduleAt(simTime(), new cMessage); //sends the initial message!
+    }
+
+    void PacketGen::handleMessage(cMessage *msg)
+    {
+        if (dynamic_cast<appMessage *>(msg))
+        {
+            delete msg;
+        }
+        else
+        {
+            if (message != nullptr)
+            {
+                delete message;
+            }
+
+
+            char name[80];
+            sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+
+            message = new appMessage(name);
+
+            message->setTimeStamp(simTime());
+            message->setSenderId(txId);
+            message->setSeqno(seqno);
+            message->setMsgSize(messageSize);
+
+            seqno++;
+
+            send(message, "out0");
+            txCount++;
+            scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
+        }
+    }
+
+    //appMessage* PacketGen::createMessage()
+    //{
+    ////    char name[80];
+    ////    sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
+    ////
+    ////    message = new appMessage(name);
+    ////
+    ////    message->setTimeStamp(simTime());
+    ////    message->setSenderId(txId);
+    ////    message->setSeqno(seqno);
+    ////    message->setMsgSize(messageSize);
+    ////
+    ////    seqno++;
+    ////
+    ////    return message;
+    //}
+
+    void PacketGen::finish()
+    {
+        double xPos = getParentModule()->par("nodeXPos");
+        double yPos = getParentModule()->par("nodeYPos");
+        outFileGenerator << txId << "," << txCount << "," << xPos << "," << yPos << std::endl;
+    }
 }

@@ -32,7 +32,15 @@
 
 namespace wsn {
 Define_Module(Transceiver);
-#define FSM_DEBUG
+//#define FSM_DEBUG
+
+Transceiver::~Transceiver()
+{
+    while (!currentTransmissions.empty())
+    {
+        currentTransmissions.pop_back();
+    }
+}
 
 void Transceiver::initialize()
 {
@@ -109,7 +117,7 @@ void Transceiver::handleMessage(cMessage *msg)
 
           if (startMsg->getCollidedFlag())
           {
-              //TODO how do we drop a collided message?
+              EV << "dropped due to collision!";
           }
           else
           {
@@ -274,11 +282,12 @@ void Transceiver::handleMessage(cMessage *msg)
         case FSM_Exit(TRANSMIT):
             if (dynamic_cast<SelfMessage *>(msg)){
                 SelfMessage *smsg = static_cast<SelfMessage *>(msg);
-                transmissionRequest *tcmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
-                macMessage *mmsg = static_cast<macMessage *>(tcmsg->decapsulate());
+                transmissionRequest *trmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
+                macMessage *mmsg = static_cast<macMessage *>(trmsg->decapsulate());
 
                 delete smsg;
-                delete tcmsg;
+                delete trmsg;
+                //delete msg;
 
                 signalStart *startMsg = new signalStart();
 

@@ -15,7 +15,7 @@
 
 #ifndef __WSN_MAC_H_
 #define __WSN_MAC_H_
-#define FSM_DEBUG
+//#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "appMessage_m.h"
@@ -45,10 +45,11 @@ class MAC : public cSimpleModule
 
     int MAC_State;
     int backoffCounter;
-    int bufferSize;
+    uint bufferSize;
     int maxBackoffs;
     double backoffDistribution;
     bool firstPass = false;
+    bool test = false;
 
     // State control
 
@@ -62,16 +63,16 @@ class MAC : public cSimpleModule
 
     std::list<appMessage *> buffer;
 
-    appMessage *curMessage = NULL;
-    appMessage *appMsg = NULL;
-    appMessage *appMsgEncap;
-    macMessage *mmsg;
-    transmissionIndication *tiMsg = NULL;
-    transmissionRequest *initPacket = NULL;
-    transmissionRequest *requestMsg = NULL;
-    CSRequest *csrmsg = NULL;
-    CSResponse *csMsg = NULL;
-    transmissionConfirm *confirm = NULL;
+    appMessage *curMessage = nullptr;
+    appMessage *appMsg = nullptr;
+    appMessage *appMsgEncap = nullptr;
+    macMessage *mmsg = nullptr;
+    transmissionIndication *tiMsg = nullptr;
+    transmissionRequest *initPacket = nullptr;
+    transmissionRequest *requestMsg = nullptr;
+    CSRequest *csrmsg = nullptr;
+    CSResponse *csMsg = nullptr;
+    transmissionConfirm *confirm = nullptr;
     SelfMessage *smsg;
 };
 }

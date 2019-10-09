@@ -15,7 +15,7 @@
 
 #ifndef __WSN_TRANSCEIVER_H_
 #define __WSN_TRANSCEIVER_H_
-#define FSM_DEBUG
+//#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "signalStart_m.h"
@@ -31,6 +31,8 @@ namespace wsn {
  */
 class Transceiver : public cSimpleModule
 {
+public:
+    ~Transceiver();
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
@@ -73,7 +75,7 @@ class Transceiver : public cSimpleModule
 
     std::list<signalStart *> currentTransmissions;
 
-    CSRequest *csr = NULL;
+    CSRequest *csr = nullptr;
 };
 }
 #endif
