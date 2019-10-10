@@ -1,11 +1,12 @@
-../out/gcc-release/src/packetGen.o: packetGen.cc packetGen.h \
+../out/gcc-release/src/../src/packetGen.o: ../src/packetGen.cc \
+ ../src/packetGen.h \
  /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h \
- appMessage_m.h CSRequest_m.h
+ ../src/appMessage_m.h ../src/CSRequest_m.h
 
-packetGen.h:
+../src/packetGen.h:
 
 /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h:
 
-appMessage_m.h:
+../src/appMessage_m.h:
 
-CSRequest_m.h:
+../src/CSRequest_m.h:

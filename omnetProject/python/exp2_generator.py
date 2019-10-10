@@ -8,7 +8,7 @@ for i in range(1, 21):
         config['General'] = {'network': 'simulation',
                              'debug-on-errors': 'true',
                              'sim-time-limit': '1000s',
-                             'seed-set': '${0,17,3,4,5,6,18,8,13,14}',
+                             'seed-set': '${0,29,3,4,5,6,18,8,13,14,30,20,31,32,23,24,25,36,27,28}',
                              'simulation.numTX': i,
                              'simulation.radius': '20',
                              'simulation.TXNode[*].packGen.messageSize': '64',

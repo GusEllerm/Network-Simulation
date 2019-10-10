@@ -6,6 +6,10 @@ test2 = []
 test3 = []
 numTXX = []
 drop_rates = []
+overflows = []
+timeouts = []
+total_sent_after_mac = []
+total_received = []
 
 for i in range(1, 21):
     if (i % 2 == 0):
@@ -15,7 +19,7 @@ for q in range (1,21):
     i = 0
     j = 0
     total_mac_loss = 0
-    repeats = 10
+    repeats = 20
     packets_received = []
     packets_sent = []
     buffer_overflows = []
@@ -70,7 +74,6 @@ for q in range (1,21):
             sent = packets_sent[i] - total_mac_loss[i]
             sent_on_chan.append(sent)
 
-
         for i in range(0, repeats):
             lost = sent_on_chan[i] - packets_received[i]
             lost_on_chan.append(lost)
@@ -85,38 +88,44 @@ for q in range (1,21):
             mac_loss.append(loss_mac)
 
         drop_rates.append((100 - (np.mean(loss_rates))) / 100)
+        overflows.append(np.mean(buffer_overflows))
+        timeouts.append(np.mean(buffer_timeouts))
 
-        test.append((np.mean(loss_rates) + np.mean(channel_loss)))
-        test2.append((np.mean(loss_rates) + np.mean(mac_loss)))
+        test.append(((np.mean(loss_rates) + np.mean(channel_loss))) / 100)
+        test2.append(((np.mean(loss_rates) + np.mean(mac_loss))) / 100)
 
+        total_sent_after_mac.append(np.floor(np.mean(sent_on_chan)))
+        total_received.append(np.floor(np.mean(packets_received)))
 
-
-
-
-# plt.figure()
-# plt.plot(numTXX, test)
-# plt.hold(True)
-# plt.plot(numTXX, test2)
-# plt.title('Channel Packet Receive Rate Simulation')
-# plt.xlabel('Number of Transmitters')
-# plt.ylabel('Loss Rate')
-# plt.legend(['Channel Loss', 'Mac Loss'])
-# plt.grid(True)
-# plt.xlim(2, 20)
+plt.figure()
+plt.plot(numTXX, test)
+plt.hold(True)
+plt.plot(numTXX, test2)
+plt.title('Ratio Lost in MAC vs. Channel')
+plt.xlabel('Number of Transmitters')
+plt.ylabel('Loss Rate')
+plt.legend(['Channel Loss', 'MAC Loss'])
+plt.grid(True)
+plt.xlim(2, 20)
+plt.ylim(0, 1)
 
 plt.figure()
 plt.plot(numTXX, drop_rates)
-
 plt.title('Total Loss Rate')
 plt.xlabel('Number of Transmitters')
 plt.ylabel('Loss Rate')
 plt.grid(True)
 plt.xlim(2, 20)
 plt.ylim(0, 1)
-plt.show()
+
+plt.figure()
+plt.plot(numTXX, overflows)
+plt.title('Buffer Overflows')
+plt.xlabel('Number of Transmitters')
+plt.ylabel('Number of Lost Packets')
+plt.grid(True)
+plt.xlim(2, 20)
 
 
 
-            #test2.append((np.mean(loss_rates) + np.mean(mac_loss)))
-
-        #print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))
+#print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))

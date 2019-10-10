@@ -67,6 +67,7 @@ namespace wsn {
             sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
 
             message = new appMessage(name);
+            txCount++;
 
             message->setTimeStamp(simTime());
             message->setSenderId(txId);
@@ -76,7 +77,7 @@ namespace wsn {
             seqno++;
 
             send(message, "out0");
-            txCount++;
+
             scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
         }
     }
