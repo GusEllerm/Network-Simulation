@@ -1,6 +1,7 @@
-../out/gcc-release/src/CSResponse_m.o: CSResponse_m.cc CSResponse_m.h \
- /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h
+../out/gcc-release/simulations/../src/CSResponse_m.o: \
+ ../src/CSResponse_m.cc ../src/CSResponse_m.h \
+ /home/username/omnetpp-5.5.1/include/omnetpp.h
 
-CSResponse_m.h:
+../src/CSResponse_m.h:
 
-/home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h:
+/home/username/omnetpp-5.5.1/include/omnetpp.h:

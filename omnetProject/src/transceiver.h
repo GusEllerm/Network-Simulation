@@ -21,6 +21,7 @@
 #include "signalStart_m.h"
 #include "CSRequest_m.h"
 #include <list>
+#include <fstream>
 
 using namespace omnetpp;
 
@@ -36,6 +37,7 @@ public:
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
 
     const double ref = 1.0;
     const double pathLossExponent = 4.0;
@@ -48,6 +50,11 @@ public:
     double ber;
     double per;
     double u;
+
+    std::string outFileName;
+    std::ofstream outFile;
+
+    int collisions;
 
     // State control
     int transceiverState;

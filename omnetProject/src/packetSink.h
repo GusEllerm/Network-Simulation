@@ -34,7 +34,9 @@ class PacketSink : public cSimpleModule
     virtual void finish();
 
     std::string outFileName;
+    std::string outFileName2;
     std::ofstream outFile;
+    std::ofstream outFile2;
     int bufferSize;
     int rxCount;
 };

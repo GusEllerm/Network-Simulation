@@ -1,7 +1,7 @@
-../out/gcc-release/src/transmissionIndication_m.o: \
- transmissionIndication_m.cc transmissionIndication_m.h \
- /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h
+../out/gcc-release/simulations/../src/transmissionIndication_m.o: \
+ ../src/transmissionIndication_m.cc ../src/transmissionIndication_m.h \
+ /home/username/omnetpp-5.5.1/include/omnetpp.h
 
-transmissionIndication_m.h:
+../src/transmissionIndication_m.h:
 
-/home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h:
+/home/username/omnetpp-5.5.1/include/omnetpp.h:

@@ -22,6 +22,7 @@ simple PacketSink
 {
     parameters:
         string outFile;
+        string outFile2;
     gates:
         input in0;
 }

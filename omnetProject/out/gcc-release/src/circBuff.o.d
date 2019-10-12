@@ -1,3 +1,4 @@
-../out/gcc-release/src/circBuff.o: circBuff.cc circBuff.h
+../out/gcc-release/simulations/../src/circBuff.o: ../src/circBuff.cc \
+ ../src/circBuff.h
 
-circBuff.h:
+../src/circBuff.h:

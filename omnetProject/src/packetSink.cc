@@ -33,13 +33,23 @@ namespace wsn {
         strftime(date,80," %Y-%m-%d %H-%M-%S",now);
 
         rxCount = 0;
+
         outFileName = par("outFile").str();
         outFileName = outFileName.substr(1, outFileName.size() - 2);
         outFile.open("../logs/" + outFileName, std::ios_base::app);
 
+        outFileName2 = par("outFile2").str();
+        outFileName2 = outFileName2.substr(1, outFileName2.size() - 2);
+        outFile2.open("../logs/" + outFileName2, std::ios_base::app);
+
         outFile.seekp(0, std::ios_base::end);
         if (outFile.tellp() == 0) {
             outFile << "Packets_RX" << std::endl;
+        }
+
+        outFile2.seekp(0, std::ios_base::end);
+        if (outFile2.tellp() == 0) {
+            outFile2 << "SenderID,SequenceNum" << std::endl;
         }
     }
 
@@ -48,6 +58,7 @@ namespace wsn {
         if (dynamic_cast<appMessage *>(msg))
         {
             appMessage *appMsg = static_cast<appMessage *>(msg);
+            outFile2 << appMsg->getSenderId() << "," << appMsg->getSeqno() << std::endl;
             rxCount++;
             delete msg;
         }
@@ -56,5 +67,6 @@ namespace wsn {
     void PacketSink::finish()
     {
         outFile << rxCount << std::endl;
+        outFile2 << "=,=" << std::endl;
     }
 }

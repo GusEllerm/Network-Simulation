@@ -59,6 +59,17 @@ void Transceiver::initialize()
     nodeXPos = getParentModule()->par("nodeXPos");
     nodeYPos = getParentModule()->par("nodeYPos");
 
+    outFileName = par("outFile").str();
+    outFileName = outFileName.substr(1, outFileName.size() - 2);
+    outFile.open("../logs/" + outFileName, std::ios_base::app);
+
+    outFile.seekp(0, std::ios_base::end);
+    if (outFile.tellp() == 0) {
+        outFile << "NodeID,Collisions" << std::endl;
+    }
+
+    collisions = 0;
+
 }
 
 void Transceiver::handleMessage(cMessage *msg)
@@ -71,6 +82,7 @@ void Transceiver::handleMessage(cMessage *msg)
         // Collision check
         if (!currentTransmissions.empty())
         {
+            collisions++;
             startMsg->setCollidedFlag(true);
             for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
             {
@@ -374,5 +386,12 @@ void Transceiver::handleMessage(cMessage *msg)
             FSM_Goto(transmitFSM, RECEIVE);
             break;
     }
+}
+
+// https://stackoverflow.com/questions/33397097/how-to-invoke-finish-individually-on-modules-in-omnet
+
+void Transceiver::finish()
+{
+    outFile << nodeId << "," << collisions <<std::endl;
 }
 }

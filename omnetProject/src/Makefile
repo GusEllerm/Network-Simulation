@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for omnetProject
+# OMNeT++/OMNEST Makefile for WSN
 #
 # This file was generated with the command:
-#  opp_makemake -f
+#  opp_makemake -f --deep -L../out/$$\(CONFIGNAME\) -L../out/$$\(CONFIGNAME\)/logs
 #
 
 # Name of target to be created (-o option)
-TARGET = omnetProject$(D)$(EXE_SUFFIX)
+TARGET = WSN$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -22,7 +22,7 @@ INCLUDE_PATH =
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS =
+LIBS = $(LDFLAG_LIBPATH)../out/$(CONFIGNAME) $(LDFLAG_LIBPATH)../out/$(CONFIGNAME)/logs
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -86,6 +86,9 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+ifneq ($(TOOLCHAIN_NAME),clangc2)
+LIBS += -Wl,-rpath,$(abspath ../out/$(CONFIGNAME)) -Wl,-rpath,$(abspath ../out/$(CONFIGNAME)/logs)
+endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)

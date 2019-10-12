@@ -27,6 +27,7 @@ simple Transceiver
         double noisePowerDBm;
         double turnaroundTime;
         double csTime;
+        string outFile;
         
     gates:
         input in0;
