@@ -20,6 +20,7 @@ num_iterations = 20
 def successful_packets_per_node(num_nodes):
     master_dict = {}
     final_dict = {}
+    results_dict = {}
     total_successful_packets = 0
     repeat = 0
 
@@ -55,14 +56,14 @@ def successful_packets_per_node(num_nodes):
         final_dict[node] = final_dict[node] / num_iterations
         total_successful_packets += final_dict[node]
 
-    for node in final_dict.keys():
+    for node in range(0, num_nodes):
+        results_dict[node] = (final_dict[str(node)] / total_successful_packets) * 100
         print("Node " + str(node) + " accounts for " +
-              "{0:.2f}".format((final_dict[node] / total_successful_packets) * 100) + "% of successful packets")
+              "{0:.2f}".format((final_dict[str(node)] / total_successful_packets) * 100) + "% of successful packets")
 
-    print("\n")
-    # print(master_dict)
-    # print(final_dict)
-    # print(total_successful_packets)
+    print("")
+    return results_dict
+
 
 
 def loss_stats(num_nodes):
@@ -196,8 +197,10 @@ def create_graphs(simulation_stats):
     packet_loss_collision = []
     packet_loss_buffer = []
     packet_loss_timeout = []
+    nodes_v_successful_packets = []
 
     # Explained packet loss (packet_loss_mac + packet_loss_collision)
+    # Checks to see if we have accounted for all packet loss in the system
     packet_loss_explainable = []
 
     for simulation in simulation_stats.keys():
@@ -219,7 +222,11 @@ def create_graphs(simulation_stats):
         packet_loss_timeout.append(
             np.mean(simulation_stats[simulation]["Loss_due_to_timeout"])
         )
+        nodes_v_successful_packets.append(
+            list(simulation_stats[simulation]["node_v_successful_packets"].values())
+        )
 
+    print(nodes_v_successful_packets)
     for j in range(0, len(simulation_stats.keys())):
         packet_loss_explainable.append(
             (((packet_loss_mac[j] + packet_loss_collision[j]) / 100) * (packet_loss_means[j] / 100)) * 100
@@ -268,26 +275,26 @@ def create_graphs(simulation_stats):
     plt.ylim(0, 100)
     plt.show()
 
-
 def main():
     simulation_stats = {}
 
     for simulation in range(2, 22, 2):
-        print(simulation)
         simulation_stats[simulation] = {"Overall_successful_transmissions": [],
                                         "Loss_due_to_MAC": [],
                                         "Loss_due_to_Collisions": [],
                                         "Loss_due_to_buffer_overflow": [],
-                                        "Loss_due_to_timeout": []}
+                                        "Loss_due_to_timeout": [],
+                                        "node_v_successful_packets": {}}
+
     for simulation in range(2, 22, 2):
         overall, mac, collision, buffer, timeout = loss_stats(simulation)
+        succsess_per_node = successful_packets_per_node(simulation)
+        simulation_stats[simulation]["node_v_successful_packets"] = succsess_per_node
         simulation_stats[simulation]["Overall_successful_transmissions"] = overall
         simulation_stats[simulation]["Loss_due_to_MAC"] = mac
         simulation_stats[simulation]["Loss_due_to_Collisions"] = collision
         simulation_stats[simulation]["Loss_due_to_buffer_overflow"] = buffer
         simulation_stats[simulation]["Loss_due_to_timeout"] = timeout
-
-        # successful_packets_per_node(num_nodes)
 
     create_graphs(simulation_stats)
 
