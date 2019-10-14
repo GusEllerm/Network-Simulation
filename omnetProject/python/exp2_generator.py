@@ -33,10 +33,10 @@ for i in range(1, 21):
                              'simulation.RXNode.trans.noisePowerDBm': '-120',
                              'simulation.RXNode.trans.turnaroundTime': '0.001',
                              'simulation.RXNode.trans.csTime': '0.000125',
-                             'simulation.TXNode[*].MAC.backoffDistribution': 'exponential(0.03)',
+                             'simulation.TXNode[*].MAC.backoffDistribution': 'exponential(0.003)',
                              'simulation.TXNode[*].MAC.bufferSize': '5',
                              'simulation.TXNode[*].MAC.maxBackoffs': '5',
-                             'simulation.RXNode.MAC.backoffDistribution': 'exponential(0.03)',
+                             'simulation.RXNode.MAC.backoffDistribution': 'exponential(0.003)',
                              'simulation.RXNode.MAC.bufferSize': '5',
                              'simulation.RXNode.MAC.maxBackoffs': '5'}
 

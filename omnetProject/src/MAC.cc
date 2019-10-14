@@ -28,7 +28,7 @@
 
 namespace wsn {
 Define_Module(MAC);
-//#define FSM_DEBUG
+#define FSM_DEBUG
 
 MAC::~MAC()
 {
@@ -157,6 +157,7 @@ void MAC::handleMessage(cMessage *msg)
         {
             // send CSRequest packet to transceiver
             csrmsg = new CSRequest;
+            EV << "HASOUDHASODHUOADHOASHDUSDO";
             send(csrmsg, "out0");
             FSM_Goto(MAC_FSM, TRANSMITLOCK);
             break;
@@ -190,8 +191,8 @@ void MAC::handleMessage(cMessage *msg)
                         FSM_Goto(MAC_FSM, TRANSMITLOCK);
 
                     } else {
-                        delete smsg;
                         timedOut++;
+                        delete smsg;
                         // packet is dropped
                         appMessage *test = buffer.back();
                         delete test;
@@ -207,7 +208,7 @@ void MAC::handleMessage(cMessage *msg)
                     FSM_Goto(MAC_FSM, TRANSMITMSG);
                 }
 
-                cancelAndDelete(smsg);
+                //cancelAndDelete(smsg);
             }
 
             else if (dynamic_cast<transmissionConfirm *>(msg)) {
@@ -226,6 +227,7 @@ void MAC::handleMessage(cMessage *msg)
             }
 
             else if (dynamic_cast<SelfMessage *>(msg)) {
+                EV << "GOTR INTO THE ELSE IF";
                 FSM_Goto(MAC_FSM, TRANSMITCS);
             }
             break;

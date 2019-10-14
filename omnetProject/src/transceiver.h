@@ -55,6 +55,7 @@ public:
     std::ofstream outFile;
 
     int collisions;
+    bool collisionCounted;
 
     // State control
     int transceiverState;

@@ -15,7 +15,7 @@
 
 #ifndef __WSN_MAC_H_
 #define __WSN_MAC_H_
-//#define FSM_DEBUG
+#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "appMessage_m.h"

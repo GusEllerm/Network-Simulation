@@ -82,7 +82,6 @@ void Transceiver::handleMessage(cMessage *msg)
         // Collision check
         if (!currentTransmissions.empty())
         {
-            collisions++;
             startMsg->setCollidedFlag(true);
             for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
             {
@@ -131,6 +130,7 @@ void Transceiver::handleMessage(cMessage *msg)
 
           if (startMsg->getCollidedFlag())
           {
+              collisions++;
               EV << "dropped due to collision!";
           }
           else
@@ -202,6 +202,7 @@ void Transceiver::handleMessage(cMessage *msg)
          return;
       }
 
+    collisionCounted = false;
 
     FSM_Switch(transmitFSM)
     {

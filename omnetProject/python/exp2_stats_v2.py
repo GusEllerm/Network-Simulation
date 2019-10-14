@@ -14,7 +14,7 @@ mac_loss_verbose = True
 channel_loss = True
 channel_loss_verbose = True
 
-num_iterations = 20
+num_iterations = 1
 
 
 def successful_packets_per_node(num_nodes):
@@ -199,8 +199,13 @@ def create_graphs(simulation_stats):
 
     for j in range(0, len(simulation_stats.keys())):
         packet_loss_explainable.append(
-            (((packet_loss_mac[j] + packet_loss_collision[j])/ 100) * (packet_loss_means[j]/100))*100
+            (((packet_loss_mac[j] + packet_loss_collision[j]) / 100) * (packet_loss_means[j] / 100)) * 100
         )
+
+
+    print(packet_loss_means)
+    print(packet_loss_explainable)
+
 
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_means)
@@ -227,9 +232,9 @@ def create_graphs(simulation_stats):
     plt.show()
 
     plt.figure()
-    plt.plot(list(simulation_stats.keys()), packet_loss_means)
+    plt.plot(list(simulation_stats.keys()), packet_loss_means, linestyle=':')
     plt.plot(list(simulation_stats.keys()), packet_loss_explainable)
-    plt.title("Explainable packet drop")
+    plt.title("Explainable packet loss")
     plt.legend(["Total observed packet loss", "Total explainable packet loss"])
     plt.xlabel("Number of Transmitters")
     plt.ylabel("Percent of dropped packets")
@@ -242,11 +247,12 @@ def create_graphs(simulation_stats):
 def main():
     simulation_stats = {}
 
-    for simulation in range(2, 22, 2):
+    for simulation in range(18, 20, 2):
+        print(simulation)
         simulation_stats[simulation] = {"Overall_successful_transmissions": [],
                                         "Loss_due_to_MAC": [],
                                         "Loss_due_to_Collisions": []}
-    for simulation in range(2, 22, 2):
+    for simulation in range(18, 20, 2):
         overall, mac, collision = loss_stats(simulation)
         simulation_stats[simulation]["Overall_successful_transmissions"] = overall
         simulation_stats[simulation]["Loss_due_to_MAC"] = mac
