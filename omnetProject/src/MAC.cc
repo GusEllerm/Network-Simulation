@@ -157,7 +157,6 @@ void MAC::handleMessage(cMessage *msg)
         {
             // send CSRequest packet to transceiver
             csrmsg = new CSRequest;
-            EV << "HASOUDHASODHUOADHOASHDUSDO";
             send(csrmsg, "out0");
             FSM_Goto(MAC_FSM, TRANSMITLOCK);
             break;
@@ -192,7 +191,6 @@ void MAC::handleMessage(cMessage *msg)
 
                     } else {
                         timedOut++;
-                        delete smsg;
                         // packet is dropped
                         appMessage *test = buffer.back();
                         delete test;
@@ -227,7 +225,6 @@ void MAC::handleMessage(cMessage *msg)
             }
 
             else if (dynamic_cast<SelfMessage *>(msg)) {
-                EV << "GOTR INTO THE ELSE IF";
                 FSM_Goto(MAC_FSM, TRANSMITCS);
             }
             break;
@@ -260,6 +257,13 @@ void MAC::handleMessage(cMessage *msg)
 
         delete macMsg;
         delete tiMsg;
+
+    }
+
+    // Garbage collection
+    else if (dynamic_cast<SelfMessage *>(msg))
+    {
+        delete msg;
     }
 }
 void MAC::finish()

@@ -14,7 +14,7 @@ mac_loss_verbose = True
 channel_loss = True
 channel_loss_verbose = True
 
-num_iterations = 1
+num_iterations = 20
 
 
 def successful_packets_per_node(num_nodes):
@@ -76,6 +76,8 @@ def loss_stats(num_nodes):
     success_percent_pi_list = []
     mac_loss_percent_pi_list = []
     collision_percent_pi_list = []
+    mac_loss_buffer_overflow_list = []
+    mac_loss_timeout_list = []
 
     sink_packets_path = "../logs/exp2/exp2_numTX_" + str(num_nodes)
     gen_packets_path = "../logs/exp2/generator_" + str(num_nodes) + "_TX"
@@ -154,6 +156,15 @@ def loss_stats(num_nodes):
                     print("Buffer loss :" + "{}".format(loss_mac_pi_dict[iteration]["Overflow"]))
                     print("Timeout loss :" + "{}".format(loss_mac_pi_dict[iteration]["Timeout"]))
                     print("")
+                    mac_loss_buffer_overflow_list.append(
+                        (loss_mac_pi_dict[iteration]["Overflow"] / (
+                            int(gen_packets_pi_dict[iteration] - sunk_packets_pi_dict[iteration]))) * 100
+                    )
+                    mac_loss_timeout_list.append(
+                        (loss_mac_pi_dict[iteration]["Timeout"] / (
+                            int(gen_packets_pi_dict[iteration] - sunk_packets_pi_dict[iteration])) * 100
+                        )
+                    )
 
         # Get loss rate due to channel
         if channel_loss:
@@ -171,7 +182,11 @@ def loss_stats(num_nodes):
                     print("Collision loss :" + "{}".format(collision_pi_dict[iteration]))
                     print("")
 
-    return success_percent_pi_list, mac_loss_percent_pi_list, collision_percent_pi_list
+    return success_percent_pi_list, \
+           mac_loss_percent_pi_list, \
+           collision_percent_pi_list, \
+           mac_loss_buffer_overflow_list, \
+           mac_loss_timeout_list
 
 def create_graphs(simulation_stats):
 
@@ -179,6 +194,8 @@ def create_graphs(simulation_stats):
     packet_success_means = []
     packet_loss_mac = []
     packet_loss_collision = []
+    packet_loss_buffer = []
+    packet_loss_timeout = []
 
     # Explained packet loss (packet_loss_mac + packet_loss_collision)
     packet_loss_explainable = []
@@ -195,6 +212,12 @@ def create_graphs(simulation_stats):
         )
         packet_loss_collision.append(
             np.mean(simulation_stats[simulation]["Loss_due_to_Collisions"])
+        )
+        packet_loss_buffer.append(
+            np.mean(simulation_stats[simulation]["Loss_due_to_buffer_overflow"])
+        )
+        packet_loss_timeout.append(
+            np.mean(simulation_stats[simulation]["Loss_due_to_timeout"])
         )
 
     for j in range(0, len(simulation_stats.keys())):
@@ -222,8 +245,10 @@ def create_graphs(simulation_stats):
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_mac)
     plt.plot(list(simulation_stats.keys()), packet_loss_collision)
+    plt.plot(list(simulation_stats.keys()), packet_loss_buffer, linestyle=':')
+    plt.plot(list(simulation_stats.keys()), packet_loss_timeout, linestyle=':')
     plt.title("Error rate split into mac and collision")
-    plt.legend(["MAC packet loss", "Collision packet loss"])
+    plt.legend(["MAC packet loss", "Collision packet loss", "Mac loss: Buffer overflow", "Mac loss: Timeout"])
     plt.xlabel("Number of Transmitters")
     plt.ylabel("Percent of dropped packets")
     plt.grid(True)
@@ -247,16 +272,20 @@ def create_graphs(simulation_stats):
 def main():
     simulation_stats = {}
 
-    for simulation in range(18, 20, 2):
+    for simulation in range(2, 22, 2):
         print(simulation)
         simulation_stats[simulation] = {"Overall_successful_transmissions": [],
                                         "Loss_due_to_MAC": [],
-                                        "Loss_due_to_Collisions": []}
-    for simulation in range(18, 20, 2):
-        overall, mac, collision = loss_stats(simulation)
+                                        "Loss_due_to_Collisions": [],
+                                        "Loss_due_to_buffer_overflow": [],
+                                        "Loss_due_to_timeout": []}
+    for simulation in range(2, 22, 2):
+        overall, mac, collision, buffer, timeout = loss_stats(simulation)
         simulation_stats[simulation]["Overall_successful_transmissions"] = overall
         simulation_stats[simulation]["Loss_due_to_MAC"] = mac
         simulation_stats[simulation]["Loss_due_to_Collisions"] = collision
+        simulation_stats[simulation]["Loss_due_to_buffer_overflow"] = buffer
+        simulation_stats[simulation]["Loss_due_to_timeout"] = timeout
 
         # successful_packets_per_node(num_nodes)
 
