@@ -22,7 +22,7 @@ simple PacketGen
 {
     parameters:
         int messageSize;
-        double iatDistribution;
+        volatile double iatDistribution;
         string outFile;
         
     gates:

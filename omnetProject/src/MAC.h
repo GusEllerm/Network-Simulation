@@ -45,22 +45,23 @@ class MAC : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
     virtual void finish();
 
-    int MAC_State;
-    int backoffCounter;
     uint bufferSize;
+    int backoffCounter;
     int maxBackoffs;
-    volatile double backoffDistribution;
-    bool firstPass = false;
-    bool test = false;
     int timedOut;
     int bufferDropped;
     int txId;
 
+    volatile double backoffDistribution;
+
+    bool firstPass = false;
+    bool test = false;
+
     std::string outFileName;
     std::ofstream outFile;
+    std::list<appMessage *> buffer;
 
     // State control
-
     cFSM MAC_FSM;
     enum {
         INIT = 0,
@@ -69,17 +70,15 @@ class MAC : public cSimpleModule
         TRANSMITMSG = FSM_Transient(2)
     };
 
-    std::list<appMessage *> buffer;
-
     appMessage *curMessage = nullptr;
-    appMessage *appMsg = nullptr;
+    appMessage *incomingAppMsg = nullptr;
     appMessage *appMsgEncap = nullptr;
     macMessage *mmsg = nullptr;
     transmissionIndication *tiMsg = nullptr;
-    transmissionRequest *initPacket = nullptr;
+    transmissionRequest *initMsg = nullptr;
     transmissionRequest *requestMsg = nullptr;
-    CSRequest *csrmsg = nullptr;
-    CSResponse *csMsg = nullptr;
+    CSRequest *csReqMsg = nullptr;
+    CSResponse *csResMsg = nullptr;
     transmissionConfirm *confirm = nullptr;
     SelfMessage *smsg = nullptr;
 };

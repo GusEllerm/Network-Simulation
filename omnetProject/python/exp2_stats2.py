@@ -126,6 +126,16 @@ plt.ylabel('Number of Lost Packets')
 plt.grid(True)
 plt.xlim(2, 20)
 
+plt.figure()
+plt.plot(numTXX, total_received)
+plt.title('Buffer Overflows')
+plt.xlabel('Number of Transmitters')
+plt.ylabel('Number of Lost Packets')
+plt.grid(True)
+plt.xlim(2, 20)
+
+
+plt.show()
 
 
 #print((np.mean(loss_rates) + np.mean(channel_loss)) + (np.mean(loss_rates) + np.mean(mac_loss)))

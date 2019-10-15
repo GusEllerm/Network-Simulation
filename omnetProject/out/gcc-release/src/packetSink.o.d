@@ -1,10 +1,12 @@
-../out/gcc-release/src/packetSink.o: packetSink.cc packetSink.h \
- /home/username/omnetpp-5.5.1/include/omnetpp.h appMessage_m.h circBuff.h
+../out/gcc-release/simulations/../src/packetSink.o: ../src/packetSink.cc \
+ ../src/packetSink.h \
+ /home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h \
+ ../src/appMessage_m.h ../src/circBuff.h
 
-packetSink.h:
+../src/packetSink.h:
 
-/home/username/omnetpp-5.5.1/include/omnetpp.h:
+/home/cosc/student/dwh62/Documents/COSC418/omnetpp-5.5.1/include/omnetpp.h:
 
-appMessage_m.h:
+../src/appMessage_m.h:
 
-circBuff.h:
+../src/circBuff.h:

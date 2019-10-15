@@ -26,12 +26,6 @@ namespace wsn {
 
     void PacketSink::initialize()
     {
-        time_t t = time(0);
-        struct tm *now = localtime(& t);
-
-        char date[80];
-        strftime(date,80," %Y-%m-%d %H-%M-%S",now);
-
         rxCount = 0;
 
         outFileName = par("outFile").str();
@@ -57,8 +51,10 @@ namespace wsn {
     {
         if (dynamic_cast<appMessage *>(msg))
         {
-            appMessage *appMsg = static_cast<appMessage *>(msg);
+            appMsg = static_cast<appMessage *>(msg);
+
             outFile2 << appMsg->getSenderId() << "," << appMsg->getSeqno() << std::endl;
+
             rxCount++;
             delete msg;
         }

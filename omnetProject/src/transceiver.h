@@ -19,71 +19,59 @@
 
 #include <omnetpp.h>
 #include "signalStart_m.h"
-#include "CSRequest_m.h"
 #include <list>
 #include <fstream>
 
 using namespace omnetpp;
 
 namespace wsn {
+    class Transceiver : public cSimpleModule
+    {
+    public:
+        ~Transceiver();
+      protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage *msg);
+        virtual void finish();
 
-/**
- * TODO - Generated class
- */
-class Transceiver : public cSimpleModule
-{
-public:
-    ~Transceiver();
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+        const double ref = 1.0;
+        const double pathLossExponent = 4.0;
+        double lossRatio;
+        double lossRatioDB;
+        double receivedPowerDBm;
+        double bitRateDB;
+        double snrDB;
+        double snr;
+        double ber;
+        double per;
+        double u;
+        double nodeXPos;
+        double nodeYPos;
+        double txPowerDBm;
+        double bitRate;
+        double csThreshDBm;
+        double noisePowerDBm;
+        double turnaroundTime;
+        double csTime;
+        int nodeId;
+        int collisions;
+        bool collisionCounted;
 
-    const double ref = 1.0;
-    const double pathLossExponent = 4.0;
-    double lossRatio;
-    double lossRatioDB;
-    double receivedPowerDBm;
-    double bitRateDB;
-    double snrDB;
-    double snr;
-    double ber;
-    double per;
-    double u;
+        std::string outFileName;
+        std::ofstream outFile;
+        std::list<signalStart *> currentTransmissions;
 
-    std::string outFileName;
-    std::ofstream outFile;
-
-    int collisions;
-    bool collisionCounted;
-
-    // State control
-    int transceiverState;
-    cFSM transmitFSM;
-    enum {
-        INIT = 0,
-        RECEIVE = FSM_Steady(1),
-        TURNAROUNDLOCK = FSM_Steady(2),
-        TRANSMIT = FSM_Transient(1),
-        CSLOCK = FSM_Steady(3),
-        CSTRANSMIT = FSM_Transient(2),
-        TRANSMITFINAL = FSM_Steady(4)
+        // State control
+        cFSM transmitFSM;
+        enum {
+            INIT = 0,
+            RECEIVE = FSM_Steady(1),
+            TURNAROUNDLOCK = FSM_Steady(2),
+            TRANSMIT = FSM_Transient(1),
+            CSLOCK = FSM_Steady(3),
+            CSTRANSMIT = FSM_Transient(2),
+            TRANSMITFINAL = FSM_Steady(4)
+        };
     };
-
-    int nodeId;
-    double nodeXPos;
-    double nodeYPos;
-
-    double txPowerDBm;
-    double bitRate;
-    double csThreshDBm;
-    double noisePowerDBm;
-    double turnaroundTime;
-    double csTime;
-
-    std::list<signalStart *> currentTransmissions;
-
-    CSRequest *csr = nullptr;
-};
 }
 #endif

@@ -18,6 +18,7 @@
 
 #include <omnetpp.h>
 #include <fstream>
+#include "appMessage_m.h"
 
 using namespace omnetpp;
 
@@ -33,6 +34,7 @@ class PacketSink : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
     virtual void finish();
 
+    appMessage *appMsg = nullptr;
     std::string outFileName;
     std::string outFileName2;
     std::ofstream outFile;

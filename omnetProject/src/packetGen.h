@@ -36,19 +36,14 @@ public:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
     virtual void finish();
-    //appMessage* createMessage();
 
-    double distro;
+    volatile double distro;
     int messageSize;
     int seqno;
     int txId;
     int txCount;
 
     appMessage *message = nullptr;
-    appMessage *outMessage = nullptr;
-    appMessage *appMsg = nullptr;
-
-    std::ofstream outFileGenerator;
 
     std::string outFileName;
     std::ofstream outFile;

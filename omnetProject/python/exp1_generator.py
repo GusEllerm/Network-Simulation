@@ -9,7 +9,7 @@ for i in range(1, 41):
                          'debug-on-errors': 'true',
                          'sim-time-limit': '1000s',
                          'seed-set': '${repetition}',
-                         'repeat': '20',
+                         'repeat': '1',
                          'simulation.numTX': '1',
                          'simulation.radius': i,
                          'simulation.TXNode[*].packGen.messageSize': '64',

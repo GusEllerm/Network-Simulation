@@ -53,8 +53,6 @@ void Transceiver::initialize()
     turnaroundTime = par("turnaroundTime");
     csTime = par("csTime");
 
-    transceiverState = 0; //RX
-
     nodeId = getParentModule()->par("nodeId");
     nodeXPos = getParentModule()->par("nodeXPos");
     nodeYPos = getParentModule()->par("nodeYPos");
@@ -69,7 +67,6 @@ void Transceiver::initialize()
     }
 
     collisions = 0;
-
 }
 
 void Transceiver::handleMessage(cMessage *msg)
@@ -181,7 +178,6 @@ void Transceiver::handleMessage(cMessage *msg)
               }
           }
 
-
          EV << "Path Loss (delta): ";
          EV << lossRatioDB;
          EV << "||";
@@ -238,8 +234,8 @@ void Transceiver::handleMessage(cMessage *msg)
 
             // CS request from MAC
             else if (dynamic_cast<CSRequest *>(msg)) {
-                csr = static_cast<CSRequest *>(msg);
-                delete csr;
+                CSRequest *csReq = static_cast<CSRequest *>(msg);
+                delete csReq;
 
                 EV << "CS Request received\n";
                 double totalPower = 0;
@@ -302,7 +298,6 @@ void Transceiver::handleMessage(cMessage *msg)
 
                 delete smsg;
                 delete trmsg;
-                //delete msg;
 
                 signalStart *startMsg = new signalStart();
 
@@ -393,6 +388,6 @@ void Transceiver::handleMessage(cMessage *msg)
 
 void Transceiver::finish()
 {
-    outFile << nodeId << "," << collisions <<std::endl;
+    outFile << nodeId << "," << collisions << std::endl;
 }
 }

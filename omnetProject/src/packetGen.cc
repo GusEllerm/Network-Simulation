@@ -62,7 +62,6 @@ namespace wsn {
                 delete message;
             }
 
-
             char name[80];
             sprintf(name, "TX ID: %d, Seqno: %d, Time: %f", txId, seqno, simTime().dbl());
 
