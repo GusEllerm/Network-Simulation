@@ -19,44 +19,44 @@
 #include "signalStop_m.h"
 
 namespace wsn {
-Define_Module(SimpleChannel);
+    Define_Module(SimpleChannel);
 
-void SimpleChannel::initialize()
-{
-    numGates = gateCount() / 2;
-}
-
-void SimpleChannel::handleMessage(cMessage *msg)
-{
-    if (dynamic_cast<signalStart *>(msg))
+    void SimpleChannel::initialize()
     {
-        signalStart *startMsg = static_cast<signalStart *>(msg);
+        numGates = gateCount() / 2;
+    }
 
-        for (int idx = 0; idx < numGates; idx++)
+    void SimpleChannel::handleMessage(cMessage *msg)
+    {
+        if (dynamic_cast<signalStart *>(msg))
         {
-            signalStart *sendMsg = new signalStart(*startMsg); //deep copy
-            send(sendMsg, "out", idx);
+            signalStart *startMsg = static_cast<signalStart *>(msg);
+
+            for (int idx = 0; idx < numGates; idx++)
+            {
+                signalStart *sendMsg = new signalStart(*startMsg); //deep copy
+                send(sendMsg, "out", idx);
+            }
+
+            delete msg;
         }
 
-        delete msg;
-    }
-
-    else if (dynamic_cast<signalStop *>(msg))
-    {
-        signalStop *stopMsg = static_cast<signalStop *>(msg);
-
-        for (int idx = 0; idx < numGates; idx++)
+        else if (dynamic_cast<signalStop *>(msg))
         {
-            signalStop *sendMsg = new signalStop(*stopMsg); //deep copy
-            send(sendMsg, "out", idx);
+            signalStop *stopMsg = static_cast<signalStop *>(msg);
+
+            for (int idx = 0; idx < numGates; idx++)
+            {
+                signalStop *sendMsg = new signalStop(*stopMsg); //deep copy
+                send(sendMsg, "out", idx);
+            }
+
+            delete msg;
         }
 
-        delete msg;
+        else {
+            EV << "something strange got to channel";
+            delete msg;
+        }
     }
-
-    else {
-        EV << "something strange got to channel";
-        delete msg;
-    }
-}
 }

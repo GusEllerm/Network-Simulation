@@ -31,363 +31,363 @@
 #include <string.h>
 
 namespace wsn {
-Define_Module(Transceiver);
-//#define FSM_DEBUG
+    Define_Module(Transceiver);
+    //#define FSM_DEBUG
 
-Transceiver::~Transceiver()
-{
-    while (!currentTransmissions.empty())
+    Transceiver::~Transceiver()
     {
-        signalStart *deleteMsg = currentTransmissions.back();
-        delete deleteMsg;
-        currentTransmissions.pop_back();
-    }
-}
-
-void Transceiver::initialize()
-{
-    txPowerDBm = par("txPowerDBm");
-    bitRate = par("bitRate");
-    csThreshDBm = par("csThreshDBm");
-    noisePowerDBm = par("noisePowerDBm");
-    turnaroundTime = par("turnaroundTime");
-    csTime = par("csTime");
-
-    nodeId = getParentModule()->par("nodeId");
-    nodeXPos = getParentModule()->par("nodeXPos");
-    nodeYPos = getParentModule()->par("nodeYPos");
-
-    outFileName = par("outFile").str();
-    outFileName = outFileName.substr(1, outFileName.size() - 2);
-    outFile.open("../logs/" + outFileName, std::ios_base::app);
-
-    outFile.seekp(0, std::ios_base::end);
-    if (outFile.tellp() == 0) {
-        outFile << "NodeID,Collisions" << std::endl;
-    }
-
-    collisions = 0;
-}
-
-void Transceiver::handleMessage(cMessage *msg)
-{
-    // The receive path (receive path gets run always therefore is not included in the state machine)
-    if (dynamic_cast<signalStart *>(msg))
-    {
-        signalStart *startMsg = static_cast<signalStart *>(msg);
-
-        // Collision check
-        if (!currentTransmissions.empty())
+        while (!currentTransmissions.empty())
         {
-            startMsg->setCollidedFlag(true);
+            signalStart *deleteMsg = currentTransmissions.back();
+            delete deleteMsg;
+            currentTransmissions.pop_back();
+        }
+    }
+
+    void Transceiver::initialize()
+    {
+        txPowerDBm = par("txPowerDBm");
+        bitRate = par("bitRate");
+        csThreshDBm = par("csThreshDBm");
+        noisePowerDBm = par("noisePowerDBm");
+        turnaroundTime = par("turnaroundTime");
+        csTime = par("csTime");
+
+        nodeId = getParentModule()->par("nodeId");
+        nodeXPos = getParentModule()->par("nodeXPos");
+        nodeYPos = getParentModule()->par("nodeYPos");
+
+        outFileName = par("outFile").str();
+        outFileName = outFileName.substr(1, outFileName.size() - 2);
+        outFile.open("../logs/" + outFileName, std::ios_base::app);
+
+        outFile.seekp(0, std::ios_base::end);
+        if (outFile.tellp() == 0) {
+            outFile << "NodeID,Collisions" << std::endl;
+        }
+
+        collisions = 0;
+    }
+
+    void Transceiver::handleMessage(cMessage *msg)
+    {
+        // The receive path (receive path gets run always therefore is not included in the state machine)
+        if (dynamic_cast<signalStart *>(msg))
+        {
+            signalStart *startMsg = static_cast<signalStart *>(msg);
+
+            // Collision check
+            if (!currentTransmissions.empty())
+            {
+                startMsg->setCollidedFlag(true);
+                for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+                {
+                    (*it)->setCollidedFlag(true);
+                }
+            }
+
+            // Check if a node has more than one on going transmission, if so - end the program
             for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
             {
-                (*it)->setCollidedFlag(true);
+                if (startMsg->getId() == (*it)->getId())
+                {
+                    EV << "Aborting in transceiver -- node has more than one active transmission";
+                    exit(EXIT_FAILURE);
+                }
             }
+
+            currentTransmissions.push_front(new signalStart(*startMsg)); //deep copy
+            delete msg;
+            return;
         }
 
-        // Check if a node has more than one on going transmission, if so - end the program
-        for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+        if (dynamic_cast<signalStop *>(msg))
+          {
+              signalStop *stopMsg = static_cast<signalStop *>(msg);
+              signalStart *startMsg;
+
+              // Check for corresponding start message
+              bool found = false;
+              for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+              {
+                  if (stopMsg->getId() == (*it)->getId())
+                  {
+                      startMsg = *it;
+                      it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
+                      found = true;
+                  }
+              }
+              if (!found) //we got a stop signal for a transmission that never existed!
+              {
+                  EV << "Aborting in transceiver";
+                  exit(EXIT_FAILURE);
+              }
+
+              delete stopMsg;
+
+              if (startMsg->getCollidedFlag())
+              {
+                  collisions++;
+                  EV << "dropped due to collision!";
+              }
+              else
+              {
+                  macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
+
+                  double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
+                  double msgXPos = startMsg->getPosX();
+                  double msgYPos = startMsg->getPosY();
+
+                  double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+                  double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+
+                  double dist = sqrt(xDist + yDist);
+
+                  if (dist <= ref)
+                  {
+                      lossRatio = ref;
+                  }
+                  else
+                  {
+                      lossRatio = pow(dist, pathLossExponent);
+                  }
+
+                  lossRatioDB = 10 * log10(lossRatio);
+                  receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
+                  bitRateDB = 10 * log10(bitRate);
+                  snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
+                  snr = pow(10, snrDB/10);
+                  ber = erfc(sqrt(2 * snr));
+
+                  int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
+                  packetLength = packetLength * 8;
+
+                  per = 1 - (pow((1 - ber), packetLength));
+
+                  u = uniform(0, 1);
+
+                  if (u < per)
+                  {
+                      delete mmsg;
+                  }
+                  else
+                  {
+                      transmissionIndication *indicationMsg = new transmissionIndication();
+                      indicationMsg->encapsulate(mmsg);
+                      send(indicationMsg, "out0");
+                  }
+              }
+
+             EV << "Path Loss (delta): ";
+             EV << lossRatioDB;
+             EV << "||";
+             EV << "Received Power DBm (R): ";
+             EV << receivedPowerDBm;
+             EV << "||";
+             EV << "SNR DB (E): ";
+             EV << snrDB;
+             EV << "||";
+             EV << "Bit Error Rate (p): ";
+             EV << ber;
+             EV << "||";
+             EV << "Packet Error Rate: ";
+             EV << per;
+             EV << "||";
+
+             delete startMsg;
+             return;
+          }
+
+        collisionCounted = false;
+
+        FSM_Switch(transmitFSM)
         {
-            if (startMsg->getId() == (*it)->getId())
-            {
-                EV << "Aborting in transceiver -- node has more than one active transmission";
-                exit(EXIT_FAILURE);
-            }
-        }
+            case FSM_Exit(INIT):
+                FSM_Goto(transmitFSM, RECEIVE);
+                break;
 
-        currentTransmissions.push_front(new signalStart(*startMsg)); //deep copy
-        delete msg;
-        return;
-    }
+            case FSM_Enter(RECEIVE):
+                    // Transmission Confirm received from the TRANSMIT state
+                    if (dynamic_cast<transmissionConfirm *>(msg)) {
+                        EV << "Status ok sent to MAC\n";
+                        send(msg, "out0"); // Sends the transmission confirm to the MAC layer
+                    } else if (dynamic_cast<SelfMessage *>(msg)) {
+                        delete msg;
+                    }
+                break;
 
-    if (dynamic_cast<signalStop *>(msg))
-      {
-          signalStop *stopMsg = static_cast<signalStop *>(msg);
-          signalStart *startMsg;
+            case FSM_Exit(RECEIVE):
 
-          // Check for corresponding start message
-          bool found = false;
-          for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-          {
-              if (stopMsg->getId() == (*it)->getId())
-              {
-                  startMsg = *it;
-                  it = currentTransmissions.erase(it); //to avoid demolishing the memory we just pointed to.
-                  found = true;
-              }
-          }
-          if (!found) //we got a stop signal for a transmission that never existed!
-          {
-              EV << "Aborting in transceiver";
-              exit(EXIT_FAILURE);
-          }
+                // transmission Request from MAC
+                if (dynamic_cast<transmissionRequest *>(msg)) {
+                    // message is deleted after stream {RECEIVE -> TURNAROUNDLOCK -> TRANSMIT}
+                    transmissionRequest *tmsg = static_cast<transmissionRequest *>(msg);
 
-          delete stopMsg;
+                    // Creating a self message for differentiating between new transmissionRequests and current
+                    // That way we can send statusBusy if we receive another request while transmitting
+                    SelfMessage *smsg = new SelfMessage();
+                    smsg->setDescription("Current Stream");
+                    smsg->encapsulate(tmsg);
+                    scheduleAt(simTime() + turnaroundTime, smsg);
+                    FSM_Goto(transmitFSM, TURNAROUNDLOCK);
+                }
 
-          if (startMsg->getCollidedFlag())
-          {
-              collisions++;
-              EV << "dropped due to collision!";
-          }
-          else
-          {
-              macMessage *mmsg = static_cast<macMessage *>(startMsg->decapsulate());
+                // CS request from MAC
+                else if (dynamic_cast<CSRequest *>(msg)) {
+                    CSRequest *csReq = static_cast<CSRequest *>(msg);
+                    delete csReq;
 
-              double msgtransmitPowerDBm = startMsg->getTransmitPowerDBm();
-              double msgXPos = startMsg->getPosX();
-              double msgYPos = startMsg->getPosY();
+                    EV << "CS Request received\n";
+                    double totalPower = 0;
+                    double totalPowerDBm = 0;
 
-              double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
-              double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+                     for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
+                     {
+                         double msgtransmitPowerDBm = (*it)->getTransmitPowerDBm();
+                         double msgXPos = (*it)->getPosX();
+                         double msgYPos = (*it)->getPosY();
 
-              double dist = sqrt(xDist + yDist);
+                         double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
+                         double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
 
-              if (dist <= ref)
-              {
-                  lossRatio = ref;
-              }
-              else
-              {
-                  lossRatio = pow(dist, pathLossExponent);
-              }
+                         double dist = sqrt(xDist + yDist);
 
-              lossRatioDB = 10 * log10(lossRatio);
-              receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
-              bitRateDB = 10 * log10(bitRate);
-              snrDB = (receivedPowerDBm) - (noisePowerDBm + bitRateDB);
-              snr = pow(10, snrDB/10);
-              ber = erfc(sqrt(2 * snr));
+                         if (dist <= ref)
+                         {
+                             lossRatio = ref;
+                         }
+                         else
+                         {
+                             lossRatio = pow(dist, pathLossExponent);
+                         }
 
-              int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
-              packetLength = packetLength * 8;
+                         lossRatioDB = 10 * log10(lossRatio);
+                         receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
+                         double receivedPower = pow(10, receivedPowerDBm / 10);
+                         totalPower += receivedPower;
+                     }
 
-              per = 1 - (pow((1 - ber), packetLength));
+                    totalPowerDBm = 10 * log10(totalPower);
 
-              u = uniform(0, 1);
+                    SelfMessage *smsg = new SelfMessage();
+                    smsg->setTotalPower(totalPowerDBm);
+                    scheduleAt(simTime() + csTime, smsg);
 
-              if (u < per)
-              {
-                  delete mmsg;
-              }
-              else
-              {
-                  transmissionIndication *indicationMsg = new transmissionIndication();
-                  indicationMsg->encapsulate(mmsg);
-                  send(indicationMsg, "out0");
-              }
-          }
+                    FSM_Goto(transmitFSM, CSLOCK);
+                }
 
-         EV << "Path Loss (delta): ";
-         EV << lossRatioDB;
-         EV << "||";
-         EV << "Received Power DBm (R): ";
-         EV << receivedPowerDBm;
-         EV << "||";
-         EV << "SNR DB (E): ";
-         EV << snrDB;
-         EV << "||";
-         EV << "Bit Error Rate (p): ";
-         EV << ber;
-         EV << "||";
-         EV << "Packet Error Rate: ";
-         EV << per;
-         EV << "||";
+                break;
 
-         delete startMsg;
-         return;
-      }
+            case FSM_Enter(TURNAROUNDLOCK):
+                break;
+            case FSM_Exit(TURNAROUNDLOCK):
+                if (dynamic_cast<SelfMessage *>(msg))
+                {
+                    FSM_Goto(transmitFSM, TRANSMIT); // message has waited for the turnaround time, start transmit
+                } else if (dynamic_cast<transmissionConfirm *>(msg))
+                {
+                    FSM_Goto(transmitFSM, RECEIVE);
+                }
+                break;
 
-    collisionCounted = false;
+            case FSM_Exit(TRANSMIT):
+                if (dynamic_cast<SelfMessage *>(msg)){
+                    SelfMessage *smsg = static_cast<SelfMessage *>(msg);
+                    transmissionRequest *trmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
+                    macMessage *mmsg = static_cast<macMessage *>(trmsg->decapsulate());
 
-    FSM_Switch(transmitFSM)
-    {
-        case FSM_Exit(INIT):
-            FSM_Goto(transmitFSM, RECEIVE);
-            break;
+                    delete smsg;
+                    delete trmsg;
 
-        case FSM_Enter(RECEIVE):
-                // Transmission Confirm received from the TRANSMIT state
-                if (dynamic_cast<transmissionConfirm *>(msg)) {
-                    EV << "Status ok sent to MAC\n";
-                    send(msg, "out0"); // Sends the transmission confirm to the MAC layer
-                } else if (dynamic_cast<SelfMessage *>(msg)) {
+                    signalStart *startMsg = new signalStart();
+
+                    int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
+                    packetLength = packetLength * 8; //convert to bits
+
+                    startMsg->setId(nodeId);
+                    startMsg->setPosX(nodeXPos);
+                    startMsg->setPosY(nodeYPos);
+                    startMsg->setTransmitPowerDBm(txPowerDBm);
+                    startMsg->setCollidedFlag(false);
+
+                    startMsg->encapsulate(mmsg);
+
+                    send(startMsg, "out1"); //to channel
+
+                    SelfMessage *selfPacket = new SelfMessage();
+                    selfPacket->setDescription("End Transmission");
+                    scheduleAt(simTime() + (packetLength / bitRate), selfPacket);
+                    FSM_Goto(transmitFSM, TRANSMITFINAL);
+                }
+
+
+                // TransmissionRequest while dealing with a previous TransmissionRequest
+                else if (dynamic_cast<transmissionRequest *>(msg))
+                {
+                    transmissionConfirm *tcmsg = new transmissionConfirm();
+                    tcmsg->setStatus("statusBusy");
+                    send(tcmsg, "out1");
                     delete msg;
                 }
-            break;
 
-        case FSM_Exit(RECEIVE):
+                else if (dynamic_cast<CSRequest *>(msg))
+                {
+                    CSResponse *csResponse = new CSResponse();
+                    csResponse->setBusyChannel(true);
+                    send(csResponse, "out0");
+                    delete msg;
+                }
 
-            // transmission Request from MAC
-            if (dynamic_cast<transmissionRequest *>(msg)) {
-                // message is deleted after stream {RECEIVE -> TURNAROUNDLOCK -> TRANSMIT}
-                transmissionRequest *tmsg = static_cast<transmissionRequest *>(msg);
+                break;
 
-                // Creating a self message for differentiating between new transmissionRequests and current
-                // That way we can send statusBusy if we receive another request while transmitting
-                SelfMessage *smsg = new SelfMessage();
-                smsg->setDescription("Current Stream");
-                smsg->encapsulate(tmsg);
-                scheduleAt(simTime() + turnaroundTime, smsg);
-                FSM_Goto(transmitFSM, TURNAROUNDLOCK);
-            }
+            case FSM_Exit(TRANSMITFINAL):
+                if (dynamic_cast<SelfMessage *>(msg)) {
 
-            // CS request from MAC
-            else if (dynamic_cast<CSRequest *>(msg)) {
-                CSRequest *csReq = static_cast<CSRequest *>(msg);
-                delete csReq;
+                    signalStop *stopMsg = new signalStop();
+                    int id = getParentModule()->par("nodeId");
+                    stopMsg->setId(id);
+                    send(stopMsg, "out1"); //to channel
+                    delete msg;
 
-                EV << "CS Request received\n";
-                double totalPower = 0;
-                double totalPowerDBm = 0;
+                    transmissionConfirm *tcmsg = new transmissionConfirm();
+                    tcmsg->setStatus("statusOK");
+                    scheduleAt(simTime() + turnaroundTime, tcmsg);
 
-                 for (auto it = currentTransmissions.begin(); it != currentTransmissions.end(); ++it)
-                 {
-                     double msgtransmitPowerDBm = (*it)->getTransmitPowerDBm();
-                     double msgXPos = (*it)->getPosX();
-                     double msgYPos = (*it)->getPosY();
+                    FSM_Goto(transmitFSM, TURNAROUNDLOCK);
+                }
 
-                     double xDist = (nodeXPos - msgXPos) * (nodeXPos - msgXPos);
-                     double yDist = (nodeYPos - msgYPos) * (nodeYPos - msgYPos);
+            case FSM_Enter(CSLOCK):
+                break;
+            case FSM_Exit(CSLOCK):
+                if (msg->isSelfMessage()) FSM_Goto(transmitFSM, CSTRANSMIT);
+                break;
 
-                     double dist = sqrt(xDist + yDist);
+            case FSM_Exit(CSTRANSMIT):
+                EV << "SENDING CS RESPONSE\n";
 
-                     if (dist <= ref)
-                     {
-                         lossRatio = ref;
-                     }
-                     else
-                     {
-                         lossRatio = pow(dist, pathLossExponent);
-                     }
-
-                     lossRatioDB = 10 * log10(lossRatio);
-                     receivedPowerDBm = msgtransmitPowerDBm - lossRatioDB;
-                     double receivedPower = pow(10, receivedPowerDBm / 10);
-                     totalPower += receivedPower;
-                 }
-
-                totalPowerDBm = 10 * log10(totalPower);
-
-                SelfMessage *smsg = new SelfMessage();
-                smsg->setTotalPower(totalPowerDBm);
-                scheduleAt(simTime() + csTime, smsg);
-
-                FSM_Goto(transmitFSM, CSLOCK);
-            }
-
-            break;
-
-        case FSM_Enter(TURNAROUNDLOCK):
-            break;
-        case FSM_Exit(TURNAROUNDLOCK):
-            if (dynamic_cast<SelfMessage *>(msg))
-            {
-                FSM_Goto(transmitFSM, TRANSMIT); // message has waited for the turnaround time, start transmit
-            } else if (dynamic_cast<transmissionConfirm *>(msg))
-            {
-                FSM_Goto(transmitFSM, RECEIVE);
-            }
-            break;
-
-        case FSM_Exit(TRANSMIT):
-            if (dynamic_cast<SelfMessage *>(msg)){
                 SelfMessage *smsg = static_cast<SelfMessage *>(msg);
-                transmissionRequest *trmsg = static_cast<transmissionRequest *>(smsg->decapsulate());
-                macMessage *mmsg = static_cast<macMessage *>(trmsg->decapsulate());
-
-                delete smsg;
-                delete trmsg;
-
-                signalStart *startMsg = new signalStart();
-
-                int packetLength = static_cast<appMessage *>(mmsg->getEncapsulatedPacket())->getMsgSize();
-                packetLength = packetLength * 8; //convert to bits
-
-                startMsg->setId(nodeId);
-                startMsg->setPosX(nodeXPos);
-                startMsg->setPosY(nodeYPos);
-                startMsg->setTransmitPowerDBm(txPowerDBm);
-                startMsg->setCollidedFlag(false);
-
-                startMsg->encapsulate(mmsg);
-
-                send(startMsg, "out1"); //to channel
-
-                SelfMessage *selfPacket = new SelfMessage();
-                selfPacket->setDescription("End Transmission");
-                scheduleAt(simTime() + (packetLength / bitRate), selfPacket);
-                FSM_Goto(transmitFSM, TRANSMITFINAL);
-            }
-
-
-            // TransmissionRequest while dealing with a previous TransmissionRequest
-            else if (dynamic_cast<transmissionRequest *>(msg))
-            {
-                transmissionConfirm *tcmsg = new transmissionConfirm();
-                tcmsg->setStatus("statusBusy");
-                send(tcmsg, "out1");
-                delete msg;
-            }
-
-            else if (dynamic_cast<CSRequest *>(msg))
-            {
                 CSResponse *csResponse = new CSResponse();
-                csResponse->setBusyChannel(true);
+
+                double totalPowerDBm = smsg->getTotalPower();
+
+                if (totalPowerDBm > csThreshDBm)
+                {
+                    csResponse->setBusyChannel(true);
+                } else
+                {
+                    csResponse->setBusyChannel(false);
+                }
+
                 send(csResponse, "out0");
-                delete msg;
-            }
-
-            break;
-
-        case FSM_Exit(TRANSMITFINAL):
-            if (dynamic_cast<SelfMessage *>(msg)) {
-
-                signalStop *stopMsg = new signalStop();
-                int id = getParentModule()->par("nodeId");
-                stopMsg->setId(id);
-                send(stopMsg, "out1"); //to channel
-                delete msg;
-
-                transmissionConfirm *tcmsg = new transmissionConfirm();
-                tcmsg->setStatus("statusOK");
-                scheduleAt(simTime() + turnaroundTime, tcmsg);
-
-                FSM_Goto(transmitFSM, TURNAROUNDLOCK);
-            }
-
-        case FSM_Enter(CSLOCK):
-            break;
-        case FSM_Exit(CSLOCK):
-            if (msg->isSelfMessage()) FSM_Goto(transmitFSM, CSTRANSMIT);
-            break;
-
-        case FSM_Exit(CSTRANSMIT):
-            EV << "SENDING CS RESPONSE\n";
-
-            SelfMessage *smsg = static_cast<SelfMessage *>(msg);
-            CSResponse *csResponse = new CSResponse();
-
-            double totalPowerDBm = smsg->getTotalPower();
-
-            if (totalPowerDBm > csThreshDBm)
-            {
-                csResponse->setBusyChannel(true);
-            } else
-            {
-                csResponse->setBusyChannel(false);
-            }
-
-            send(csResponse, "out0");
-            FSM_Goto(transmitFSM, RECEIVE);
-            break;
+                FSM_Goto(transmitFSM, RECEIVE);
+                break;
+        }
     }
-}
 
-// https://stackoverflow.com/questions/33397097/how-to-invoke-finish-individually-on-modules-in-omnet
+    // https://stackoverflow.com/questions/33397097/how-to-invoke-finish-individually-on-modules-in-omnet
 
-void Transceiver::finish()
-{
-    outFile << nodeId << "," << collisions << std::endl;
-}
+    void Transceiver::finish()
+    {
+        outFile << nodeId << "," << collisions << std::endl;
+    }
 }

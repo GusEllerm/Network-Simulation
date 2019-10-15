@@ -233,9 +233,19 @@ def create_graphs(simulation_stats):
         )
 
 
-    print(packet_loss_means)
-    print(packet_loss_explainable)
+    # print(packet_loss_means)
+    # print(packet_loss_explainable)
 
+    test = [0.0, 0.0, 0.0082327383182678703, 0.8113122509011091, 0.8139797796830921, 0.8133005588987576, 1.807090391457033, 1.9015979008813464, 1.914233187020718, 1.98954746219225]
+
+
+    plt.figure()
+    plt.plot(list(simulation_stats.keys()), test, linestyle=':')
+    plt.xlabel("Number of Transmitters")
+    plt.ylabel("Timed Out")
+    plt.grid(True)
+    plt.xlim(2, 20)
+    plt.show()
 
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_means)

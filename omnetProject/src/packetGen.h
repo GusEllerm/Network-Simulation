@@ -24,30 +24,27 @@ using namespace omnetpp;
 
 namespace wsn {
 
-/**
- * TODO - Generated class
- */
-class PacketGen : public cSimpleModule
-{
-public:
-    ~PacketGen();
+    class PacketGen : public cSimpleModule
+    {
+    public:
+        ~PacketGen();
 
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+      protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage *msg);
+        virtual void finish();
 
-    volatile double distro;
-    int messageSize;
-    int seqno;
-    int txId;
-    int txCount;
+        volatile double distro;
+        int messageSize;
+        int seqno;
+        int txId;
+        int txCount;
 
-    appMessage *message = nullptr;
+        appMessage *message = nullptr;
 
-    std::string outFileName;
-    std::ofstream outFile;
-};
+        std::string outFileName;
+        std::ofstream outFile;
+    };
 }
 
 #endif

@@ -33,55 +33,51 @@ using namespace omnetpp;
 
 namespace wsn{
 
-/**
- * TODO - Generated class
- */
-class MAC : public cSimpleModule
-{
-  public:
-    ~MAC();
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    class MAC : public cSimpleModule
+    {
+      public:
+        ~MAC();
+      protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage *msg);
+        virtual void finish();
 
-    uint bufferSize;
-    int backoffCounter;
-    int maxBackoffs;
-    int timedOut;
-    int bufferDropped;
-    int txId;
+        uint bufferSize;
+        int backoffCounter;
+        int maxBackoffs;
+        int timedOut;
+        int bufferDropped;
+        int txId;
 
-    volatile double backoffDistribution;
+        volatile double backoffDistribution;
 
-    bool firstPass = false;
-    bool test = false;
+        bool firstPass = false;
+        bool test = false;
 
-    std::string outFileName;
-    std::ofstream outFile;
-    std::list<appMessage *> buffer;
+        std::string outFileName;
+        std::ofstream outFile;
+        std::list<appMessage *> buffer;
 
-    // State control
-    cFSM MAC_FSM;
-    enum {
-        INIT = 0,
-        TRANSMITCS = FSM_Transient(1),
-        TRANSMITLOCK = FSM_Steady(1),
-        TRANSMITMSG = FSM_Transient(2)
+        // State control
+        cFSM MAC_FSM;
+        enum {
+            INIT = 0,
+            TRANSMITCS = FSM_Transient(1),
+            TRANSMITLOCK = FSM_Steady(1),
+            TRANSMITMSG = FSM_Transient(2)
+        };
+
+        appMessage *curMessage = nullptr;
+        appMessage *incomingAppMsg = nullptr;
+        appMessage *appMsgEncap = nullptr;
+        macMessage *mmsg = nullptr;
+        transmissionIndication *tiMsg = nullptr;
+        transmissionRequest *initMsg = nullptr;
+        transmissionRequest *requestMsg = nullptr;
+        CSRequest *csReqMsg = nullptr;
+        CSResponse *csResMsg = nullptr;
+        transmissionConfirm *confirm = nullptr;
+        SelfMessage *smsg = nullptr;
     };
-
-    appMessage *curMessage = nullptr;
-    appMessage *incomingAppMsg = nullptr;
-    appMessage *appMsgEncap = nullptr;
-    macMessage *mmsg = nullptr;
-    transmissionIndication *tiMsg = nullptr;
-    transmissionRequest *initMsg = nullptr;
-    transmissionRequest *requestMsg = nullptr;
-    CSRequest *csReqMsg = nullptr;
-    CSResponse *csResMsg = nullptr;
-    transmissionConfirm *confirm = nullptr;
-    SelfMessage *smsg = nullptr;
-};
 }
-
 #endif

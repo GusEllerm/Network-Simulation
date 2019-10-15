@@ -22,17 +22,13 @@ using namespace omnetpp;
 
 namespace wsn {
 
-/**
- * TODO - Generated class
- */
-class SimpleChannel : public cSimpleModule
-{
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    class SimpleChannel : public cSimpleModule
+    {
+      protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage *msg);
 
-    int numGates;
-};
+        int numGates;
+    };
 }
-
 #endif

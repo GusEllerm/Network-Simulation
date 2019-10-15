@@ -15,7 +15,7 @@
 
 #ifndef __WSN_TRANSCEIVER_H_
 #define __WSN_TRANSCEIVER_H_
-//#define FSM_DEBUG
+#define FSM_DEBUG
 
 #include <omnetpp.h>
 #include "signalStart_m.h"
