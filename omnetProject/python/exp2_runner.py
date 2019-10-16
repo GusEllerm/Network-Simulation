@@ -14,7 +14,9 @@ os.chdir("../simulations")
 timeStart = time.time()
 
 for i in configs:
-    subprocess.call([i], shell=True)
+     subprocess.call([i], shell=True)
+
+#subprocess.call("./omnetProject -n .:../src -f exp2_numTX_6.ini -u Cmdenv", shell=True)
 
 timeEnd = time.time()
 totalTime = timeEnd - timeStart

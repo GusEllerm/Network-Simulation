@@ -18,6 +18,7 @@ num_iterations = 20
 
 
 def successful_packets_per_node(num_nodes):
+    print(num_nodes)
     master_dict = {}
     final_dict = {}
     results_dict = {}
@@ -236,13 +237,14 @@ def create_graphs(simulation_stats):
     # print(packet_loss_means)
     # print(packet_loss_explainable)
 
-    test = [0.0, 0.0, 0.0082327383182678703, 0.8113122509011091, 0.8139797796830921, 0.8133005588987576, 1.807090391457033, 1.9015979008813464, 1.914233187020718, 1.98954746219225]
+    # test = [0.0, 0.0, 0.0082327383182678703, 0.8113122509011091, 0.8139797796830921, 0.8133005588987576, 1.807090391457033, 1.9015979008813464, 1.914233187020718, 1.98954746219225]
 
 
     plt.figure()
-    plt.plot(list(simulation_stats.keys()), test, linestyle=':')
+    plt.plot(list(simulation_stats.keys()), packet_loss_timeout, linestyle=':')
+    plt.legend(["Packets dropped due to timeout"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Timed Out")
+    plt.ylabel("Packets Timeout (%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.show()
@@ -250,10 +252,10 @@ def create_graphs(simulation_stats):
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_means)
     plt.plot(list(simulation_stats.keys()), packet_success_means)
-    plt.title('Success and drop rates')
-    plt.legend(["Packet Loss", "Packet Sunk"])
+    plt.title('Packet Loss vs Successful Transmission')
+    plt.legend(["Packets Lost", "Packets Transmitted"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Percent of Packets")
+    plt.ylabel("Total packets generated in the system(%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.ylim(0, 100)
@@ -262,24 +264,23 @@ def create_graphs(simulation_stats):
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_mac)
     plt.plot(list(simulation_stats.keys()), packet_loss_collision)
-    plt.plot(list(simulation_stats.keys()), packet_loss_buffer, linestyle=':')
-    plt.plot(list(simulation_stats.keys()), packet_loss_timeout, linestyle=':')
-    plt.title("Error rate split into mac and collision")
-    plt.legend(["MAC packet loss", "Collision packet loss", "Mac loss: Buffer overflow", "Mac loss: Timeout"])
+    plt.title("Packet loss - Mac vs Collision")
+    plt.legend(["MAC packet loss", "Collision packet loss"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Percent of dropped packets")
+    plt.ylabel("Total packets generated in the system (%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.ylim(0, 100)
     plt.show()
 
     plt.figure()
-    plt.plot(list(simulation_stats.keys()), packet_loss_means, linestyle=':')
-    plt.plot(list(simulation_stats.keys()), packet_loss_explainable)
-    plt.title("Explainable packet loss")
-    plt.legend(["Total observed packet loss", "Total explainable packet loss"])
+    plt.plot(list(simulation_stats.keys()), packet_loss_mac, linestyle=':')
+    plt.plot(list(simulation_stats.keys()), packet_loss_buffer)
+    plt.plot(list(simulation_stats.keys()), packet_loss_timeout)
+    plt.title("MAC packet loss - Buffer Overflow vs Timeout")
+    plt.legend(["Total MAC packet loss", "Buffer overflow", "Timeout"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Percent of dropped packets")
+    plt.ylabel("Total packets generated in the system (%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.ylim(0, 100)
