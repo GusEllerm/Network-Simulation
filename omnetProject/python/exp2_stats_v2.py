@@ -14,7 +14,7 @@ mac_loss_verbose = True
 channel_loss = True
 channel_loss_verbose = True
 
-num_iterations = 20
+num_iterations = 10
 
 
 def successful_packets_per_node(num_nodes):
@@ -127,9 +127,7 @@ def loss_stats(num_nodes):
             collision_pi_dict[current_iteration] = int(row["Collisions"])
             current_iteration += 1
 
-        print(collision_pi_dict)
 
-        # Get success rate pi
         if percent_success:
             for iteration in range(0, num_iterations):
                 success_percent = (sunk_packets_pi_dict[iteration] / int(gen_packets_pi_dict[iteration])) * 100

@@ -77,7 +77,7 @@ namespace wsn {
 
             send(message, "out0");
 
-            scheduleAt((distro + simTime()), msg); //callback function to keep sending app messages.
+            scheduleAt((exponential(distro) + simTime()), msg); //callback function to keep sending app messages.
         }
     }
 

@@ -1,14 +1,13 @@
-../out/gcc-release/simulations/../src/SimpleChannel.o: \
- ../src/SimpleChannel.cc ../src/SimpleChannel.h \
- /home/username/omnetpp-5.5.1/include/omnetpp.h ../src/appMessage_m.h \
- ../src/signalStart_m.h ../src/signalStop_m.h
+../out/gcc-release/src/SimpleChannel.o: SimpleChannel.cc SimpleChannel.h \
+ /home/username/omnetpp-5.5.1/include/omnetpp.h appMessage_m.h \
+ signalStart_m.h signalStop_m.h
 
-../src/SimpleChannel.h:
+SimpleChannel.h:
 
 /home/username/omnetpp-5.5.1/include/omnetpp.h:
 
-../src/appMessage_m.h:
+appMessage_m.h:
 
-../src/signalStart_m.h:
+signalStart_m.h:
 
-../src/signalStop_m.h:
+signalStop_m.h:

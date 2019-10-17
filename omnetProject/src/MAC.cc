@@ -184,7 +184,7 @@ namespace wsn {
 
                             smsg = new SelfMessage();
                             smsg->setDescription("Wait for backoffDistribution");
-                            scheduleAt(simTime() + backoffDistribution, smsg);
+                            scheduleAt(simTime() + exponential(backoffDistribution), smsg);
                             FSM_Goto(MAC_FSM, TRANSMITLOCK);
 
                         } else {
