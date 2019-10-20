@@ -132,6 +132,7 @@ namespace wsn {
                 {
                     delete confirm;
                     confirm = nullptr;
+                    skip = true;
                 }
 
                 EV << "In INIT Size of buffer: " << buffer.size() << "\n";
@@ -148,6 +149,7 @@ namespace wsn {
                 {
                     delete confirm;
                     confirm = nullptr;
+                    skip = true;
                 }
 
                 backoffCounter = 0;
@@ -228,6 +230,7 @@ namespace wsn {
 
                 else if (dynamic_cast<transmissionConfirm *>(msg)) {
 
+                    //TODO - mem leak
                     confirm = static_cast<transmissionConfirm *>(msg);
                     appMessage *temp = buffer.back();
                     delete temp;
@@ -263,24 +266,28 @@ namespace wsn {
             }
         }
 
-        // RX path
-        if (dynamic_cast<transmissionIndication *>(msg))
-        {
-            tiMsg = static_cast<transmissionIndication *>(msg);
-            macMessage *macMsg = static_cast<macMessage *>(tiMsg->decapsulate());
-            appMessage *appMsgSend = static_cast<appMessage *>(macMsg->decapsulate());
+        if (!skip) {
+            // RX path
+            if (dynamic_cast<transmissionIndication *>(msg))
+            {
+                tiMsg = static_cast<transmissionIndication *>(msg);
+                macMessage *macMsg = static_cast<macMessage *>(tiMsg->decapsulate());
+                appMessage *appMsgSend = static_cast<appMessage *>(macMsg->decapsulate());
 
-            send(appMsgSend, "out1");
+                send(appMsgSend, "out1");
 
-            delete macMsg;
-            delete tiMsg;
+                delete macMsg;
+                delete tiMsg;
 
-        }
+            }
 
-        // Garbage collection
-        else if (dynamic_cast<SelfMessage *>(msg))
-        {
-            delete msg;
+            // Garbage collection
+            else if (dynamic_cast<SelfMessage *>(msg))
+            {
+                delete msg;
+            }
+        } else {
+            skip = false;
         }
     }
     void MAC::finish()

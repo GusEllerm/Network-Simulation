@@ -53,6 +53,7 @@ namespace wsn{
 
         bool firstPass = false;
         bool test = false;
+        bool skip = false;
 
         std::string outFileName;
         std::ofstream outFile;
