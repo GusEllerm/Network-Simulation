@@ -281,7 +281,7 @@ def create_graphs(simulation_stats):
     plt.ylabel("Total packets generated in the system (%)")
     plt.grid(True)
     plt.xlim(2, 20)
-    plt.ylim(0, 100)
+    plt.ylim(0, 5)
     plt.show()
 
 def main():

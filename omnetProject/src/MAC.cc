@@ -134,6 +134,22 @@ namespace wsn {
                     confirm = nullptr;
                 }
 
+                EV << "In INIT Size of buffer: " << buffer.size() << "\n";
+                if (buffer.size() > 0) {
+                    EV << "Start MAC protocol \n";
+                    FSM_Goto(MAC_FSM, TRANSMIT);
+                }
+                break;
+
+
+            case FSM_Exit(TRANSMIT):
+            {
+                if (confirm != nullptr)
+                {
+                    delete confirm;
+                    confirm = nullptr;
+                }
+
                 backoffCounter = 0;
 
                 // if there is something to read from the buffer start the state machine to transmit
@@ -147,9 +163,12 @@ namespace wsn {
                     curMessage = new appMessage(*buffer.back());
                     // Start the process to send curMessage
                     FSM_Goto(MAC_FSM, TRANSMITCS);
+                } else {
+                    EV << "End MAC protocol \n";
+                    FSM_Goto(MAC_FSM, INIT);
                 }
                 break;
-
+            }
 
             case FSM_Exit(TRANSMITCS):
             {
@@ -197,7 +216,7 @@ namespace wsn {
                             delete curMessage;
                             curMessage = nullptr;
                             EV << "Packet has reached max backoffs - dropping packet & restarting \n";
-                            FSM_Goto(MAC_FSM, INIT);
+                            FSM_Goto(MAC_FSM, TRANSMIT);
                         }
                     } else {
                         // Channel is clear
@@ -208,8 +227,8 @@ namespace wsn {
                 }
 
                 else if (dynamic_cast<transmissionConfirm *>(msg)) {
-                    confirm = static_cast<transmissionConfirm *>(msg);
 
+                    confirm = static_cast<transmissionConfirm *>(msg);
                     appMessage *temp = buffer.back();
                     delete temp;
                     buffer.pop_back();
@@ -219,7 +238,7 @@ namespace wsn {
                     EV << "Transmission Successful.. Buffer Size: ";
                     EV << buffer.size();
                     EV << "\n";
-                    FSM_Goto(MAC_FSM, INIT);
+                    FSM_Goto(MAC_FSM, TRANSMIT);
                 }
 
                 else if (dynamic_cast<SelfMessage *>(msg)) {

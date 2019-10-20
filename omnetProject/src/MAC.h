@@ -62,9 +62,10 @@ namespace wsn{
         cFSM MAC_FSM;
         enum {
             INIT = 0,
-            TRANSMITCS = FSM_Transient(1),
+            TRANSMIT = FSM_Transient(1),
+            TRANSMITCS = FSM_Transient(2),
             TRANSMITLOCK = FSM_Steady(1),
-            TRANSMITMSG = FSM_Transient(2)
+            TRANSMITMSG = FSM_Transient(3)
         };
 
         appMessage *curMessage = nullptr;
