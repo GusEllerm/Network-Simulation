@@ -127,7 +127,6 @@ def loss_stats(num_nodes):
             collision_pi_dict[current_iteration] = int(row["Collisions"])
             current_iteration += 1
 
-
         if percent_success:
             for iteration in range(0, num_iterations):
                 success_percent = (sunk_packets_pi_dict[iteration] / int(gen_packets_pi_dict[iteration])) * 100
@@ -235,15 +234,12 @@ def create_graphs(simulation_stats):
     # print(packet_loss_means)
     # print(packet_loss_explainable)
 
-    # test = [0.0, 0.0, 0.0082327383182678703, 0.8113122509011091, 0.8139797796830921, 0.8133005588987576, 1.807090391457033, 1.9015979008813464, 1.914233187020718, 1.98954746219225]
 
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_means)
-    plt.plot(list(simulation_stats.keys()), packet_success_means)
-    plt.title('Packet Loss vs Successful Transmission')
-    plt.legend(["Packets Lost", "Packets Transmitted"])
+    plt.title('Packets Lost (%)')
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Total packets generated in the system(%)")
+    plt.ylabel("Total Packets (%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.ylim(0, 100)
