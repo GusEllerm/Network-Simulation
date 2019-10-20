@@ -230,7 +230,6 @@ namespace wsn {
 
                 else if (dynamic_cast<transmissionConfirm *>(msg)) {
 
-                    //TODO - mem leak
                     confirm = static_cast<transmissionConfirm *>(msg);
                     appMessage *temp = buffer.back();
                     delete temp;
