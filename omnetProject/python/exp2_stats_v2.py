@@ -237,16 +237,6 @@ def create_graphs(simulation_stats):
 
     # test = [0.0, 0.0, 0.0082327383182678703, 0.8113122509011091, 0.8139797796830921, 0.8133005588987576, 1.807090391457033, 1.9015979008813464, 1.914233187020718, 1.98954746219225]
 
-
-    plt.figure()
-    plt.plot(list(simulation_stats.keys()), packet_loss_timeout, linestyle=':')
-    plt.legend(["Packets dropped due to timeout"])
-    plt.xlabel("Number of Transmitters")
-    plt.ylabel("Packets Timeout (%)")
-    plt.grid(True)
-    plt.xlim(2, 20)
-    plt.show()
-
     plt.figure()
     plt.plot(list(simulation_stats.keys()), packet_loss_means)
     plt.plot(list(simulation_stats.keys()), packet_success_means)
@@ -265,7 +255,7 @@ def create_graphs(simulation_stats):
     plt.title("Packet loss - Mac vs Collision")
     plt.legend(["MAC packet loss", "Collision packet loss"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Total packets generated in the system (%)")
+    plt.ylabel("Total packets (%)")
     plt.grid(True)
     plt.xlim(2, 20)
     plt.ylim(0, 100)
@@ -278,11 +268,26 @@ def create_graphs(simulation_stats):
     plt.title("MAC packet loss - Buffer Overflow vs Timeout")
     plt.legend(["Total MAC packet loss", "Buffer overflow", "Timeout"])
     plt.xlabel("Number of Transmitters")
-    plt.ylabel("Total packets generated in the system (%)")
+    plt.ylabel("Total packets (%)")
     plt.grid(True)
     plt.xlim(2, 20)
-    plt.ylim(0, 5)
+    plt.ylim(0, 3)
     plt.show()
+
+    for i in range(0, len(packet_loss_timeout)):
+        packet_loss_timeout[i] = packet_loss_timeout[i] * 100
+
+    plt.figure()
+    plt.plot(list(simulation_stats.keys()), packet_loss_timeout, linestyle=':')
+    plt.title("Timeout per Transmitter")
+    plt.legend(["Packets dropped due to timeout"])
+    plt.xlabel("Number of Transmitters")
+    plt.ylabel("Packets Timeout (%)")
+    plt.grid(True)
+    plt.xlim(2, 20)
+    plt.ylim(0, 100)
+    plt.show()
+
 
 def main():
     simulation_stats = {}
