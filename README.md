@@ -1,14 +1,14 @@
 # COSC418
 
-## To build in src
+## To build in ./src
 `cd ./omnetProject/src
 opp_makemake -f --deep -r
 make`
 
-## To run in src
+## To run in ./src
 `./omnetProject -n ./ned -f ./ned/omnetpp.ini`
 
-## To run simulations
+## To run ./simulations
 `cd ./omnetProject/python/runners
 python3 expX_runner.py`
 
@@ -27,5 +27,5 @@ Edit the generator files as required.
 `python3 expX_generator.py`
 
 ## Authors
-* **Dylan White*
-* **Gus Ellerm*
+Dylan White
+Gus Ellerm
