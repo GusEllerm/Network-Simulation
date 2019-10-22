@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for WSN
+# OMNeT++/OMNEST Makefile for omnetProject
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -L../out/$$\(CONFIGNAME\) -L../out/$$\(CONFIGNAME\)/logs
+#  opp_makemake -f
 #
 
 # Name of target to be created (-o option)
-TARGET = WSN$(D)$(EXE_SUFFIX)
+TARGET = omnetProject$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -22,7 +22,7 @@ INCLUDE_PATH =
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)../out/$(CONFIGNAME) $(LDFLAG_LIBPATH)../out/$(CONFIGNAME)/logs
+LIBS =
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -30,36 +30,10 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = \
-    $O/circBuff.o \
-    $O/MAC.o \
-    $O/packetGen.o \
-    $O/packetSink.o \
-    $O/SimpleChannel.o \
-    $O/transceiver.o \
-    $O/appMessage_m.o \
-    $O/CSRequest_m.o \
-    $O/CSResponse_m.o \
-    $O/macMessage_m.o \
-    $O/selfMessage_m.o \
-    $O/signalStart_m.o \
-    $O/signalStop_m.o \
-    $O/transmissionConfirm_m.o \
-    $O/transmissionIndication_m.o \
-    $O/transmissionRequest_m.o
+OBJS =
 
 # Message files
-MSGFILES = \
-    appMessage.msg \
-    CSRequest.msg \
-    CSResponse.msg \
-    macMessage.msg \
-    selfMessage.msg \
-    signalStart.msg \
-    signalStop.msg \
-    transmissionConfirm.msg \
-    transmissionIndication.msg \
-    transmissionRequest.msg
+MSGFILES =
 
 # SM files
 SMFILES =
@@ -86,9 +60,6 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
-ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath ../out/$(CONFIGNAME)) -Wl,-rpath,$(abspath ../out/$(CONFIGNAME)/logs)
-endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)

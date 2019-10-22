@@ -43,7 +43,7 @@ network simulation
         }
 
         Chan: SimpleChannel {
-            @display("p=10,10");
+            @display("p=0,0");
         }
 
     connections allowunconnected:

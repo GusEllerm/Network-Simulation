@@ -277,7 +277,6 @@ namespace wsn {
 
                 delete macMsg;
                 delete tiMsg;
-
             }
 
             // Garbage collection
