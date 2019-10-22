@@ -14,9 +14,9 @@
 // 
 
 #include "SimpleChannel.h"
-#include "appMessage_m.h"
-#include "signalStart_m.h"
-#include "signalStop_m.h"
+#include "../messages/appMessage_m.h"
+#include "../messages/signalStart_m.h"
+#include "../messages/signalStop_m.h"
 
 namespace wsn {
     Define_Module(SimpleChannel);

@@ -14,8 +14,8 @@
 // 
 
 #include "packetGen.h"
-#include "appMessage_m.h"
-#include "CSRequest_m.h"
+#include "../messages/appMessage_m.h"
+#include "../messages/CSRequest_m.h"
 
 namespace wsn {
     Define_Module(PacketGen);

@@ -14,7 +14,7 @@
 // 
 
 #include "packetSink.h"
-#include "appMessage_m.h"
+#include "../messages/appMessage_m.h"
 #include "circBuff.h"
 #include <iostream>
 #include <fstream>

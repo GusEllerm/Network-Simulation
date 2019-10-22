@@ -14,16 +14,16 @@
 // 
 
 #include "transceiver.h"
-#include "appMessage_m.h"
-#include "transmissionRequest_m.h"
-#include "transmissionConfirm_m.h"
-#include "transmissionIndication_m.h"
-#include "macMessage_m.h"
-#include "signalStart_m.h"
-#include "signalStop_m.h"
-#include "selfMessage_m.h"
-#include "CSRequest_m.h"
-#include "CSResponse_m.h"
+#include "../messages/appMessage_m.h"
+#include "../messages/transmissionRequest_m.h"
+#include "../messages/transmissionConfirm_m.h"
+#include "../messages/transmissionIndication_m.h"
+#include "../messages/macMessage_m.h"
+#include "../messages/signalStart_m.h"
+#include "../messages/signalStop_m.h"
+#include "../messages/selfMessage_m.h"
+#include "../messages/CSRequest_m.h"
+#include "../messages/CSResponse_m.h"
 #include <list>
 #include <stdlib.h>
 #include <ctgmath>

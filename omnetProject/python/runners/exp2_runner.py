@@ -6,10 +6,12 @@ configs = []
 
 for i in range(2, 21):
     if (i % 2 == 0):
-        configs.append("./omnetProject -n .:../src -f exp2_numTX_" + str(i) + ".ini -u Cmdenv")
+        configs.append("../src/omnetProject -n .:../src/ned -f exp2_numTX_" + str(i) + ".ini -u Cmdenv")
 
 #subprocess.call(["python3", "clean_up.py"])
-os.chdir("../simulations")
+os.chdir("../")
+os.chdir("../")
+os.chdir("./simulations")
 
 timeStart = time.time()
 

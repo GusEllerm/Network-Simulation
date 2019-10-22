@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for omnetProject
 #
 # This file was generated with the command:
-#  opp_makemake -f
+#  opp_makemake -f --deep -r
 #
 
 # Name of target to be created (-o option)
@@ -30,10 +30,36 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS =
+OBJS = \
+    $O/cpp_files/circBuff.o \
+    $O/cpp_files/MAC.o \
+    $O/cpp_files/packetGen.o \
+    $O/cpp_files/packetSink.o \
+    $O/cpp_files/SimpleChannel.o \
+    $O/cpp_files/transceiver.o \
+    $O/messages/appMessage_m.o \
+    $O/messages/CSRequest_m.o \
+    $O/messages/CSResponse_m.o \
+    $O/messages/macMessage_m.o \
+    $O/messages/selfMessage_m.o \
+    $O/messages/signalStart_m.o \
+    $O/messages/signalStop_m.o \
+    $O/messages/transmissionConfirm_m.o \
+    $O/messages/transmissionIndication_m.o \
+    $O/messages/transmissionRequest_m.o
 
 # Message files
-MSGFILES =
+MSGFILES = \
+    messages/appMessage.msg \
+    messages/CSRequest.msg \
+    messages/CSResponse.msg \
+    messages/macMessage.msg \
+    messages/selfMessage.msg \
+    messages/signalStart.msg \
+    messages/signalStop.msg \
+    messages/transmissionConfirm.msg \
+    messages/transmissionIndication.msg \
+    messages/transmissionRequest.msg
 
 # SM files
 SMFILES =
